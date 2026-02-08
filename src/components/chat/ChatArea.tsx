@@ -8,11 +8,12 @@ import './ChatArea.css'
 
 export function ChatArea() {
   const { messages, isLoading, activeTool, sendMessage, retryLastMessage, settings } = useChatContext()
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const messagesRef = useRef<HTMLElement>(null)
   const [suggestion, setSuggestion] = useState<string | undefined>()
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+    const el = messagesRef.current
+    if (el) el.scrollTop = el.scrollHeight
   }, [messages])
 
   const handleSuggestion = useCallback((text: string) => {
@@ -32,7 +33,7 @@ export function ChatArea() {
 
   return (
     <div className="ChatArea">
-      <main className="ChatArea-messages">
+      <main className="ChatArea-messages" ref={messagesRef}>
         {messages.length === 0 && (
           <EmptyState onSuggestionClick={handleSuggestion} />
         )}
@@ -48,7 +49,6 @@ export function ChatArea() {
           />
         ))}
         {activeTool && <ToolIndicator toolName={activeTool} />}
-        <div ref={messagesEndRef} />
       </main>
       <ChatInput
         onSend={handleSend}
