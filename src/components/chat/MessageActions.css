@@ -4,13 +4,6 @@
   margin-top: 8px;
   padding-top: 6px;
   border-top: 1px solid var(--border);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.ChatMessage:hover .MessageActions,
-.ChatMessage:focus-within .MessageActions {
-  opacity: 1;
 }
 
 .MessageActions-btn {

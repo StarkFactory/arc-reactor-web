@@ -9,13 +9,12 @@ interface ChatMessageProps {
   message: ChatMessageType
   isLast: boolean
   isLoading: boolean
-  isLastAssistant: boolean
   showMetadata: boolean
   onRetry?: () => void
 }
 
 export const ChatMessage = memo(function ChatMessage({
-  message, isLast, isLoading, isLastAssistant, showMetadata, onRetry,
+  message, isLast, isLoading, showMetadata, onRetry,
 }: ChatMessageProps) {
   const showPlaceholder = isLoading && isLast && message.role === 'assistant' && !message.content
 
@@ -48,8 +47,6 @@ export const ChatMessage = memo(function ChatMessage({
         {message.role === 'assistant' && message.content && !showPlaceholder && (
           <MessageActions
             content={message.content}
-            isError={message.error}
-            isLastAssistant={isLastAssistant}
             onRetry={onRetry}
           />
         )}
