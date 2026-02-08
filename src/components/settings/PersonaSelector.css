@@ -1,0 +1,227 @@
+.PersonaSelector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.PersonaSelector-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.PersonaSelector-select {
+  flex: 1;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.PersonaSelector-select:focus {
+  border-color: var(--accent);
+}
+
+.PersonaSelector-manageBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.PersonaSelector-manageBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Preview */
+.PersonaSelector-preview {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.PersonaSelector-previewPrompt {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-height: 80px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.PersonaSelector-previewActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.PersonaSelector-editBtn,
+.PersonaSelector-deleteBtn {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.PersonaSelector-editBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.PersonaSelector-deleteBtn:hover {
+  background: #e53e3e20;
+  color: #e53e3e;
+  border-color: #e53e3e50;
+}
+
+/* Form */
+.PersonaSelector-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.PersonaSelector-input {
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.PersonaSelector-input:focus {
+  border-color: var(--accent);
+}
+
+.PersonaSelector-textarea {
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.PersonaSelector-textarea:focus {
+  border-color: var(--accent);
+}
+
+.PersonaSelector-checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.PersonaSelector-checkLabel input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.PersonaSelector-formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.PersonaSelector-saveBtn {
+  flex: 1;
+  padding: 8px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.PersonaSelector-saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.PersonaSelector-cancelBtn {
+  padding: 8px 12px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.PersonaSelector-cancelBtn:hover {
+  background: var(--bg-hover);
+}
+
+/* Loading / Error states */
+.PersonaSelector-loading {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 8px 0;
+}
+
+.PersonaSelector-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #e53e3e;
+}
+
+.PersonaSelector-retryBtn {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.PersonaSelector-inlineError {
+  font-size: 0.78rem;
+  color: #e53e3e;
+}

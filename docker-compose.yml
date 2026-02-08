@@ -4,15 +4,40 @@ services:
     build:
       context: ../arc-reactor
       dockerfile: Dockerfile
+      args:
+        ENABLE_DB: "true"
     ports:
       - "${BACKEND_PORT:-8080}:8080"
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME:-arcreactor}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER:-arc}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-arc}
+    depends_on:
+      db:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 3
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-arcreactor}
+      POSTGRES_USER: ${DB_USER:-arc}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-arc}
+    ports:
+      - "${DB_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-arc}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
 
   web:
     build: .
@@ -20,3 +45,6 @@ services:
       - "3000:80"
     depends_on:
       - backend
+
+volumes:
+  pgdata:

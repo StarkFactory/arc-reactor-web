@@ -1,6 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useChatContext } from '../../context/ChatContext'
 import { ModelSelector } from './ModelSelector'
+import { PersonaSelector } from './PersonaSelector'
 import './SettingsPanel.css'
 
 interface SettingsPanelProps {
@@ -20,7 +21,15 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
     return () => document.removeEventListener('keydown', handleKey)
   }, [open, onClose])
 
+  const handlePersonaChange = useCallback((personaId: string | null) => {
+    updateSettings({ selectedPersonaId: personaId })
+    // Clear custom system prompt when persona is selected
+    if (personaId) updateSettings({ selectedPersonaId: personaId, systemPrompt: '' })
+  }, [updateSettings])
+
   if (!open) return null
+
+  const isPersonaSelected = !!settings.selectedPersonaId
 
   return (
     <>
@@ -45,15 +54,25 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
           </div>
 
           <div className="SettingsPanel-section">
-            <label className="SettingsPanel-label">시스템 프롬프트</label>
-            <textarea
-              className="SettingsPanel-textarea"
-              value={settings.systemPrompt}
-              onChange={e => updateSettings({ systemPrompt: e.target.value })}
-              placeholder="AI 에이전트의 역할과 행동을 지정하세요... (비워두면 기본값 사용)"
-              rows={4}
+            <label className="SettingsPanel-label">페르소나</label>
+            <PersonaSelector
+              value={settings.selectedPersonaId}
+              onChange={handlePersonaChange}
             />
           </div>
+
+          {!isPersonaSelected && (
+            <div className="SettingsPanel-section">
+              <label className="SettingsPanel-label">커스텀 시스템 프롬프트</label>
+              <textarea
+                className="SettingsPanel-textarea"
+                value={settings.systemPrompt}
+                onChange={e => updateSettings({ systemPrompt: e.target.value })}
+                placeholder="AI 에이전트의 역할과 행동을 지정하세요... (비워두면 기본 페르소나 사용)"
+                rows={4}
+              />
+            </div>
+          )}
 
           <div className="SettingsPanel-section">
             <label className="SettingsPanel-label">응답 포맷</label>

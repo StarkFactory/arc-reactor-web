@@ -20,6 +20,7 @@ export interface Session {
 export interface ChatSettings {
   model: string | null
   systemPrompt: string
+  selectedPersonaId: string | null
   responseFormat: 'TEXT' | 'JSON'
   darkMode: boolean
   showMetadata: boolean

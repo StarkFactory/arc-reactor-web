@@ -127,7 +127,8 @@ export function useChat({ sessionId, settings, initialMessages = [], onMessagesC
           userId: 'web-user',
           metadata: { sessionId },
           ...(settings.model ? { model: settings.model } : {}),
-          ...(settings.systemPrompt ? { systemPrompt: settings.systemPrompt } : {}),
+          ...(settings.selectedPersonaId ? { personaId: settings.selectedPersonaId } : {}),
+          ...(!settings.selectedPersonaId && settings.systemPrompt ? { systemPrompt: settings.systemPrompt } : {}),
           ...(settings.responseFormat !== 'TEXT' ? { responseFormat: settings.responseFormat } : {}),
         },
         {
