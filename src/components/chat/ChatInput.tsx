@@ -14,15 +14,18 @@ export function ChatInput({ onSend, onStop, disabled, initialValue }: ChatInputP
   const [input, setInput] = useState('')
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
-  // Accept external value (e.g., from suggestion click)
+  // Sync initialValue during render (avoids setState-in-effect)
+  const [prevInitialValue, setPrevInitialValue] = useState(initialValue)
+  if (initialValue !== prevInitialValue) {
+    setPrevInitialValue(initialValue)
+    if (initialValue) setInput(initialValue)
+  }
+
+  // Focus when initialValue changes or loading finishes
   useEffect(() => {
-    if (initialValue) {
-      setInput(initialValue)
-      inputRef.current?.focus()
-    }
+    if (initialValue) inputRef.current?.focus()
   }, [initialValue])
 
-  // Focus input when not loading
   useEffect(() => {
     if (!disabled) inputRef.current?.focus()
   }, [disabled])
