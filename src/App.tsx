@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from './context/AuthContext'
 import { ChatProvider } from './context/ChatContext'
 import { Header } from './components/layout/Header'
@@ -14,6 +14,15 @@ function AppContent() {
     () => window.innerWidth >= 768
   )
   const [settingsOpen, setSettingsOpen] = useState(false)
+
+  // Auto-close sidebar when resizing to mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) setSidebarOpen(false)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <ChatProvider key={user?.id || 'anonymous'}>

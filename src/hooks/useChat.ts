@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import type { ChatMessage } from '../types/chat'
 import type { ChatSettings } from '../types/chat'
-import { streamChat } from '../services/api'
+import { streamChat, sendChat } from '../services/api'
 import { FRAMES_TARGET } from '../utils/constants'
 
 interface UseChatOptions {
@@ -121,18 +121,23 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
     cancelAnimationFrame(rafIdRef.current)
     sendStartTimeRef.current = Date.now()
 
+    const chatRequest = {
+      message: text.trim(),
+      userId,
+      metadata: { sessionId },
+      ...(settings.model ? { model: settings.model } : {}),
+      ...(settings.selectedPersonaId ? { personaId: settings.selectedPersonaId } : {}),
+      ...(!settings.selectedPersonaId && settings.systemPrompt ? { systemPrompt: settings.systemPrompt } : {}),
+      ...(settings.responseFormat !== 'TEXT' ? { responseFormat: settings.responseFormat } : {}),
+    }
+
     try {
-      await streamChat(
-        {
-          message: text.trim(),
-          userId,
-          metadata: { sessionId },
-          ...(settings.model ? { model: settings.model } : {}),
-          ...(settings.selectedPersonaId ? { personaId: settings.selectedPersonaId } : {}),
-          ...(!settings.selectedPersonaId && settings.systemPrompt ? { systemPrompt: settings.systemPrompt } : {}),
-          ...(settings.responseFormat !== 'TEXT' ? { responseFormat: settings.responseFormat } : {}),
-        },
-        {
+      if (settings.responseFormat === 'JSON') {
+        // JSON format uses non-streaming endpoint
+        const content = await sendChat(chatRequest)
+        updateAssistantMessage(content, true)
+      } else {
+        await streamChat(chatRequest, {
           onToken: (data) => {
             targetTextRef.current += data
             tickAnimation()
@@ -152,25 +157,25 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
           onError: (err) => {
             throw err
           },
-        },
-      )
-
-      // Stream ended
-      streamDoneRef.current = true
-      if (targetTextRef.current) {
-        await waitForAnimationDone()
-      }
-
-      if (!targetTextRef.current) {
-        // Fallback: no streaming content received
-        setMessages(prev => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === 'assistant' && !last.content) {
-            updated[updated.length - 1] = { ...last, content: '응답을 받지 못했습니다.' }
-          }
-          return updated
         })
+
+        // Stream ended
+        streamDoneRef.current = true
+        if (targetTextRef.current) {
+          await waitForAnimationDone()
+        }
+
+        if (!targetTextRef.current) {
+          // Fallback: no streaming content received
+          setMessages(prev => {
+            const updated = [...prev]
+            const last = updated[updated.length - 1]
+            if (last?.role === 'assistant' && !last.content) {
+              updated[updated.length - 1] = { ...last, content: '응답을 받지 못했습니다.' }
+            }
+            return updated
+          })
+        }
       }
     } catch (err) {
       cancelAnimationFrame(rafIdRef.current)
@@ -190,16 +195,20 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
       setIsLoading(false)
       setActiveTool(null)
     }
-  }, [isLoading, sessionId, settings, tickAnimation, waitForAnimationDone])
+  }, [isLoading, sessionId, settings, userId, tickAnimation, waitForAnimationDone, updateAssistantMessage])
 
   const retryLastMessage = useCallback(async () => {
     const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')
     if (!lastUserMsg) return
 
-    // Remove the failed assistant message
+    // Remove both the last assistant message AND its corresponding user message
+    // so that sendMessage can re-add them as a fresh pair
     setMessages(prev => {
-      const lastAssistant = prev[prev.length - 1]
-      if (lastAssistant?.role === 'assistant') {
+      const last = prev[prev.length - 1]
+      if (last?.role === 'assistant' && prev[prev.length - 2]?.role === 'user') {
+        return prev.slice(0, -2)
+      }
+      if (last?.role === 'assistant') {
         return prev.slice(0, -1)
       }
       return prev
