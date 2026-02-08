@@ -103,7 +103,7 @@
 }
 
 .Sidebar-deleteBtn:hover {
-  color: #ef4444;
+  color: var(--error);
 }
 
 /* Desktop: sidebar pushes content */

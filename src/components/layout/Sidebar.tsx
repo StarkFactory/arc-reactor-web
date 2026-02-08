@@ -53,7 +53,9 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 className="Sidebar-deleteBtn"
                 onClick={(e) => {
                   e.stopPropagation()
-                  deleteSession(session.id)
+                  if (confirm('이 대화를 삭제하시겠습니까?')) {
+                    deleteSession(session.id)
+                  }
                 }}
                 aria-label="대화 삭제"
               >

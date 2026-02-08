@@ -45,7 +45,7 @@ export const ChatMessage = memo(function ChatMessage({
             {formatDuration(message.durationMs)}
           </div>
         )}
-        {message.content && !showPlaceholder && (
+        {message.role === 'assistant' && message.content && !showPlaceholder && (
           <MessageActions
             content={message.content}
             isError={message.error}

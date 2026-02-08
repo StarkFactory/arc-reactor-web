@@ -13,4 +13,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 767px) {
+  .ChatArea-messages {
+    padding: 12px;
+    gap: 8px;
+  }
 }

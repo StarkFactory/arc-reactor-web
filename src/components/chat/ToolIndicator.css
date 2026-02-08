@@ -12,7 +12,7 @@
   width: 14px;
   height: 14px;
   border: 2px solid var(--border);
-  border-top-color: #3b82f6;
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: ToolIndicator-spin 0.8s linear infinite;
 }

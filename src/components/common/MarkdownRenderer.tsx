@@ -3,6 +3,15 @@ import remarkGfm from 'remark-gfm'
 import { CodeBlock } from './CodeBlock'
 import './MarkdownRenderer.css'
 
+// Fix CommonMark emphasis edge case: closing ** preceded by punctuation
+// (e.g. parenthesis) and followed by CJK is not recognized as right-flanking.
+// Insert zero-width space before closing ** so preceding char is non-punctuation.
+const CJK_BOLD_FIX_RE = /(\*\*[^*]+?[)}\]:.!?;,])(\*\*(?=[가-힣ぁ-んァ-ヶ\u4e00-\u9fff]))/g
+
+function preprocessMarkdown(text: string): string {
+  return text.replace(CJK_BOLD_FIX_RE, '$1\u200B$2')
+}
+
 interface MarkdownRendererProps {
   content: string
 }
@@ -42,7 +51,7 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
           },
         }}
       >
-        {content}
+        {preprocessMarkdown(content)}
       </ReactMarkdown>
     </div>
   )

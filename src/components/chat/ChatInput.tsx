@@ -51,7 +51,7 @@ export function ChatInput({ onSend, disabled, initialValue }: ChatInputProps) {
         disabled={disabled}
       />
       <button type="submit" disabled={disabled || !input.trim()}>
-        {disabled ? '...' : '보내기'}
+        {disabled ? '전송 중' : '보내기'}
       </button>
     </form>
   )

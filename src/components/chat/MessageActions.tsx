@@ -14,13 +14,29 @@ export function MessageActions({ content, isError, isLastAssistant, onRetry }: M
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(content).then(() => {
       setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
+      setTimeout(() => setCopied(false), 2000)
+    }).catch(() => {
+      // Fallback for older browsers / HTTP context
+      const textarea = document.createElement('textarea')
+      textarea.value = content
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
     })
   }, [content])
 
   return (
     <div className="MessageActions">
-      <button className="MessageActions-btn" onClick={handleCopy} title="복사">
+      <button
+        className={`MessageActions-btn ${copied ? 'MessageActions-btn--copied' : ''}`}
+        onClick={handleCopy}
+        title="복사"
+      >
         {copied ? (
           <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
             <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" />

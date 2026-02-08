@@ -17,11 +17,12 @@
   background: var(--bg-secondary);
   color: var(--text-primary);
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .ChatInput textarea:focus {
-  border-color: #3b82f6;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .ChatInput textarea::placeholder {
@@ -32,19 +33,39 @@
   padding: 10px 20px;
   border: none;
   border-radius: 12px;
-  background: #3b82f6;
+  background: var(--accent);
   color: white;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, transform 0.1s;
 }
 
 .ChatInput button:hover:not(:disabled) {
-  background: #2563eb;
+  background: var(--accent-hover);
+}
+
+.ChatInput button:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .ChatInput button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (max-width: 767px) {
+  .ChatInput {
+    padding: 12px;
+    gap: 6px;
+  }
+
+  .ChatInput textarea {
+    padding: 8px 12px;
+  }
+
+  .ChatInput button {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
 }

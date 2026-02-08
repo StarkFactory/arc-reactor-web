@@ -27,9 +27,14 @@
   cursor: pointer;
   color: var(--text-primary);
   font-size: 0.9rem;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
 }
 
 .EmptyState-suggestion:hover {
   background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+.EmptyState-suggestion:active {
+  transform: scale(0.97);
 }
