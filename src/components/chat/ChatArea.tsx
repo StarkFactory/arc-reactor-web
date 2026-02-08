@@ -7,7 +7,7 @@ import { EmptyState } from './EmptyState'
 import './ChatArea.css'
 
 export function ChatArea() {
-  const { messages, isLoading, activeTool, sendMessage, retryLastMessage, settings } = useChatContext()
+  const { messages, isLoading, activeTool, sendMessage, stopGeneration, retryLastMessage, settings } = useChatContext()
   const messagesRef = useRef<HTMLElement>(null)
   const [suggestion, setSuggestion] = useState<string | undefined>()
 
@@ -45,6 +45,7 @@ export function ChatArea() {
       </main>
       <ChatInput
         onSend={handleSend}
+        onStop={stopGeneration}
         disabled={isLoading}
         initialValue={suggestion}
       />

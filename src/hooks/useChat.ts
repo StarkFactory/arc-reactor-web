@@ -3,6 +3,7 @@ import type { ChatMessage } from '../types/chat'
 import type { ChatSettings } from '../types/chat'
 import { streamChat, sendChat } from '../services/api'
 import { FRAMES_TARGET } from '../utils/constants'
+import i18n from '../i18n'
 
 interface UseChatOptions {
   sessionId: string
@@ -16,6 +17,9 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
   const [isLoading, setIsLoading] = useState(false)
   const [activeTool, setActiveTool] = useState<string | null>(null)
+
+  // Abort controller for cancelling streaming
+  const abortControllerRef = useRef<AbortController | null>(null)
 
   // Typing animation refs
   const targetTextRef = useRef('')
@@ -121,6 +125,10 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
     cancelAnimationFrame(rafIdRef.current)
     sendStartTimeRef.current = Date.now()
 
+    // Create abort controller for this request
+    const abortController = new AbortController()
+    abortControllerRef.current = abortController
+
     const chatRequest = {
       message: text.trim(),
       userId,
@@ -157,7 +165,7 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
           onError: (err) => {
             throw err
           },
-        })
+        }, abortController.signal)
 
         // Stream ended
         streamDoneRef.current = true
@@ -171,7 +179,7 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
             const updated = [...prev]
             const last = updated[updated.length - 1]
             if (last?.role === 'assistant' && !last.content) {
-              updated[updated.length - 1] = { ...last, content: '응답을 받지 못했습니다.' }
+              updated[updated.length - 1] = { ...last, content: i18n.t('chat.noResponse') }
             }
             return updated
           })
@@ -179,23 +187,39 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
       }
     } catch (err) {
       cancelAnimationFrame(rafIdRef.current)
-      const errorMessage = err instanceof Error ? err.message : '요청에 실패했습니다.'
-      setMessages(prev => {
-        const updated = prev.filter(m => m.content !== '')
-        updated.push({
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          content: errorMessage,
-          error: true,
-          timestamp: Date.now(),
+      // If aborted by user, finalize with whatever content we have
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        streamDoneRef.current = true
+        if (targetTextRef.current) {
+          updateAssistantMessage(targetTextRef.current, true)
+        } else {
+          // No content received yet — remove the empty assistant message
+          setMessages(prev => prev.filter(m => m.content !== ''))
+        }
+      } else {
+        const errorMessage = err instanceof Error ? err.message : i18n.t('chat.requestFailed')
+        setMessages(prev => {
+          const updated = prev.filter(m => m.content !== '')
+          updated.push({
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content: errorMessage,
+            error: true,
+            timestamp: Date.now(),
+          })
+          return updated
         })
-        return updated
-      })
+      }
     } finally {
+      abortControllerRef.current = null
       setIsLoading(false)
       setActiveTool(null)
     }
   }, [isLoading, sessionId, settings, userId, tickAnimation, waitForAnimationDone, updateAssistantMessage])
+
+  const stopGeneration = useCallback(() => {
+    abortControllerRef.current?.abort()
+  }, [])
 
   const retryLastMessage = useCallback(async () => {
     const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')
@@ -224,6 +248,7 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
     isLoading,
     activeTool,
     sendMessage,
+    stopGeneration,
     retryLastMessage,
   }
 }

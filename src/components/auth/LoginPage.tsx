@@ -1,11 +1,13 @@
 import { useState, useCallback } from 'react'
 import type { FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import './LoginPage.css'
 
 type Mode = 'login' | 'register'
 
 export function LoginPage() {
+  const { t } = useTranslation()
   const { login, register, error, clearError, isLoading } = useAuth()
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
@@ -36,21 +38,21 @@ export function LoginPage() {
   return (
     <div className="LoginPage">
       <div className="LoginPage-card">
-        <div className="LoginPage-logo">Arc Reactor</div>
-        <p className="LoginPage-subtitle">AI Agent Chat</p>
+        <div className="LoginPage-logo">{t('app.title')}</div>
+        <p className="LoginPage-subtitle">{t('app.subtitle')}</p>
 
         <div className="LoginPage-tabs">
           <button
             className={`LoginPage-tab ${mode === 'login' ? 'LoginPage-tab--active' : ''}`}
             onClick={() => switchMode('login')}
           >
-            로그인
+            {t('auth.login')}
           </button>
           <button
             className={`LoginPage-tab ${mode === 'register' ? 'LoginPage-tab--active' : ''}`}
             onClick={() => switchMode('register')}
           >
-            회원가입
+            {t('auth.register')}
           </button>
         </div>
 
@@ -59,7 +61,7 @@ export function LoginPage() {
             <input
               className="LoginPage-input"
               type="text"
-              placeholder="이름"
+              placeholder={t('auth.name')}
               value={name}
               onChange={e => setName(e.target.value)}
               autoComplete="name"
@@ -68,7 +70,7 @@ export function LoginPage() {
           <input
             className="LoginPage-input"
             type="email"
-            placeholder="이메일"
+            placeholder={t('auth.email')}
             value={email}
             onChange={e => setEmail(e.target.value)}
             autoComplete="email"
@@ -77,7 +79,7 @@ export function LoginPage() {
           <input
             className="LoginPage-input"
             type="password"
-            placeholder={mode === 'register' ? '비밀번호 (8자 이상)' : '비밀번호'}
+            placeholder={mode === 'register' ? t('auth.passwordHint') : t('auth.password')}
             value={password}
             onChange={e => setPassword(e.target.value)}
             autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
@@ -90,7 +92,7 @@ export function LoginPage() {
             type="submit"
             disabled={!isValid || isLoading}
           >
-            {isLoading ? '처리 중...' : mode === 'login' ? '로그인' : '가입하기'}
+            {isLoading ? t('auth.processing') : mode === 'login' ? t('auth.login') : t('auth.submit')}
           </button>
         </form>
       </div>

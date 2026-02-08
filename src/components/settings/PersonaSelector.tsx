@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { PersonaResponse } from '../../types/api'
 import { listPersonas, createPersona, updatePersona, deletePersona } from '../../services/personas'
 import './PersonaSelector.css'
@@ -12,6 +13,7 @@ interface PersonaSelectorProps {
 type EditMode = 'none' | 'create' | 'edit'
 
 export function PersonaSelector({ value, onChange, onSystemPromptPreview }: PersonaSelectorProps) {
+  const { t } = useTranslation()
   const [personas, setPersonas] = useState<PersonaResponse[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -29,12 +31,12 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
       const data = await listPersonas()
       setPersonas(data)
     } catch {
-      setError('페르소나 목록을 불러올 수 없습니다')
+      setError(t('persona.loadError'))
       setPersonas([])
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     fetchPersonas()
@@ -94,32 +96,32 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
       await fetchPersonas()
       closeForm()
     } catch {
-      setError('저장에 실패했습니다')
+      setError(t('persona.saveError'))
     } finally {
       setSaving(false)
     }
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('이 페르소나를 삭제하시겠습니까?')) return
+    if (!confirm(t('persona.deleteConfirm'))) return
     try {
       await deletePersona(id)
       if (value === id) onChange(null)
       await fetchPersonas()
     } catch {
-      setError('삭제에 실패했습니다')
+      setError(t('persona.deleteError'))
     }
   }
 
   if (loading) {
-    return <div className="PersonaSelector-loading">불러오는 중...</div>
+    return <div className="PersonaSelector-loading">{t('persona.loading')}</div>
   }
 
   if (error && personas.length === 0) {
     return (
       <div className="PersonaSelector-error">
         <span>{error}</span>
-        <button className="PersonaSelector-retryBtn" onClick={fetchPersonas}>재시도</button>
+        <button className="PersonaSelector-retryBtn" onClick={fetchPersonas}>{t('persona.retry')}</button>
       </div>
     )
   }
@@ -132,17 +134,17 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
           value={value ?? ''}
           onChange={handleSelect}
         >
-          <option value="">직접 입력 (커스텀)</option>
+          <option value="">{t('persona.custom')}</option>
           {personas.map(p => (
             <option key={p.id} value={p.id}>
-              {p.name}{p.isDefault ? ' (기본)' : ''}
+              {p.name}{p.isDefault ? ` (${t('persona.default')})` : ''}
             </option>
           ))}
         </select>
         <button
           className="PersonaSelector-manageBtn"
           onClick={() => editMode === 'none' ? openCreate() : closeForm()}
-          title={editMode === 'none' ? '페르소나 추가' : '닫기'}
+          title={editMode === 'none' ? t('persona.add') : t('persona.close')}
         >
           {editMode === 'none' ? '+' : '\u00d7'}
         </button>
@@ -157,13 +159,13 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
             <div className="PersonaSelector-previewPrompt">{selected.systemPrompt}</div>
             <div className="PersonaSelector-previewActions">
               <button className="PersonaSelector-editBtn" onClick={() => openEdit(selected)}>
-                수정
+                {t('persona.edit')}
               </button>
               <button
                 className="PersonaSelector-deleteBtn"
                 onClick={() => handleDelete(selected.id)}
               >
-                삭제
+                {t('persona.delete')}
               </button>
             </div>
           </div>
@@ -177,13 +179,13 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
             className="PersonaSelector-input"
             value={formName}
             onChange={e => setFormName(e.target.value)}
-            placeholder="페르소나 이름"
+            placeholder={t('persona.namePlaceholder')}
           />
           <textarea
             className="PersonaSelector-textarea"
             value={formPrompt}
             onChange={e => setFormPrompt(e.target.value)}
-            placeholder="시스템 프롬프트"
+            placeholder={t('persona.promptPlaceholder')}
             rows={4}
           />
           <label className="PersonaSelector-checkLabel">
@@ -192,7 +194,7 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
               checked={formIsDefault}
               onChange={e => setFormIsDefault(e.target.checked)}
             />
-            기본 페르소나로 설정
+            {t('persona.setDefault')}
           </label>
           <div className="PersonaSelector-formActions">
             <button
@@ -200,10 +202,10 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
               onClick={handleSave}
               disabled={saving || !formName.trim() || !formPrompt.trim()}
             >
-              {saving ? '저장 중...' : editMode === 'create' ? '생성' : '저장'}
+              {saving ? t('persona.saving') : editMode === 'create' ? t('persona.create') : t('persona.save')}
             </button>
             <button className="PersonaSelector-cancelBtn" onClick={closeForm}>
-              취소
+              {t('persona.cancel')}
             </button>
           </div>
         </div>
