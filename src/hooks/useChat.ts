@@ -7,11 +7,12 @@ import { FRAMES_TARGET } from '../utils/constants'
 interface UseChatOptions {
   sessionId: string
   settings: ChatSettings
+  userId: string
   initialMessages?: ChatMessage[]
   onMessagesChange?: (messages: ChatMessage[]) => void
 }
 
-export function useChat({ sessionId, settings, initialMessages = [], onMessagesChange }: UseChatOptions) {
+export function useChat({ sessionId, settings, userId, initialMessages = [], onMessagesChange }: UseChatOptions) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages)
   const [isLoading, setIsLoading] = useState(false)
   const [activeTool, setActiveTool] = useState<string | null>(null)
@@ -124,7 +125,7 @@ export function useChat({ sessionId, settings, initialMessages = [], onMessagesC
       await streamChat(
         {
           message: text.trim(),
-          userId: 'web-user',
+          userId,
           metadata: { sessionId },
           ...(settings.model ? { model: settings.model } : {}),
           ...(settings.selectedPersonaId ? { personaId: settings.selectedPersonaId } : {}),

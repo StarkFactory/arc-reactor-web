@@ -1,0 +1,122 @@
+.LoginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  padding: 20px;
+}
+
+.LoginPage-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  text-align: center;
+}
+
+.LoginPage-logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.LoginPage-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 0 28px;
+}
+
+.LoginPage-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.LoginPage-tab {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.LoginPage-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.LoginPage-tab:hover:not(.LoginPage-tab--active) {
+  color: var(--text-primary);
+}
+
+.LoginPage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.LoginPage-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.LoginPage-input:focus {
+  border-color: var(--accent);
+}
+
+.LoginPage-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.LoginPage-error {
+  padding: 10px 12px;
+  background: #e53e3e15;
+  border: 1px solid #e53e3e40;
+  border-radius: 8px;
+  color: #e53e3e;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.LoginPage-submit {
+  padding: 12px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-top: 4px;
+}
+
+.LoginPage-submit:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.LoginPage-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

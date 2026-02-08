@@ -1,5 +1,6 @@
 import type { ChatRequest } from '../types/api'
 import { API_BASE } from '../utils/constants'
+import { getAuthToken, removeAuthToken } from '../utils/api-client'
 
 export interface StreamCallbacks {
   onToken: (text: string) => void
@@ -14,12 +15,22 @@ export async function streamChat(
   callbacks: StreamCallbacks,
   signal?: AbortSignal,
 ): Promise<void> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  const token = getAuthToken()
+  if (token) headers['Authorization'] = `Bearer ${token}`
+
   const res = await fetch(`${API_BASE}/api/chat/stream`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(request),
     signal,
   })
+
+  if (res.status === 401 && token) {
+    removeAuthToken()
+    window.location.reload()
+    throw new Error('Session expired')
+  }
 
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`)
