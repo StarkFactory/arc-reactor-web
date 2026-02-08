@@ -1,0 +1,79 @@
+.ChatMessage {
+  display: flex;
+}
+
+.ChatMessage--user {
+  justify-content: flex-end;
+}
+
+.ChatMessage--assistant {
+  justify-content: flex-start;
+}
+
+.ChatMessage-bubble {
+  max-width: 75%;
+  padding: 10px 16px;
+  border-radius: 16px;
+  line-height: 1.5;
+}
+
+.ChatMessage-text {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.95rem;
+}
+
+.ChatMessage-placeholder {
+  color: var(--text-secondary);
+}
+
+.ChatMessage--user .ChatMessage-bubble {
+  background: #3b82f6;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.ChatMessage--assistant .ChatMessage-bubble {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-bottom-left-radius: 4px;
+}
+
+.ChatMessage--error .ChatMessage-bubble {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.ChatMessage-errorText {
+  color: #ef4444;
+  font-size: 0.9rem;
+}
+
+.ChatMessage-tools {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.ChatMessage-toolBadge {
+  display: inline-block;
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.ChatMessage-content {
+  font-size: 0.95rem;
+}
+
+.ChatMessage-meta {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-align: right;
+}

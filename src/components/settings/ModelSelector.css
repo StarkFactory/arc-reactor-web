@@ -1,0 +1,22 @@
+.ModelSelector {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.ModelSelector:focus {
+  border-color: var(--accent);
+}
+
+.ModelSelector--compact {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}

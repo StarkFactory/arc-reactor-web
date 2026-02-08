@@ -1,0 +1,101 @@
+.MarkdownRenderer {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.MarkdownRenderer p {
+  margin: 0 0 8px;
+}
+
+.MarkdownRenderer p:last-child {
+  margin-bottom: 0;
+}
+
+.MarkdownRenderer h1,
+.MarkdownRenderer h2,
+.MarkdownRenderer h3,
+.MarkdownRenderer h4,
+.MarkdownRenderer h5,
+.MarkdownRenderer h6 {
+  margin: 12px 0 6px;
+  font-weight: 600;
+}
+
+.MarkdownRenderer h1 { font-size: 1.3rem; }
+.MarkdownRenderer h2 { font-size: 1.15rem; }
+.MarkdownRenderer h3 { font-size: 1.05rem; }
+
+.MarkdownRenderer ul,
+.MarkdownRenderer ol {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+
+.MarkdownRenderer li {
+  margin: 2px 0;
+}
+
+.MarkdownRenderer blockquote {
+  margin: 8px 0;
+  padding: 4px 12px;
+  border-left: 3px solid var(--accent);
+  color: var(--text-secondary);
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 0 4px 4px 0;
+}
+
+.MarkdownRenderer table {
+  border-collapse: collapse;
+  margin: 8px 0;
+  width: 100%;
+  font-size: 0.88rem;
+}
+
+.MarkdownRenderer th,
+.MarkdownRenderer td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.MarkdownRenderer th {
+  background: var(--bg-hover);
+  font-weight: 600;
+}
+
+.MarkdownRenderer tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.MarkdownRenderer-inlineCode {
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.88em;
+}
+
+.MarkdownRenderer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.MarkdownRenderer a:hover {
+  text-decoration: underline;
+}
+
+.MarkdownRenderer strong {
+  font-weight: 600;
+}
+
+.MarkdownRenderer hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 12px 0;
+}
+
+.MarkdownRenderer img {
+  max-width: 100%;
+  border-radius: 8px;
+}

@@ -1,0 +1,71 @@
+import { useEffect } from 'react'
+import { useChatContext } from '../../context/ChatContext'
+import { formatRelativeTime } from '../../utils/formatters'
+import './Sidebar.css'
+
+interface SidebarProps {
+  open: boolean
+  onClose: () => void
+}
+
+export function Sidebar({ open, onClose }: SidebarProps) {
+  const { sessions, activeSessionId, createSession, switchSession, deleteSession } = useChatContext()
+
+  useEffect(() => {
+    if (!open || window.innerWidth >= 768) return
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [open, onClose])
+
+  const sorted = [...sessions].sort((a, b) => b.updatedAt - a.updatedAt)
+
+  const handleSelect = (id: string) => {
+    switchSession(id)
+    // Close on mobile
+    if (window.innerWidth < 768) onClose()
+  }
+
+  return (
+    <>
+      {open && <div className="Sidebar-backdrop" onClick={onClose} />}
+      <aside className={`Sidebar ${open ? 'Sidebar--open' : ''}`}>
+        <div className="Sidebar-header">
+          <button className="Sidebar-newChat" onClick={createSession}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 2a.75.75 0 01.75.75v4.5h4.5a.75.75 0 010 1.5h-4.5v4.5a.75.75 0 01-1.5 0v-4.5h-4.5a.75.75 0 010-1.5h4.5v-4.5A.75.75 0 018 2z" />
+            </svg>
+            새 대화
+          </button>
+        </div>
+        <nav className="Sidebar-list">
+          {sorted.map(session => (
+            <div
+              key={session.id}
+              className={`Sidebar-item ${session.id === activeSessionId ? 'Sidebar-item--active' : ''}`}
+              onClick={() => handleSelect(session.id)}
+            >
+              <div className="Sidebar-itemTitle">{session.title}</div>
+              <div className="Sidebar-itemMeta">{formatRelativeTime(session.updatedAt)}</div>
+              <button
+                className="Sidebar-deleteBtn"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  deleteSession(session.id)
+                }}
+                aria-label="대화 삭제"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z" />
+                  <path fillRule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                </svg>
+              </button>
+            </div>
+          ))}
+        </nav>
+      </aside>
+    </>
+  )
+}

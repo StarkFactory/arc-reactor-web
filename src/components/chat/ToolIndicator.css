@@ -1,0 +1,22 @@
+.ToolIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.ToolIndicator-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: ToolIndicator-spin 0.8s linear infinite;
+}
+
+@keyframes ToolIndicator-spin {
+  to { transform: rotate(360deg); }
+}

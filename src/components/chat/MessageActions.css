@@ -1,0 +1,30 @@
+.MessageActions {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.ChatMessage:hover .MessageActions,
+.ChatMessage:focus-within .MessageActions {
+  opacity: 1;
+}
+
+.MessageActions-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 6px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.MessageActions-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}

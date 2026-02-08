@@ -1,0 +1,65 @@
+.Header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  min-height: 56px;
+}
+
+.Header-menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.Header-menuBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.Header-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.Header-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.Header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.Header-iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.Header-iconBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
