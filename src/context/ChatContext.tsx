@@ -65,13 +65,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     return s.id
   })
 
+  // Ensure activeSessionId always points to a valid session
   const activeSession = validSessions.find(s => s.id === activeSessionId)
+    ?? validSessions[0]
+  const effectiveSessionId = activeSession.id
 
   const handleMessagesChange = useCallback((msgs: ChatMessage[]) => {
     setSessions(prev => {
       const list = Array.isArray(prev) ? prev : []
       return list.map(s => {
-        if (s.id !== activeSessionId) return s
+        if (s.id !== effectiveSessionId) return s
         // Auto-title from first user message
         const firstUser = msgs.find(m => m.role === 'user')
         const title = firstUser
@@ -80,10 +83,10 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         return { ...s, title, messages: msgs, updatedAt: Date.now() }
       })
     })
-  }, [activeSessionId, setSessions])
+  }, [effectiveSessionId, setSessions])
 
   const { messages, isLoading, activeTool, sendMessage, retryLastMessage } = useChat({
-    sessionId: activeSessionId,
+    sessionId: effectiveSessionId,
     settings,
     userId: userId || 'web-user',
     initialMessages: activeSession?.messages ?? [],
@@ -117,12 +120,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         setActiveSessionId(newSession.id)
         return [newSession]
       }
-      if (id === activeSessionId) {
+      if (id === effectiveSessionId) {
         setActiveSessionId(filtered[0].id)
       }
       return filtered
     })
-  }, [activeSessionId, setSessions])
+  }, [effectiveSessionId, setSessions])
 
   const renameSessionFn = useCallback((id: string, title: string) => {
     setSessions(prev => {
@@ -134,7 +137,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   return (
     <ChatCtx.Provider value={{
       sessions: validSessions,
-      activeSessionId,
+      activeSessionId: effectiveSessionId,
       createSession: createSessionFn,
       switchSession: switchSessionFn,
       deleteSession: deleteSessionFn,

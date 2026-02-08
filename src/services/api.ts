@@ -28,7 +28,6 @@ export async function streamChat(
 
   if (res.status === 401 && token) {
     removeAuthToken()
-    window.location.reload()
     throw new Error('Session expired')
   }
 

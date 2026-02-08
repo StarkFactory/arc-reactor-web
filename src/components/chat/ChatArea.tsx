@@ -27,7 +27,7 @@ export function ChatArea() {
 
   return (
     <div className="ChatArea">
-      <main className="ChatArea-messages" ref={messagesRef}>
+      <main className="ChatArea-messages" ref={messagesRef} aria-live="polite">
         {messages.length === 0 && (
           <EmptyState onSuggestionClick={handleSuggestion} />
         )}
