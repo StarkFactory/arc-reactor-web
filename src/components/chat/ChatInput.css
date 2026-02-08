@@ -54,6 +54,29 @@
   cursor: not-allowed;
 }
 
+.ChatInput-stopBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #ef4444;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.ChatInput-stopBtn:hover {
+  background: #dc2626;
+}
+
+.ChatInput-stopBtn:active {
+  transform: scale(0.97);
+}
+
 @media (max-width: 767px) {
   .ChatInput {
     padding: 12px;

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { AVAILABLE_MODELS } from '../../utils/constants'
 import './ModelSelector.css'
 
@@ -8,6 +9,8 @@ interface ModelSelectorProps {
 }
 
 export function ModelSelector({ value, onChange, compact = false }: ModelSelectorProps) {
+  const { t } = useTranslation()
+
   return (
     <select
       className={`ModelSelector ${compact ? 'ModelSelector--compact' : ''}`}
@@ -16,7 +19,10 @@ export function ModelSelector({ value, onChange, compact = false }: ModelSelecto
     >
       {AVAILABLE_MODELS.map(m => (
         <option key={m.id} value={m.id}>
-          {compact ? m.label : `${m.label}${m.provider ? ` (${m.provider})` : ''}`}
+          {compact
+            ? (m.labelKey ? t(m.labelKey) : m.label)
+            : `${m.labelKey ? t(m.labelKey) : m.label}${m.provider ? ` (${m.provider})` : ''}`
+          }
         </option>
       ))}
     </select>

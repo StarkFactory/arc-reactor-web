@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import './ToolIndicator.css'
 
 interface ToolIndicatorProps {
@@ -5,10 +6,12 @@ interface ToolIndicatorProps {
 }
 
 export function ToolIndicator({ toolName }: ToolIndicatorProps) {
+  const { t } = useTranslation()
+
   return (
     <div className="ToolIndicator">
       <span className="ToolIndicator-spinner" />
-      <span>도구 사용 중: {toolName}</span>
+      <span>{t('tool.using', { name: toolName })}</span>
     </div>
   )
 }

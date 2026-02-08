@@ -1,13 +1,16 @@
 import { useState, useRef, useEffect, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import './ChatInput.css'
 
 interface ChatInputProps {
   onSend: (text: string) => void
+  onStop: () => void
   disabled: boolean
   initialValue?: string
 }
 
-export function ChatInput({ onSend, disabled, initialValue }: ChatInputProps) {
+export function ChatInput({ onSend, onStop, disabled, initialValue }: ChatInputProps) {
+  const { t } = useTranslation()
   const [input, setInput] = useState('')
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
@@ -46,13 +49,22 @@ export function ChatInput({ onSend, disabled, initialValue }: ChatInputProps) {
         value={input}
         onChange={e => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="메시지를 입력하세요..."
+        placeholder={t('chat.placeholder')}
         rows={1}
         disabled={disabled}
       />
-      <button type="submit" disabled={disabled || !input.trim()}>
-        {disabled ? '전송 중' : '보내기'}
-      </button>
+      {disabled ? (
+        <button type="button" className="ChatInput-stopBtn" onClick={onStop}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+            <rect x="3" y="3" width="10" height="10" rx="1.5" />
+          </svg>
+          {t('chat.stop')}
+        </button>
+      ) : (
+        <button type="submit" disabled={!input.trim()}>
+          {t('chat.send')}
+        </button>
+      )}
     </form>
   )
 }

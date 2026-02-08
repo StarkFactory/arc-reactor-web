@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import './MessageActions.css'
 
 interface MessageActionsProps {
@@ -7,6 +8,7 @@ interface MessageActionsProps {
 }
 
 export function MessageActions({ content, onRetry }: MessageActionsProps) {
+  const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(() => {
@@ -33,7 +35,7 @@ export function MessageActions({ content, onRetry }: MessageActionsProps) {
       <button
         className={`MessageActions-btn ${copied ? 'MessageActions-btn--copied' : ''}`}
         onClick={handleCopy}
-        title="복사"
+        title={t('actions.copy')}
       >
         {copied ? (
           <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
@@ -47,7 +49,7 @@ export function MessageActions({ content, onRetry }: MessageActionsProps) {
         )}
       </button>
       {onRetry && (
-        <button className="MessageActions-btn" onClick={onRetry} title="재시도">
+        <button className="MessageActions-btn" onClick={onRetry} title={t('actions.retry')}>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
             <path d="M8 3a5 5 0 104.546 2.914.75.75 0 011.36-.636A6.5 6.5 0 118 1.5v-1a.5.5 0 01.854-.354l2 2a.5.5 0 010 .708l-2 2A.5.5 0 018 4.5V3z" />
           </svg>

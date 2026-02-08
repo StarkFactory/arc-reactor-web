@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react'
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { User } from '../types/auth'
 import * as authApi from '../services/auth'
 import { getAuthToken, setAuthToken, removeAuthToken, setOnUnauthorized } from '../utils/api-client'
@@ -29,6 +30,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const { t } = useTranslation()
   const [user, setUser] = useState<User | null>(null)
   const [isAuthRequired, setIsAuthRequired] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -72,19 +74,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await authApi.login({ email, password })
       if (response.error || !response.token || !response.user) {
-        setError(response.error || '로그인에 실패했습니다.')
+        setError(response.error || t('auth.loginFailed'))
         return false
       }
       setAuthToken(response.token)
       setUser(response.user)
       return true
     } catch {
-      setError('서버에 연결할 수 없습니다.')
+      setError(t('auth.serverError'))
       return false
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   const register = useCallback(async (email: string, password: string, name: string): Promise<boolean> => {
     setError(null)
@@ -92,19 +94,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await authApi.register({ email, password, name })
       if (response.error || !response.token || !response.user) {
-        setError(response.error || '회원가입에 실패했습니다.')
+        setError(response.error || t('auth.registerFailed'))
         return false
       }
       setAuthToken(response.token)
       setUser(response.user)
       return true
     } catch {
-      setError('서버에 연결할 수 없습니다.')
+      setError(t('auth.serverError'))
       return false
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [t])
 
   const logout = useCallback(() => {
     removeAuthToken()

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { ChatMessage, Session, ChatSettings } from '../types/chat'
 import { useAuth } from './AuthContext'
 import { useSettings } from '../hooks/useSettings'
@@ -21,6 +22,7 @@ interface ChatContextValue {
   isLoading: boolean
   activeTool: string | null
   sendMessage: (text: string) => Promise<void>
+  stopGeneration: () => void
   retryLastMessage: () => Promise<void>
 
   // Settings
@@ -31,20 +33,19 @@ interface ChatContextValue {
 
 const ChatCtx = createContext<ChatContextValue | null>(null)
 
-function createNewSession(): Session {
-  return {
-    id: crypto.randomUUID(),
-    title: '새 대화',
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-    messages: [],
-  }
-}
-
 const BASE_SESSION_KEY = 'arc-reactor-sessions'
 
 export function ChatProvider({ children }: { children: ReactNode }) {
+  const { t } = useTranslation()
   const { user } = useAuth()
+
+  const createNewSession = useCallback((): Session => ({
+    id: crypto.randomUUID(),
+    title: t('chat.newConversation'),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    messages: [],
+  }), [t])
   const userId = user?.id
 
   // Namespace localStorage keys by userId for session isolation
@@ -85,7 +86,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     })
   }, [effectiveSessionId, setSessions])
 
-  const { messages, isLoading, activeTool, sendMessage, retryLastMessage } = useChat({
+  const { messages, isLoading, activeTool, sendMessage, stopGeneration, retryLastMessage } = useChat({
     sessionId: effectiveSessionId,
     settings,
     userId: userId || 'web-user',
@@ -146,6 +147,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       isLoading,
       activeTool,
       sendMessage,
+      stopGeneration,
       retryLastMessage,
       settings,
       updateSettings,

@@ -1,4 +1,5 @@
 import { useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useChatContext } from '../../context/ChatContext'
 import { useAuth } from '../../context/AuthContext'
 import { ModelSelector } from './ModelSelector'
@@ -11,6 +12,7 @@ interface SettingsPanelProps {
 }
 
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
+  const { t, i18n } = useTranslation()
   const { settings, updateSettings, resetSettings } = useChatContext()
   const { isAuthenticated, user, logout } = useAuth()
 
@@ -38,8 +40,8 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
       <div className="SettingsPanel-backdrop" onClick={onClose} />
       <div className="SettingsPanel">
         <div className="SettingsPanel-header">
-          <h2>설정</h2>
-          <button className="SettingsPanel-closeBtn" onClick={onClose} aria-label="닫기">
+          <h2>{t('settings.title')}</h2>
+          <button className="SettingsPanel-closeBtn" onClick={onClose} aria-label={t('settings.close')}>
             <svg width="18" height="18" viewBox="0 0 20 20" fill="currentColor">
               <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" />
             </svg>
@@ -48,7 +50,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
 
         <div className="SettingsPanel-body">
           <div className="SettingsPanel-section">
-            <label className="SettingsPanel-label">LLM 모델</label>
+            <label className="SettingsPanel-label">{t('settings.model')}</label>
             <ModelSelector
               value={settings.model}
               onChange={model => updateSettings({ model })}
@@ -56,7 +58,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
           </div>
 
           <div className="SettingsPanel-section">
-            <label className="SettingsPanel-label">페르소나</label>
+            <label className="SettingsPanel-label">{t('settings.persona')}</label>
             <PersonaSelector
               value={settings.selectedPersonaId}
               onChange={handlePersonaChange}
@@ -65,67 +67,85 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
 
           {!isPersonaSelected && (
             <div className="SettingsPanel-section">
-              <label className="SettingsPanel-label">커스텀 시스템 프롬프트</label>
+              <label className="SettingsPanel-label">{t('settings.customPrompt')}</label>
               <textarea
                 className="SettingsPanel-textarea"
                 value={settings.systemPrompt}
                 onChange={e => updateSettings({ systemPrompt: e.target.value })}
-                placeholder="AI 에이전트의 역할과 행동을 지정하세요... (비워두면 기본 페르소나 사용)"
+                placeholder={t('settings.customPromptPlaceholder')}
                 rows={4}
               />
             </div>
           )}
 
           <div className="SettingsPanel-section">
-            <label className="SettingsPanel-label">응답 포맷</label>
+            <label className="SettingsPanel-label">{t('settings.responseFormat')}</label>
             <div className="SettingsPanel-toggle">
               <button
                 className={`SettingsPanel-toggleBtn ${settings.responseFormat === 'TEXT' ? 'SettingsPanel-toggleBtn--active' : ''}`}
                 onClick={() => updateSettings({ responseFormat: 'TEXT' })}
               >
-                텍스트
+                {t('settings.text')}
               </button>
               <button
                 className={`SettingsPanel-toggleBtn ${settings.responseFormat === 'JSON' ? 'SettingsPanel-toggleBtn--active' : ''}`}
                 onClick={() => updateSettings({ responseFormat: 'JSON' })}
               >
-                JSON
+                {t('settings.json')}
               </button>
             </div>
           </div>
 
           <div className="SettingsPanel-section">
-            <label className="SettingsPanel-label">테마</label>
+            <label className="SettingsPanel-label">{t('settings.theme')}</label>
             <div className="SettingsPanel-toggle">
               <button
                 className={`SettingsPanel-toggleBtn ${settings.darkMode ? 'SettingsPanel-toggleBtn--active' : ''}`}
                 onClick={() => updateSettings({ darkMode: true })}
               >
-                다크
+                {t('settings.dark')}
               </button>
               <button
                 className={`SettingsPanel-toggleBtn ${!settings.darkMode ? 'SettingsPanel-toggleBtn--active' : ''}`}
                 onClick={() => updateSettings({ darkMode: false })}
               >
-                라이트
+                {t('settings.light')}
               </button>
             </div>
           </div>
 
           <div className="SettingsPanel-section">
-            <label className="SettingsPanel-label">응답 시간 표시</label>
+            <label className="SettingsPanel-label">{t('settings.showDuration')}</label>
             <div className="SettingsPanel-toggle">
               <button
                 className={`SettingsPanel-toggleBtn ${settings.showMetadata ? 'SettingsPanel-toggleBtn--active' : ''}`}
                 onClick={() => updateSettings({ showMetadata: true })}
               >
-                표시
+                {t('settings.show')}
               </button>
               <button
                 className={`SettingsPanel-toggleBtn ${!settings.showMetadata ? 'SettingsPanel-toggleBtn--active' : ''}`}
                 onClick={() => updateSettings({ showMetadata: false })}
               >
-                숨김
+                {t('settings.hide')}
+              </button>
+            </div>
+          </div>
+
+          <div className="SettingsPanel-section">
+            <label className="SettingsPanel-label">{t('settings.language')}</label>
+            <div className="SettingsPanel-toggle">
+              <button
+                className={`SettingsPanel-toggleBtn ${i18n.language === 'en' ? 'SettingsPanel-toggleBtn--active' : ''}`}
+                onClick={() => i18n.changeLanguage('en')}
+              >
+                English
+              </button>
+              <button
+                className={`SettingsPanel-toggleBtn ${i18n.language === 'ko' ? 'SettingsPanel-toggleBtn--active' : ''}`}
+                onClick={() => i18n.changeLanguage('ko')}
+              >
+                한국어
               </button>
             </div>
           </div>
@@ -136,12 +156,12 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             <div className="SettingsPanel-userInfo">
               <span className="SettingsPanel-userName">{user?.name} ({user?.email})</span>
               <button className="SettingsPanel-logoutBtn" onClick={logout}>
-                로그아웃
+                {t('settings.logout')}
               </button>
             </div>
           )}
           <button className="SettingsPanel-resetBtn" onClick={resetSettings}>
-            기본값으로 초기화
+            {t('settings.reset')}
           </button>
         </div>
       </div>

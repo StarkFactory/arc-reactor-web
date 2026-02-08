@@ -1,0 +1,103 @@
+{
+  "app": {
+    "title": "Arc Reactor",
+    "subtitle": "AI Agent Chat",
+    "loading": "Loading..."
+  },
+  "chat": {
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "stop": "Stop",
+    "noResponse": "No response received.",
+    "requestFailed": "Request failed.",
+    "emptyState": "Ask Arc Reactor AI Agent a question",
+    "newConversation": "New conversation"
+  },
+  "suggestions": {
+    "hello": "Hello!",
+    "time": "What time is it?",
+    "math": "What is 3 + 5?"
+  },
+  "tool": {
+    "using": "Using tool: {{name}}"
+  },
+  "actions": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "retry": "Retry"
+  },
+  "sidebar": {
+    "newChat": "New chat",
+    "deleteConfirm": "Delete this conversation?",
+    "deleteLabel": "Delete conversation"
+  },
+  "settings": {
+    "title": "Settings",
+    "close": "Close",
+    "model": "LLM Model",
+    "persona": "Persona",
+    "customPrompt": "Custom System Prompt",
+    "customPromptPlaceholder": "Specify the AI agent's role and behavior... (leave empty for default persona)",
+    "responseFormat": "Response Format",
+    "text": "Text",
+    "json": "JSON",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "showDuration": "Show Response Time",
+    "show": "Show",
+    "hide": "Hide",
+    "language": "Language",
+    "logout": "Logout",
+    "reset": "Reset to defaults"
+  },
+  "model": {
+    "default": "Default (Server)"
+  },
+  "persona": {
+    "loading": "Loading...",
+    "loadError": "Failed to load personas",
+    "retry": "Retry",
+    "custom": "Custom (manual input)",
+    "default": "default",
+    "add": "Add persona",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this persona?",
+    "namePlaceholder": "Persona name",
+    "promptPlaceholder": "System prompt",
+    "setDefault": "Set as default persona",
+    "create": "Create",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "saveError": "Failed to save",
+    "deleteError": "Failed to delete"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "Password (8+ characters)",
+    "loginFailed": "Login failed.",
+    "registerFailed": "Registration failed.",
+    "serverError": "Cannot connect to server.",
+    "processing": "Processing...",
+    "submit": "Sign up"
+  },
+  "error": {
+    "rateLimited": "Rate limit exceeded. Please try again later.",
+    "timeout": "Request timed out.",
+    "contextTooLong": "Input is too long. Please shorten your message.",
+    "toolError": "An error occurred while executing a tool.",
+    "guardRejected": "Request was rejected.",
+    "hookRejected": "Request was rejected.",
+    "http429": "Rate limit exceeded. Please try again later.",
+    "http502": "Cannot connect to server.",
+    "http503": "Server is temporarily unavailable.",
+    "http504": "Server response timed out."
+  }
+}

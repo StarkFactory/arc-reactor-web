@@ -1,4 +1,4 @@
-import { SUGGESTIONS } from '../../utils/constants'
+import { useTranslation } from 'react-i18next'
 import './EmptyState.css'
 
 interface EmptyStateProps {
@@ -6,11 +6,19 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({ onSuggestionClick }: EmptyStateProps) {
+  const { t } = useTranslation()
+
+  const suggestions = [
+    t('suggestions.hello'),
+    t('suggestions.time'),
+    t('suggestions.math'),
+  ]
+
   return (
     <div className="EmptyState">
-      <p className="EmptyState-text">Arc Reactor AI Agent에게 질문하세요</p>
+      <p className="EmptyState-text">{t('chat.emptyState')}</p>
       <div className="EmptyState-suggestions">
-        {SUGGESTIONS.map(s => (
+        {suggestions.map(s => (
           <button
             key={s}
             className="EmptyState-suggestion"
