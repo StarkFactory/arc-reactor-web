@@ -1,12 +1,16 @@
-import { useState, useRef, useEffect, type FormEvent } from 'react'
+import { useState, useRef, useEffect, useCallback, type FormEvent } from 'react'
 import './App.css'
 
 interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
+  toolsUsed?: string[]
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
+
+/** Chars revealed per animation frame (~60fps → ~180 chars/sec) */
+const CHARS_PER_FRAME = 3
 
 function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -14,8 +18,15 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
   const [sessionId] = useState(() => crypto.randomUUID())
+  const [activeTool, setActiveTool] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+
+  // Typing animation state (refs to avoid re-renders during animation)
+  const targetTextRef = useRef('')
+  const displayedLenRef = useRef(0)
+  const rafIdRef = useRef<number>(0)
+  const toolsUsedRef = useRef<string[]>([])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -24,6 +35,56 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
+
+  /** Flush remaining text instantly (called when stream ends) */
+  const flushAnimation = useCallback(() => {
+    cancelAnimationFrame(rafIdRef.current)
+    const full = targetTextRef.current
+    if (full) {
+      displayedLenRef.current = full.length
+      setMessages(prev => {
+        const updated = [...prev]
+        const last = updated[updated.length - 1]
+        if (last?.role === 'assistant') {
+          updated[updated.length - 1] = {
+            ...last,
+            content: full,
+            toolsUsed: toolsUsedRef.current.length > 0 ? [...toolsUsedRef.current] : undefined,
+          }
+        }
+        return updated
+      })
+    }
+  }, [])
+
+  /** Start or continue the typing animation loop */
+  const tickAnimation = useCallback(() => {
+    cancelAnimationFrame(rafIdRef.current)
+
+    const step = () => {
+      const target = targetTextRef.current
+      const current = displayedLenRef.current
+      if (current < target.length) {
+        const next = Math.min(current + CHARS_PER_FRAME, target.length)
+        displayedLenRef.current = next
+        const displayed = target.slice(0, next)
+        setMessages(prev => {
+          const updated = [...prev]
+          const last = updated[updated.length - 1]
+          if (last?.role === 'assistant') {
+            updated[updated.length - 1] = {
+              ...last,
+              content: displayed,
+              toolsUsed: toolsUsedRef.current.length > 0 ? [...toolsUsedRef.current] : undefined,
+            }
+          }
+          return updated
+        })
+        rafIdRef.current = requestAnimationFrame(step)
+      }
+    }
+    rafIdRef.current = requestAnimationFrame(step)
+  }, [])
 
   const sendMessage = async (e: FormEvent) => {
     e.preventDefault()
@@ -34,6 +95,12 @@ function App() {
     setMessages(prev => [...prev, userMsg])
     setInput('')
     setIsLoading(true)
+    setActiveTool(null)
+
+    // Reset animation state
+    targetTextRef.current = ''
+    displayedLenRef.current = 0
+    toolsUsedRef.current = []
 
     try {
       const res = await fetch(`${API_BASE}/api/chat/stream`, {
@@ -46,7 +113,7 @@ function App() {
 
       const reader = res.body?.getReader()
       const decoder = new TextDecoder()
-      let assistantContent = ''
+      let buffer = ''
 
       setMessages(prev => [...prev, { role: 'assistant', content: '' }])
 
@@ -54,24 +121,54 @@ function App() {
         const { done, value } = await reader.read()
         if (done) break
 
-        const chunk = decoder.decode(value, { stream: true })
-        const lines = chunk.split('\n')
+        buffer += decoder.decode(value, { stream: true })
 
-        for (const line of lines) {
-          if (line.startsWith('data:')) {
-            const data = line.slice(5)
-            if (data === '[DONE]') continue
-            assistantContent += data
-            setMessages(prev => {
-              const updated = [...prev]
-              updated[updated.length - 1] = { role: 'assistant', content: assistantContent }
-              return updated
-            })
+        // Parse SSE events (separated by double newline)
+        const parts = buffer.split('\n\n')
+        buffer = parts.pop() ?? ''
+
+        for (const part of parts) {
+          const lines = part.split('\n')
+          let eventType = 'message'
+          const dataLines: string[] = []
+
+          for (const line of lines) {
+            if (line.startsWith('event:')) {
+              eventType = line.slice(6).trim()
+            } else if (line.startsWith('data:')) {
+              dataLines.push(line.slice(5))
+            }
+          }
+
+          // SSE spec: multiple data lines are joined with newlines
+          const data = dataLines.join('\n')
+
+          switch (eventType) {
+            case 'message':
+              if (data) {
+                targetTextRef.current += data
+                tickAnimation()
+              }
+              break
+            case 'tool_start':
+              setActiveTool(data)
+              if (data && !toolsUsedRef.current.includes(data)) {
+                toolsUsedRef.current.push(data)
+              }
+              break
+            case 'tool_end':
+              setActiveTool(null)
+              break
+            case 'done':
+              break
           }
         }
       }
 
-      if (!assistantContent) {
+      // Flush any remaining animation
+      flushAnimation()
+
+      if (!targetTextRef.current) {
         const json = await res.json().catch(() => null)
         if (json?.content) {
           setMessages(prev => {
@@ -84,10 +181,11 @@ function App() {
     } catch (err) {
       setMessages(prev => [
         ...prev.filter(m => m.content !== ''),
-        { role: 'assistant', content: `[오류] ${err instanceof Error ? err.message : '요청 실패'}` }
+        { role: 'assistant', content: `[Error] ${err instanceof Error ? err.message : 'Request failed'}` }
       ])
     } finally {
       setIsLoading(false)
+      setActiveTool(null)
       inputRef.current?.focus()
     }
   }
@@ -125,10 +223,25 @@ function App() {
         {messages.map((msg, i) => (
           <div key={i} className={`message ${msg.role}`}>
             <div className="message-bubble">
+              {msg.role === 'assistant' && msg.toolsUsed && msg.toolsUsed.length > 0 && (
+                <div className="tools-used">
+                  {msg.toolsUsed.map(t => (
+                    <span key={t} className="tool-badge">{t}</span>
+                  ))}
+                </div>
+              )}
               <pre>{msg.content || (isLoading && i === messages.length - 1 ? '...' : '')}</pre>
             </div>
           </div>
         ))}
+
+        {activeTool && (
+          <div className="tool-indicator">
+            <span className="tool-spinner" />
+            <span>Using tool: {activeTool}</span>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </main>
 
