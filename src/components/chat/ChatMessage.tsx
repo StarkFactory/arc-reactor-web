@@ -45,15 +45,15 @@ export const ChatMessage = memo(function ChatMessage({
             {formatDuration(message.durationMs)}
           </div>
         )}
+        {message.content && !showPlaceholder && (
+          <MessageActions
+            content={message.content}
+            isError={message.error}
+            isLastAssistant={isLastAssistant}
+            onRetry={onRetry}
+          />
+        )}
       </div>
-      {message.content && !showPlaceholder && (
-        <MessageActions
-          content={message.content}
-          isError={message.error}
-          isLastAssistant={isLastAssistant}
-          onRetry={onRetry}
-        />
-      )}
     </div>
   )
 })
