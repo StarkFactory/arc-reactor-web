@@ -106,7 +106,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       return updated
     })
     setActiveSessionId(newSession.id)
-  }, [setSessions])
+  }, [createNewSession, setSessions])
 
   const switchSessionFn = useCallback((id: string) => {
     setActiveSessionId(id)
@@ -126,7 +126,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       }
       return filtered
     })
-  }, [effectiveSessionId, setSessions])
+  }, [createNewSession, effectiveSessionId, setSessions])
 
   const renameSessionFn = useCallback((id: string, title: string) => {
     setSessions(prev => {
@@ -158,6 +158,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useChatContext(): ChatContextValue {
   const ctx = useContext(ChatCtx)
   if (!ctx) throw new Error('useChatContext must be used within ChatProvider')

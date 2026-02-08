@@ -1,49 +1,62 @@
 # Arc Reactor Web
 
-[Arc Reactor](https://github.com/StarkFactory/arc-reactor) AI Agent 프레임워크의 웹 채팅 UI입니다.
+Web chat UI for the [Arc Reactor](https://github.com/StarkFactory/arc-reactor) AI Agent framework.
 
-## 기능
+## Features
 
-- SSE(Server-Sent Events) 기반 실시간 스트리밍 응답
-- 다크/라이트 테마 전환
-- 세션 기반 대화 관리
-- 반응형 채팅 인터페이스
+- Real-time streaming responses via SSE (Server-Sent Events)
+- Session-based conversation management
+- Dark / Light theme toggle
+- i18n support (English, Korean)
+- Persona management (CRUD, default persona)
+- Optional JWT authentication with user isolation
+- Responsive design (375px ~ 1440px)
+- Markdown rendering with syntax highlighting
 
-## 실행
+## Getting Started
 
-### 개발 모드
+### Prerequisites
+
+- Node.js 18+
+- [Arc Reactor](https://github.com/StarkFactory/arc-reactor) backend running on port 8080
+
+### Development
 
 ```bash
-# 백엔드(arc-reactor) 먼저 실행 후
 npm install
 npm run dev    # http://localhost:3000
 ```
 
-개발 서버가 `/api` 요청을 `http://localhost:8080`으로 프록시합니다.
+The dev server proxies `/api` requests to `http://localhost:8080`.
 
 ### Docker Compose
 
-백엔드와 프론트엔드를 한번에 실행:
+Run backend and frontend together:
 
 ```bash
-# .env 파일에 API 키 설정
+# Set API keys in .env
 cp .env.example .env
 
-# 실행
+# Start
 docker compose up --build
 ```
 
-- 웹 UI: http://localhost:3000
-- 백엔드 API: http://localhost:8080
+- Web UI: http://localhost:3000
+- Backend API: http://localhost:8080
 
-## 환경 변수
+## Environment Variables
 
-| 변수 | 설명 | 기본값 |
-|------|------|--------|
-| `VITE_API_URL` | 백엔드 API URL | `http://localhost:8080` |
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_API_URL` | Backend API URL | `http://localhost:8080` |
 
-## 기술 스택
+## Tech Stack
 
 - React 19 + TypeScript
 - Vite
-- Nginx (프로덕션)
+- i18next
+- Nginx (production)
+
+## License
+
+[Apache License 2.0](LICENSE)
