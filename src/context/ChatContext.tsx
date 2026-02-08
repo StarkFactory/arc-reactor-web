@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
 import type { ChatMessage, Session, ChatSettings } from '../types/chat'
+import { useAuth } from './AuthContext'
 import { useSettings } from '../hooks/useSettings'
 import { useChat } from '../hooks/useChat'
 import { useLocalStorage } from '../hooks/useLocalStorage'
@@ -40,10 +41,17 @@ function createNewSession(): Session {
   }
 }
 
-export function ChatProvider({ children }: { children: ReactNode }) {
-  const { settings, updateSettings, resetSettings } = useSettings()
+const BASE_SESSION_KEY = 'arc-reactor-sessions'
 
-  const [sessions, setSessions] = useLocalStorage<Session[]>('arc-reactor-sessions', [createNewSession()])
+export function ChatProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth()
+  const userId = user?.id
+
+  // Namespace localStorage keys by userId for session isolation
+  const sessionKey = userId ? `${BASE_SESSION_KEY}:${userId}` : BASE_SESSION_KEY
+  const { settings, updateSettings, resetSettings } = useSettings(userId)
+
+  const [sessions, setSessions] = useLocalStorage<Session[]>(sessionKey, [createNewSession()])
 
   // Ensure sessions is always a valid array
   const validSessions = Array.isArray(sessions) ? sessions : (() => {
@@ -57,13 +65,16 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     return s.id
   })
 
+  // Ensure activeSessionId always points to a valid session
   const activeSession = validSessions.find(s => s.id === activeSessionId)
+    ?? validSessions[0]
+  const effectiveSessionId = activeSession.id
 
   const handleMessagesChange = useCallback((msgs: ChatMessage[]) => {
     setSessions(prev => {
       const list = Array.isArray(prev) ? prev : []
       return list.map(s => {
-        if (s.id !== activeSessionId) return s
+        if (s.id !== effectiveSessionId) return s
         // Auto-title from first user message
         const firstUser = msgs.find(m => m.role === 'user')
         const title = firstUser
@@ -72,11 +83,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         return { ...s, title, messages: msgs, updatedAt: Date.now() }
       })
     })
-  }, [activeSessionId, setSessions])
+  }, [effectiveSessionId, setSessions])
 
   const { messages, isLoading, activeTool, sendMessage, retryLastMessage } = useChat({
-    sessionId: activeSessionId,
+    sessionId: effectiveSessionId,
     settings,
+    userId: userId || 'web-user',
     initialMessages: activeSession?.messages ?? [],
     onMessagesChange: handleMessagesChange,
   })
@@ -108,12 +120,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         setActiveSessionId(newSession.id)
         return [newSession]
       }
-      if (id === activeSessionId) {
+      if (id === effectiveSessionId) {
         setActiveSessionId(filtered[0].id)
       }
       return filtered
     })
-  }, [activeSessionId, setSessions])
+  }, [effectiveSessionId, setSessions])
 
   const renameSessionFn = useCallback((id: string, title: string) => {
     setSessions(prev => {
@@ -125,7 +137,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   return (
     <ChatCtx.Provider value={{
       sessions: validSessions,
-      activeSessionId,
+      activeSessionId: effectiveSessionId,
       createSession: createSessionFn,
       switchSession: switchSessionFn,
       deleteSession: deleteSessionFn,

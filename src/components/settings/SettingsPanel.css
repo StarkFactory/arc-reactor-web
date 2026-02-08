@@ -143,3 +143,40 @@
   background: var(--bg-hover);
   color: var(--text-primary);
 }
+
+.SettingsPanel-userInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 10px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+.SettingsPanel-userName {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+.SettingsPanel-logoutBtn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  background: none;
+  border: 1px solid #e53e3e;
+  border-radius: 6px;
+  color: #e53e3e;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.SettingsPanel-logoutBtn:hover {
+  background: #e53e3e;
+  color: white;
+}

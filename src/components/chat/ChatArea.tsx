@@ -25,15 +25,9 @@ export function ChatArea() {
     sendMessage(text)
   }, [sendMessage])
 
-  // Find last assistant message index
-  const lastAssistantIdx = messages.reduceRight(
-    (found, msg, idx) => found === -1 && msg.role === 'assistant' ? idx : found,
-    -1,
-  )
-
   return (
     <div className="ChatArea">
-      <main className="ChatArea-messages" ref={messagesRef}>
+      <main className="ChatArea-messages" ref={messagesRef} aria-live="polite">
         {messages.length === 0 && (
           <EmptyState onSuggestionClick={handleSuggestion} />
         )}
@@ -43,7 +37,6 @@ export function ChatArea() {
             message={msg}
             isLast={i === messages.length - 1}
             isLoading={isLoading}
-            isLastAssistant={i === lastAssistantIdx}
             showMetadata={settings.showMetadata}
             onRetry={msg.role === 'assistant' ? retryLastMessage : undefined}
           />

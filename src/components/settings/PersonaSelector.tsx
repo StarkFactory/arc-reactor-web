@@ -101,6 +101,7 @@ export function PersonaSelector({ value, onChange, onSystemPromptPreview }: Pers
   }
 
   const handleDelete = async (id: string) => {
+    if (!confirm('이 페르소나를 삭제하시겠습니까?')) return
     try {
       await deletePersona(id)
       if (value === id) onChange(null)

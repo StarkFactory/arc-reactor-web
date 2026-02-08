@@ -1,5 +1,6 @@
 import type { ChatRequest } from '../types/api'
 import { API_BASE } from '../utils/constants'
+import { getAuthToken, removeAuthToken } from '../utils/api-client'
 
 export interface StreamCallbacks {
   onToken: (text: string) => void
@@ -9,17 +10,49 @@ export interface StreamCallbacks {
   onError: (error: Error) => void
 }
 
+/** Non-streaming chat for JSON response format */
+export async function sendChat(request: ChatRequest): Promise<string> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  const token = getAuthToken()
+  if (token) headers['Authorization'] = `Bearer ${token}`
+
+  const res = await fetch(`${API_BASE}/api/chat`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(request),
+  })
+
+  if (res.status === 401 && token) {
+    removeAuthToken()
+    throw new Error('Session expired')
+  }
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+  const data = await res.json()
+  return data.content ?? data.message ?? JSON.stringify(data)
+}
+
 export async function streamChat(
   request: ChatRequest,
   callbacks: StreamCallbacks,
   signal?: AbortSignal,
 ): Promise<void> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  const token = getAuthToken()
+  if (token) headers['Authorization'] = `Bearer ${token}`
+
   const res = await fetch(`${API_BASE}/api/chat/stream`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(request),
     signal,
   })
+
+  if (res.status === 401 && token) {
+    removeAuthToken()
+    throw new Error('Session expired')
+  }
 
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`)

@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react'
 import { useChatContext } from '../../context/ChatContext'
+import { useAuth } from '../../context/AuthContext'
 import { ModelSelector } from './ModelSelector'
 import { PersonaSelector } from './PersonaSelector'
 import './SettingsPanel.css'
@@ -11,6 +12,7 @@ interface SettingsPanelProps {
 
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   const { settings, updateSettings, resetSettings } = useChatContext()
+  const { isAuthenticated, user, logout } = useAuth()
 
   useEffect(() => {
     if (!open) return
@@ -130,6 +132,14 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
         </div>
 
         <div className="SettingsPanel-footer">
+          {isAuthenticated && (
+            <div className="SettingsPanel-userInfo">
+              <span className="SettingsPanel-userName">{user?.name} ({user?.email})</span>
+              <button className="SettingsPanel-logoutBtn" onClick={logout}>
+                로그아웃
+              </button>
+            </div>
+          )}
           <button className="SettingsPanel-resetBtn" onClick={resetSettings}>
             기본값으로 초기화
           </button>
