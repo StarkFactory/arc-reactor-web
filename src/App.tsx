@@ -9,8 +9,12 @@ interface ChatMessage {
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
-/** Chars revealed per animation frame (~60fps → ~180 chars/sec) */
-const CHARS_PER_FRAME = 3
+/**
+ * Target animation duration in frames (~60fps).
+ * Any response (short or long) animates over roughly this many frames.
+ * 40 frames ≈ 667ms at 60fps — clearly visible typing effect.
+ */
+const FRAMES_TARGET = 40
 
 function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
@@ -27,6 +31,8 @@ function App() {
   const displayedLenRef = useRef(0)
   const rafIdRef = useRef<number>(0)
   const toolsUsedRef = useRef<string[]>([])
+  const streamDoneRef = useRef(false)
+  const animationDoneResolveRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -36,25 +42,21 @@ function App() {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
   }, [darkMode])
 
-  /** Flush remaining text instantly (called when stream ends) */
-  const flushAnimation = useCallback(() => {
-    cancelAnimationFrame(rafIdRef.current)
-    const full = targetTextRef.current
-    if (full) {
-      displayedLenRef.current = full.length
-      setMessages(prev => {
-        const updated = [...prev]
-        const last = updated[updated.length - 1]
-        if (last?.role === 'assistant') {
-          updated[updated.length - 1] = {
-            ...last,
-            content: full,
-            toolsUsed: toolsUsedRef.current.length > 0 ? [...toolsUsedRef.current] : undefined,
-          }
+  const updateAssistantMessage = useCallback((content: string, final: boolean) => {
+    setMessages(prev => {
+      const updated = [...prev]
+      const last = updated[updated.length - 1]
+      if (last?.role === 'assistant') {
+        updated[updated.length - 1] = {
+          ...last,
+          content,
+          toolsUsed: final && toolsUsedRef.current.length > 0
+            ? [...toolsUsedRef.current]
+            : last.toolsUsed,
         }
-        return updated
-      })
-    }
+      }
+      return updated
+    })
   }, [])
 
   /** Start or continue the typing animation loop */
@@ -64,27 +66,41 @@ function App() {
     const step = () => {
       const target = targetTextRef.current
       const current = displayedLenRef.current
+
       if (current < target.length) {
-        const next = Math.min(current + CHARS_PER_FRAME, target.length)
+        // Scale speed so total animation takes ~FRAMES_TARGET frames
+        // Short text (18 chars): 1 char/frame → 18 frames = 300ms (visible typing)
+        // Long text (500 chars): 13 chars/frame → 40 frames = 667ms (smooth scroll)
+        const speed = Math.max(1, Math.ceil(target.length / FRAMES_TARGET))
+        const next = Math.min(current + speed, target.length)
         displayedLenRef.current = next
-        const displayed = target.slice(0, next)
-        setMessages(prev => {
-          const updated = [...prev]
-          const last = updated[updated.length - 1]
-          if (last?.role === 'assistant') {
-            updated[updated.length - 1] = {
-              ...last,
-              content: displayed,
-              toolsUsed: toolsUsedRef.current.length > 0 ? [...toolsUsedRef.current] : undefined,
-            }
-          }
-          return updated
-        })
+        updateAssistantMessage(target.slice(0, next), false)
         rafIdRef.current = requestAnimationFrame(step)
+      } else if (streamDoneRef.current) {
+        // Animation caught up and stream is done — finalize
+        updateAssistantMessage(target, true)
+        if (animationDoneResolveRef.current) {
+          animationDoneResolveRef.current()
+          animationDoneResolveRef.current = null
+        }
       }
+      // else: animation caught up but stream still going — wait for tickAnimation to be called again
     }
     rafIdRef.current = requestAnimationFrame(step)
-  }, [])
+  }, [updateAssistantMessage])
+
+  /** Returns a promise that resolves when typing animation finishes */
+  const waitForAnimationDone = useCallback((): Promise<void> => {
+    // Already caught up?
+    if (displayedLenRef.current >= targetTextRef.current.length) {
+      updateAssistantMessage(targetTextRef.current, true)
+      return Promise.resolve()
+    }
+    return new Promise<void>(resolve => {
+      animationDoneResolveRef.current = resolve
+      tickAnimation()
+    })
+  }, [tickAnimation, updateAssistantMessage])
 
   const sendMessage = async (e: FormEvent) => {
     e.preventDefault()
@@ -101,6 +117,9 @@ function App() {
     targetTextRef.current = ''
     displayedLenRef.current = 0
     toolsUsedRef.current = []
+    streamDoneRef.current = false
+    animationDoneResolveRef.current = null
+    cancelAnimationFrame(rafIdRef.current)
 
     try {
       const res = await fetch(`${API_BASE}/api/chat/stream`, {
@@ -165,8 +184,11 @@ function App() {
         }
       }
 
-      // Flush any remaining animation
-      flushAnimation()
+      // Stream ended — mark done and wait for typing animation to finish naturally
+      streamDoneRef.current = true
+      if (targetTextRef.current) {
+        await waitForAnimationDone()
+      }
 
       if (!targetTextRef.current) {
         const json = await res.json().catch(() => null)
@@ -179,6 +201,7 @@ function App() {
         }
       }
     } catch (err) {
+      cancelAnimationFrame(rafIdRef.current)
       setMessages(prev => [
         ...prev.filter(m => m.content !== ''),
         { role: 'assistant', content: `[Error] ${err instanceof Error ? err.message : 'Request failed'}` }
