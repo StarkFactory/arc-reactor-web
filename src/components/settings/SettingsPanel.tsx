@@ -4,6 +4,7 @@ import { useChatContext } from '../../context/ChatContext'
 import { useAuth } from '../../context/AuthContext'
 import { ModelSelector } from './ModelSelector'
 import { PersonaSelector } from './PersonaSelector'
+import { PromptTemplateManager } from './PromptTemplateManager'
 import './SettingsPanel.css'
 
 interface SettingsPanelProps {
@@ -14,7 +15,7 @@ interface SettingsPanelProps {
 export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
   const { t, i18n } = useTranslation()
   const { settings, updateSettings, resetSettings } = useChatContext()
-  const { isAuthenticated, user, logout } = useAuth()
+  const { isAuthenticated, isAdmin, user, logout } = useAuth()
 
   useEffect(() => {
     if (!open) return
@@ -65,7 +66,17 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             />
           </div>
 
-          {!isPersonaSelected && (
+          {!isPersonaSelected && isAdmin && (
+            <div className="SettingsPanel-section">
+              <label className="SettingsPanel-label">{t('settings.promptTemplate')}</label>
+              <PromptTemplateManager
+                value={settings.selectedPromptTemplateId}
+                onChange={(templateId) => updateSettings({ selectedPromptTemplateId: templateId })}
+              />
+            </div>
+          )}
+
+          {!isPersonaSelected && !settings.selectedPromptTemplateId && (
             <div className="SettingsPanel-section">
               <label className="SettingsPanel-label">{t('settings.customPrompt')}</label>
               <textarea

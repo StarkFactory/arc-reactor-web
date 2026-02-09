@@ -1,0 +1,382 @@
+.PromptTemplateManager {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.PromptTemplateManager-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.PromptTemplateManager-select {
+  flex: 1;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.PromptTemplateManager-select:focus {
+  border-color: var(--accent);
+}
+
+.PromptTemplateManager-manageBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.PromptTemplateManager-manageBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Detail panel */
+.PromptTemplateManager-detail {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.PromptTemplateManager-detailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.PromptTemplateManager-detailName {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.PromptTemplateManager-detailActions {
+  display: flex;
+  gap: 6px;
+}
+
+.PromptTemplateManager-actionBtn {
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.PromptTemplateManager-actionBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.PromptTemplateManager-actionBtn--danger:hover {
+  background: #e53e3e20;
+  color: #e53e3e;
+  border-color: #e53e3e50;
+}
+
+.PromptTemplateManager-description {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Active version highlight */
+.PromptTemplateManager-activeHighlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 6px 8px;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Status badges */
+.PromptTemplateManager-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.PromptTemplateManager-badge--draft {
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.PromptTemplateManager-badge--active {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.PromptTemplateManager-badge--archived {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+/* Versions section */
+.PromptTemplateManager-versionsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.PromptTemplateManager-addVersionBtn {
+  padding: 3px 8px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.PromptTemplateManager-addVersionBtn:hover {
+  background: var(--bg-hover);
+}
+
+/* Version item */
+.PromptTemplateManager-versionItem {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.PromptTemplateManager-versionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.PromptTemplateManager-versionNum {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.PromptTemplateManager-versionContent {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.PromptTemplateManager-versionChangeLog {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.PromptTemplateManager-versionActions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.PromptTemplateManager-versionBtn {
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.PromptTemplateManager-versionBtn--activate {
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.PromptTemplateManager-versionBtn--activate:hover {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.PromptTemplateManager-versionBtn--archive:hover {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+/* Forms */
+.PromptTemplateManager-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.PromptTemplateManager-input {
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.PromptTemplateManager-input:focus {
+  border-color: var(--accent);
+}
+
+.PromptTemplateManager-textarea {
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.PromptTemplateManager-textarea:focus {
+  border-color: var(--accent);
+}
+
+.PromptTemplateManager-formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.PromptTemplateManager-saveBtn {
+  flex: 1;
+  padding: 8px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.PromptTemplateManager-saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.PromptTemplateManager-cancelBtn {
+  padding: 8px 12px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.PromptTemplateManager-cancelBtn:hover {
+  background: var(--bg-hover);
+}
+
+/* Loading / Error states */
+.PromptTemplateManager-loading {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 8px 0;
+}
+
+.PromptTemplateManager-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #e53e3e;
+}
+
+.PromptTemplateManager-retryBtn {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.PromptTemplateManager-inlineError {
+  font-size: 0.78rem;
+  color: #e53e3e;
+}
+
+.PromptTemplateManager-noVersions {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 8px 0;
+}
+
+.PromptTemplateManager-versions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.PromptTemplateManager-detailLoading {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 8px 0;
+}

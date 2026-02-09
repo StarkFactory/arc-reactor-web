@@ -8,6 +8,7 @@ import { getAuthToken, setAuthToken, removeAuthToken, setOnUnauthorized } from '
 interface AuthContextValue {
   user: User | null
   isAuthenticated: boolean
+  isAdmin: boolean
   isAuthRequired: boolean
   isLoading: boolean
   error: string | null
@@ -128,6 +129,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       value={{
         user,
         isAuthenticated: !!user,
+        isAdmin: user?.role === 'ADMIN',
         isAuthRequired,
         isLoading,
         error,
