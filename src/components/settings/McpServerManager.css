@@ -1,0 +1,355 @@
+.McpManager {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.McpManager-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.McpManager-addBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+
+.McpManager-addBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Server list */
+.McpManager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.McpManager-empty {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 12px 0;
+  text-align: center;
+}
+
+/* Server card */
+.McpManager-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  transition: border-color 0.15s;
+}
+
+.McpManager-card:hover {
+  border-color: var(--accent);
+}
+
+.McpManager-cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.McpManager-cardName {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.McpManager-cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.McpManager-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.McpManager-badge--transport {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.McpManager-badge--status {
+  font-size: 0.7rem;
+}
+
+.McpManager-badge--CONNECTED {
+  background: #22c55e20;
+  color: #22c55e;
+}
+
+.McpManager-badge--PENDING {
+  background: #f59e0b20;
+  color: #f59e0b;
+}
+
+.McpManager-badge--CONNECTING {
+  background: #3b82f620;
+  color: #3b82f6;
+}
+
+.McpManager-badge--DISCONNECTED {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.McpManager-badge--FAILED {
+  background: #ef444420;
+  color: #ef4444;
+}
+
+.McpManager-toolCount {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+/* Card actions */
+.McpManager-cardActions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.McpManager-actionBtn {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.McpManager-actionBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.McpManager-actionBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.McpManager-actionBtn--connect {
+  border-color: #22c55e50;
+  color: #22c55e;
+}
+
+.McpManager-actionBtn--connect:hover {
+  background: #22c55e15;
+}
+
+.McpManager-actionBtn--disconnect {
+  border-color: #f59e0b50;
+  color: #f59e0b;
+}
+
+.McpManager-actionBtn--disconnect:hover {
+  background: #f59e0b15;
+}
+
+.McpManager-actionBtn--delete {
+  border-color: #ef444450;
+  color: #ef4444;
+}
+
+.McpManager-actionBtn--delete:hover {
+  background: #ef444415;
+}
+
+/* Detail / tools */
+.McpManager-detail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.McpManager-toolList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.McpManager-toolTag {
+  padding: 2px 6px;
+  background: var(--bg-hover);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-family: 'SF Mono', 'Consolas', monospace;
+}
+
+.McpManager-detailLabel {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+/* Register form */
+.McpManager-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.McpManager-formTitle {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.McpManager-input {
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.McpManager-input:focus {
+  border-color: var(--accent);
+}
+
+.McpManager-input::placeholder {
+  color: var(--text-secondary);
+}
+
+.McpManager-select {
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+.McpManager-select:focus {
+  border-color: var(--accent);
+}
+
+.McpManager-checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.McpManager-checkLabel input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.McpManager-formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.McpManager-saveBtn {
+  flex: 1;
+  padding: 7px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.McpManager-saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.McpManager-cancelBtn {
+  padding: 7px 12px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.McpManager-cancelBtn:hover {
+  background: var(--bg-hover);
+}
+
+/* Loading / Error states */
+.McpManager-loading {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 8px 0;
+}
+
+.McpManager-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #ef4444;
+}
+
+.McpManager-retryBtn {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.McpManager-inlineError {
+  font-size: 0.78rem;
+  color: #ef4444;
+}
