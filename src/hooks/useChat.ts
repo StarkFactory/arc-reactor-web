@@ -135,7 +135,12 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
       metadata: { sessionId },
       ...(settings.model ? { model: settings.model } : {}),
       ...(settings.selectedPersonaId ? { personaId: settings.selectedPersonaId } : {}),
-      ...(!settings.selectedPersonaId && settings.systemPrompt ? { systemPrompt: settings.systemPrompt } : {}),
+      ...(!settings.selectedPersonaId && settings.selectedPromptTemplateId
+        ? { promptTemplateId: settings.selectedPromptTemplateId }
+        : {}),
+      ...(!settings.selectedPersonaId && !settings.selectedPromptTemplateId && settings.systemPrompt
+        ? { systemPrompt: settings.systemPrompt }
+        : {}),
       ...(settings.responseFormat !== 'TEXT' ? { responseFormat: settings.responseFormat } : {}),
     }
 

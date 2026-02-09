@@ -48,6 +48,7 @@
     "show": "Show",
     "hide": "Hide",
     "language": "Language",
+    "promptTemplate": "Prompt Template",
     "logout": "Logout",
     "reset": "Reset to defaults"
   },
@@ -75,6 +76,37 @@
     "saveError": "Failed to save",
     "deleteError": "Failed to delete"
   },
+  "promptTemplate": {
+    "loading": "Loading...",
+    "loadError": "Failed to load prompt templates",
+    "retry": "Retry",
+    "none": "None (use persona or custom)",
+    "add": "Add template",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this template and all its versions?",
+    "namePlaceholder": "Template name (e.g., customer-support)",
+    "descriptionPlaceholder": "Description (optional)",
+    "create": "Create",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "saveError": "Failed to save",
+    "deleteError": "Failed to delete",
+    "versions": "Versions",
+    "addVersion": "+ Version",
+    "contentPlaceholder": "System prompt content for this version...",
+    "changeLogPlaceholder": "What changed? (optional)",
+    "createVersion": "Create version",
+    "activate": "Activate",
+    "archive": "Archive",
+    "active": "Active",
+    "draft": "Draft",
+    "archived": "Archived",
+    "noVersions": "No versions yet. Add one to get started.",
+    "versionError": "Version operation failed"
+  },
   "auth": {
     "login": "Login",
     "register": "Register",
@@ -98,6 +130,7 @@
     "http429": "Rate limit exceeded. Please try again later.",
     "http502": "Cannot connect to server.",
     "http503": "Server is temporarily unavailable.",
-    "http504": "Server response timed out."
+    "http504": "Server response timed out.",
+    "forbidden": "You don't have permission for this action."
   }
 }

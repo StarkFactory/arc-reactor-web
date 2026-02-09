@@ -16,6 +16,7 @@ export const DEFAULT_SETTINGS = {
   model: null as string | null,
   systemPrompt: '',
   selectedPersonaId: null as string | null,
+  selectedPromptTemplateId: null as string | null,
   responseFormat: 'TEXT' as const,
   darkMode: true,
   showMetadata: false,
