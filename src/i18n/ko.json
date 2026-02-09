@@ -50,7 +50,8 @@
     "language": "언어",
     "promptTemplate": "프롬프트 템플릿",
     "logout": "로그아웃",
-    "reset": "기본값으로 초기화"
+    "reset": "기본값으로 초기화",
+    "mcpServers": "MCP 서버"
   },
   "model": {
     "default": "기본값 (서버)"
@@ -119,6 +120,38 @@
     "serverError": "서버에 연결할 수 없습니다.",
     "processing": "처리 중...",
     "submit": "가입하기"
+  },
+  "mcp": {
+    "loading": "불러오는 중...",
+    "loadError": "MCP 서버 목록을 불러올 수 없습니다",
+    "detailError": "서버 상세 정보를 불러올 수 없습니다",
+    "retry": "재시도",
+    "noServers": "등록된 MCP 서버가 없습니다",
+    "serverCount": "{{count}}개 서버",
+    "toolCount": "{{count}}개 도구",
+    "add": "MCP 서버 추가",
+    "close": "닫기",
+    "registerTitle": "MCP 서버 등록",
+    "namePlaceholder": "서버 이름",
+    "urlPlaceholder": "SSE 엔드포인트 URL (예: http://localhost:8081/sse)",
+    "commandPlaceholder": "실행 명령어 (예: npx)",
+    "argsPlaceholder": "인자 (쉼표 구분, 예: -y, @mcp/server)",
+    "descriptionPlaceholder": "설명 (선택)",
+    "autoConnect": "시작 시 자동 연결",
+    "register": "등록",
+    "registering": "등록 중...",
+    "cancel": "취소",
+    "registerError": "서버 등록에 실패했습니다",
+    "duplicateError": "이미 같은 이름의 서버가 존재합니다",
+    "connect": "연결",
+    "disconnect": "연결 해제",
+    "delete": "삭제",
+    "deleteConfirm": "이 MCP 서버를 삭제하시겠습니까?",
+    "connectError": "연결에 실패했습니다",
+    "disconnectError": "연결 해제에 실패했습니다",
+    "deleteError": "삭제에 실패했습니다",
+    "availableTools": "사용 가능한 도구",
+    "connectToSeeTools": "연결하면 사용 가능한 도구를 확인할 수 있습니다"
   },
   "error": {
     "rateLimited": "요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.",

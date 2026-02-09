@@ -50,7 +50,8 @@
     "language": "Language",
     "promptTemplate": "Prompt Template",
     "logout": "Logout",
-    "reset": "Reset to defaults"
+    "reset": "Reset to defaults",
+    "mcpServers": "MCP Servers"
   },
   "model": {
     "default": "Default (Server)"
@@ -119,6 +120,38 @@
     "serverError": "Cannot connect to server.",
     "processing": "Processing...",
     "submit": "Sign up"
+  },
+  "mcp": {
+    "loading": "Loading...",
+    "loadError": "Failed to load MCP servers",
+    "detailError": "Failed to load server details",
+    "retry": "Retry",
+    "noServers": "No MCP servers registered",
+    "serverCount": "{{count}} server(s)",
+    "toolCount": "{{count}} tools",
+    "add": "Add MCP server",
+    "close": "Close",
+    "registerTitle": "Register MCP Server",
+    "namePlaceholder": "Server name",
+    "urlPlaceholder": "SSE endpoint URL (e.g. http://localhost:8081/sse)",
+    "commandPlaceholder": "Command (e.g. npx)",
+    "argsPlaceholder": "Arguments (comma-separated, e.g. -y, @mcp/server)",
+    "descriptionPlaceholder": "Description (optional)",
+    "autoConnect": "Auto-connect on startup",
+    "register": "Register",
+    "registering": "Registering...",
+    "cancel": "Cancel",
+    "registerError": "Failed to register server",
+    "duplicateError": "A server with this name already exists",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this MCP server?",
+    "connectError": "Failed to connect",
+    "disconnectError": "Failed to disconnect",
+    "deleteError": "Failed to delete",
+    "availableTools": "Available tools",
+    "connectToSeeTools": "Connect to see available tools"
   },
   "error": {
     "rateLimited": "Rate limit exceeded. Please try again later.",

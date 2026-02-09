@@ -121,6 +121,12 @@
   color: white;
 }
 
+.SettingsPanel-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px 0 16px;
+}
+
 .SettingsPanel-footer {
   padding: 16px;
   border-top: 1px solid var(--border);
