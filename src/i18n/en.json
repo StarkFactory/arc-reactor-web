@@ -29,7 +29,8 @@
   "sidebar": {
     "newChat": "New chat",
     "deleteConfirm": "Delete this conversation?",
-    "deleteLabel": "Delete conversation"
+    "deleteLabel": "Delete conversation",
+    "export": "Export conversation"
   },
   "settings": {
     "title": "Settings",

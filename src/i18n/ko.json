@@ -29,7 +29,8 @@
   "sidebar": {
     "newChat": "새 대화",
     "deleteConfirm": "이 대화를 삭제하시겠습니까?",
-    "deleteLabel": "대화 삭제"
+    "deleteLabel": "대화 삭제",
+    "export": "대화 내보내기"
   },
   "settings": {
     "title": "설정",
