@@ -122,6 +122,10 @@
   position: relative;
 }
 
+.Sidebar-item:has(.Sidebar-exportMenu) {
+  z-index: 10;
+}
+
 .Sidebar-exportMenu {
   position: absolute;
   top: 100%;
