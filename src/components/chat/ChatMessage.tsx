@@ -32,7 +32,11 @@ export const ChatMessage = memo(function ChatMessage({
           {message.error ? (
             <span className="ChatMessage-errorText">{message.content}</span>
           ) : showPlaceholder ? (
-            <span className="ChatMessage-placeholder">...</span>
+            <span className="ChatMessage-typingIndicator">
+              <span className="ChatMessage-dot" />
+              <span className="ChatMessage-dot" />
+              <span className="ChatMessage-dot" />
+            </span>
           ) : message.role === 'assistant' && message.content ? (
             <MarkdownRenderer content={message.content} />
           ) : (

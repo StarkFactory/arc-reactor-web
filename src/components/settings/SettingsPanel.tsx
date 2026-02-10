@@ -67,7 +67,7 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
             />
           </div>
 
-          {!isPersonaSelected && isAdmin && (
+          {!isPersonaSelected && (!isAuthRequired || isAdmin) && (
             <div className="SettingsPanel-section">
               <label className="SettingsPanel-label">{t('settings.promptTemplate')}</label>
               <PromptTemplateManager

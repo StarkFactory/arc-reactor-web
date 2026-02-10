@@ -38,8 +38,27 @@
   font-size: 0.95rem;
 }
 
-.ChatMessage-placeholder {
-  color: var(--text-secondary);
+.ChatMessage-typingIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.ChatMessage-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  animation: ChatMessage-bounce 1.4s ease-in-out infinite;
+}
+
+.ChatMessage-dot:nth-child(2) { animation-delay: 0.2s; }
+.ChatMessage-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes ChatMessage-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
 }
 
 .ChatMessage--user .ChatMessage-bubble {

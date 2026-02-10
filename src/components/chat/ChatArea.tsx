@@ -4,9 +4,14 @@ import { ChatMessage } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { ToolIndicator } from './ToolIndicator'
 import { EmptyState } from './EmptyState'
+import { ActiveConfigIndicator } from './ActiveConfigIndicator'
 import './ChatArea.css'
 
-export function ChatArea() {
+interface ChatAreaProps {
+  onOpenSettings?: () => void
+}
+
+export function ChatArea({ onOpenSettings }: ChatAreaProps) {
   const { messages, isLoading, activeTool, sendMessage, stopGeneration, retryLastMessage, settings } = useChatContext()
   const messagesRef = useRef<HTMLElement>(null)
   const [suggestion, setSuggestion] = useState<string | undefined>()
@@ -27,6 +32,7 @@ export function ChatArea() {
 
   return (
     <div className="ChatArea">
+      {onOpenSettings && <ActiveConfigIndicator onOpenSettings={onOpenSettings} />}
       <main className="ChatArea-messages" ref={messagesRef} aria-live="polite">
         {messages.length === 0 && (
           <EmptyState onSuggestionClick={handleSuggestion} />

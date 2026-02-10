@@ -1,0 +1,22 @@
+.ActiveConfigIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ActiveConfigIndicator-label {
+  display: inline-block;
+  background: var(--tool-badge-bg);
+  color: var(--tool-badge-color);
+  font-size: 0.78rem;
+  padding: 3px 12px;
+  border-radius: 12px;
+  transition: opacity 0.15s;
+}
+
+.ActiveConfigIndicator:hover .ActiveConfigIndicator-label {
+  opacity: 0.8;
+}

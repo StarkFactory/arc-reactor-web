@@ -11,7 +11,10 @@
     "noResponse": "No response received.",
     "requestFailed": "Request failed.",
     "emptyState": "Ask Arc Reactor AI Agent a question",
-    "newConversation": "New conversation"
+    "newConversation": "New conversation",
+    "activePersona": "Persona: {{name}}",
+    "activeTemplate": "Template: {{name}}",
+    "customPromptActive": "Custom prompt"
   },
   "suggestions": {
     "hello": "Hello!",

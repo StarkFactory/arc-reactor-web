@@ -11,7 +11,10 @@
     "noResponse": "응답을 받지 못했습니다.",
     "requestFailed": "요청에 실패했습니다.",
     "emptyState": "Arc Reactor AI Agent에게 질문하세요",
-    "newConversation": "새 대화"
+    "newConversation": "새 대화",
+    "activePersona": "페르소나: {{name}}",
+    "activeTemplate": "템플릿: {{name}}",
+    "customPromptActive": "커스텀 프롬프트"
   },
   "suggestions": {
     "hello": "안녕하세요",
