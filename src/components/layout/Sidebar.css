@@ -83,27 +83,78 @@
   margin-top: 2px;
 }
 
-.Sidebar-deleteBtn {
+.Sidebar-actions {
   position: absolute;
   top: 50%;
   right: 8px;
   transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.Sidebar-item:hover .Sidebar-actions {
+  opacity: 1;
+}
+
+.Sidebar-actionBtn {
   background: none;
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  opacity: 0;
-  transition: opacity 0.15s, color 0.15s;
+  transition: color 0.15s, background 0.15s;
 }
 
-.Sidebar-item:hover .Sidebar-deleteBtn {
-  opacity: 1;
+.Sidebar-actionBtn:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
 }
 
-.Sidebar-deleteBtn:hover {
+.Sidebar-actionBtn--delete:hover {
   color: var(--error);
+}
+
+.Sidebar-exportWrapper {
+  position: relative;
+}
+
+.Sidebar-exportMenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 110;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.Sidebar-exportMenuItem {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.Sidebar-exportMenuItem:hover {
+  background: var(--bg-hover);
+}
+
+.Sidebar-exportMenuItem + .Sidebar-exportMenuItem {
+  border-top: 1px solid var(--border);
 }
 
 /* Desktop: sidebar pushes content */
