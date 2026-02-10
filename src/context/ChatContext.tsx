@@ -21,7 +21,7 @@ interface ChatContextValue {
   messages: ChatMessage[]
   isLoading: boolean
   activeTool: string | null
-  sendMessage: (text: string) => Promise<void>
+  sendMessage: (text: string, files?: File[]) => Promise<void>
   stopGeneration: () => void
   retryLastMessage: () => Promise<void>
 

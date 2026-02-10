@@ -3,6 +3,7 @@ import { useChatContext } from '../../context/ChatContext'
 import { ChatMessage } from './ChatMessage'
 import { ChatInput } from './ChatInput'
 import { ToolIndicator } from './ToolIndicator'
+import { ApprovalBanner } from './ApprovalBanner'
 import { EmptyState } from './EmptyState'
 import { ActiveConfigIndicator } from './ActiveConfigIndicator'
 import './ChatArea.css'
@@ -26,8 +27,8 @@ export function ChatArea({ onOpenSettings }: ChatAreaProps) {
     setTimeout(() => setSuggestion(undefined), 100)
   }, [])
 
-  const handleSend = useCallback((text: string) => {
-    sendMessage(text)
+  const handleSend = useCallback((text: string, files?: File[]) => {
+    sendMessage(text, files)
   }, [sendMessage])
 
   return (
@@ -48,6 +49,7 @@ export function ChatArea({ onOpenSettings }: ChatAreaProps) {
           />
         ))}
         {activeTool && <ToolIndicator toolName={activeTool} />}
+        <ApprovalBanner />
       </main>
       <ChatInput
         onSend={handleSend}

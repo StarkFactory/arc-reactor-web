@@ -157,6 +157,23 @@
     "availableTools": "사용 가능한 도구",
     "connectToSeeTools": "연결하면 사용 가능한 도구를 확인할 수 있습니다"
   },
+  "attachment": {
+    "add": "파일 첨부",
+    "remove": "제거",
+    "uploading": "파일 업로드 중...",
+    "tooLarge": "파일이 너무 큽니다 (최대 10MB)",
+    "unsupported": "지원하지 않는 파일 형식입니다"
+  },
+  "approval": {
+    "pending": "도구 실행 승인 필요",
+    "toolName": "도구: {{name}}",
+    "arguments": "인자",
+    "approve": "승인",
+    "reject": "거부",
+    "approved": "승인됨",
+    "rejected": "거부됨",
+    "error": "승인 처리에 실패했습니다"
+  },
   "error": {
     "rateLimited": "요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.",
     "timeout": "요청 시간이 초과되었습니다.",

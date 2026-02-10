@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import type { ChatMessage } from '../types/chat'
 import type { ChatSettings } from '../types/chat'
-import { streamChat, sendChat } from '../services/api'
+import { streamChat, sendChat, sendChatMultipart } from '../services/api'
 import { FRAMES_TARGET } from '../utils/constants'
 import i18n from '../i18n'
 
@@ -95,14 +95,22 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
     })
   }, [tickAnimation, updateAssistantMessage])
 
-  const sendMessage = useCallback(async (text: string) => {
+  const sendMessage = useCallback(async (text: string, files?: File[]) => {
     if (!text.trim() || isLoading) return
+
+    // Build attachment metadata for display
+    const attachments = files?.map(f => ({
+      name: f.name,
+      type: f.type,
+      previewUrl: f.type.startsWith('image/') ? URL.createObjectURL(f) : undefined,
+    }))
 
     const userMsg: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
       content: text.trim(),
       timestamp: Date.now(),
+      ...(attachments && attachments.length > 0 ? { attachments } : {}),
     }
 
     const assistantMsg: ChatMessage = {
@@ -145,7 +153,17 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
     }
 
     try {
-      if (settings.responseFormat === 'JSON') {
+      if (files && files.length > 0) {
+        // Multipart upload (non-streaming)
+        const content = await sendChatMultipart(text.trim(), files, {
+          model: settings.model ?? undefined,
+          systemPrompt: !settings.selectedPersonaId && !settings.selectedPromptTemplateId
+            ? settings.systemPrompt || undefined : undefined,
+          personaId: settings.selectedPersonaId ?? undefined,
+          userId,
+        })
+        updateAssistantMessage(content, true)
+      } else if (settings.responseFormat === 'JSON') {
         // JSON format uses non-streaming endpoint
         const content = await sendChat(chatRequest)
         updateAssistantMessage(content, true)

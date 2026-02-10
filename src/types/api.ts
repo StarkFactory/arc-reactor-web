@@ -134,3 +134,20 @@ export interface McpConnectResponse {
   tools?: string[]
   error?: string
 }
+
+// ---- Approval Types (Human-in-the-Loop) ----
+
+export interface ApprovalSummary {
+  id: string
+  runId: string
+  userId: string
+  toolName: string
+  arguments: Record<string, unknown>
+  requestedAt: string
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'TIMED_OUT'
+}
+
+export interface ApprovalActionResponse {
+  success: boolean
+  message: string
+}
