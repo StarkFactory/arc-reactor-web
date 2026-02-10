@@ -43,6 +43,17 @@ export const ChatMessage = memo(function ChatMessage({
             <p className="ChatMessage-text">{message.content}</p>
           )}
         </div>
+        {message.role === 'user' && message.attachments && message.attachments.length > 0 && (
+          <div className="ChatMessage-attachments">
+            {message.attachments.map((att, i) => (
+              att.previewUrl ? (
+                <img key={i} src={att.previewUrl} alt={att.name} className="ChatMessage-attachmentImg" />
+              ) : (
+                <span key={i} className="ChatMessage-attachmentFile">{att.name}</span>
+              )
+            ))}
+          </div>
+        )}
         {showMetadata && message.role === 'assistant' && message.durationMs && (
           <div className="ChatMessage-meta">
             {formatDuration(message.durationMs)}

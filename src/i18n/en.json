@@ -157,6 +157,23 @@
     "availableTools": "Available tools",
     "connectToSeeTools": "Connect to see available tools"
   },
+  "attachment": {
+    "add": "Attach files",
+    "remove": "Remove",
+    "uploading": "Uploading files...",
+    "tooLarge": "File is too large (max 10MB)",
+    "unsupported": "Unsupported file type"
+  },
+  "approval": {
+    "pending": "Approval required",
+    "toolName": "Tool: {{name}}",
+    "arguments": "Arguments",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "error": "Failed to process approval"
+  },
   "error": {
     "rateLimited": "Rate limit exceeded. Please try again later.",
     "timeout": "Request timed out.",

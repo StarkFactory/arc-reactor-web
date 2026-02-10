@@ -1,3 +1,9 @@
+export interface MessageAttachment {
+  name: string
+  type: string
+  previewUrl?: string
+}
+
 export interface ChatMessage {
   id: string
   role: 'user' | 'assistant'
@@ -7,6 +13,7 @@ export interface ChatMessage {
   errorCode?: string
   timestamp: number
   durationMs?: number
+  attachments?: MessageAttachment[]
 }
 
 export interface Session {

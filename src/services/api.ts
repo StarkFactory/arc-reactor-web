@@ -33,6 +33,46 @@ export async function sendChat(request: ChatRequest): Promise<string> {
   return data.content ?? data.message ?? JSON.stringify(data)
 }
 
+/** Multipart chat for file attachments (non-streaming) */
+export async function sendChatMultipart(
+  message: string,
+  files: File[],
+  params?: {
+    model?: string
+    systemPrompt?: string
+    personaId?: string
+    userId?: string
+  }
+): Promise<string> {
+  const formData = new FormData()
+  formData.append('message', message)
+  files.forEach(f => formData.append('files', f))
+  if (params?.model) formData.append('model', params.model)
+  if (params?.systemPrompt) formData.append('systemPrompt', params.systemPrompt)
+  if (params?.personaId) formData.append('personaId', params.personaId)
+  if (params?.userId) formData.append('userId', params.userId)
+
+  const headers: Record<string, string> = {}
+  const token = getAuthToken()
+  if (token) headers['Authorization'] = `Bearer ${token}`
+
+  const res = await fetch(`${API_BASE}/api/chat/multipart`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  })
+
+  if (res.status === 401 && token) {
+    removeAuthToken()
+    throw new Error('Session expired')
+  }
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+  const data = await res.json()
+  return data.content ?? data.message ?? JSON.stringify(data)
+}
+
 export async function streamChat(
   request: ChatRequest,
   callbacks: StreamCallbacks,

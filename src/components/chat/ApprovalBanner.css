@@ -1,0 +1,120 @@
+.ApprovalBanner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 20px;
+}
+
+.ApprovalBanner-item {
+  background: var(--warning-bg, #fef3c7);
+  border: 1px solid var(--warning-border, #f59e0b);
+  border-radius: 12px;
+  padding: 12px 16px;
+  animation: ApprovalBanner-fadeIn 0.3s ease;
+}
+
+@keyframes ApprovalBanner-fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ApprovalBanner-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ApprovalBanner-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--warning-text, #92400e);
+  background: var(--warning-badge, #fde68a);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.ApprovalBanner-toolName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--warning-text, #92400e);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.ApprovalBanner-args {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--warning-text, #78350f);
+  overflow-x: auto;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.ApprovalBanner-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ApprovalBanner-approveBtn,
+.ApprovalBanner-rejectBtn {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.ApprovalBanner-approveBtn {
+  background: #22c55e;
+  color: white;
+}
+
+.ApprovalBanner-approveBtn:hover:not(:disabled) {
+  background: #16a34a;
+}
+
+.ApprovalBanner-rejectBtn {
+  background: #ef4444;
+  color: white;
+}
+
+.ApprovalBanner-rejectBtn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.ApprovalBanner-approveBtn:active:not(:disabled),
+.ApprovalBanner-rejectBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.ApprovalBanner-approveBtn:disabled,
+.ApprovalBanner-rejectBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Dark mode overrides */
+[data-theme="dark"] .ApprovalBanner-item {
+  background: #422006;
+  border-color: #b45309;
+}
+
+[data-theme="dark"] .ApprovalBanner-label {
+  color: #fef3c7;
+  background: #78350f;
+}
+
+[data-theme="dark"] .ApprovalBanner-toolName {
+  color: #fde68a;
+}
+
+[data-theme="dark"] .ApprovalBanner-args {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fde68a;
+}
