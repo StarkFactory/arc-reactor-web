@@ -137,6 +137,9 @@ export async function streamChat(
         case 'tool_end':
           callbacks.onToolEnd(data)
           break
+        case 'error':
+          callbacks.onError(new Error(data))
+          break
         case 'done':
           callbacks.onDone()
           break
