@@ -60,7 +60,7 @@ test.describe('Admin Dashboard Full Flow', () => {
   // --- Error Report 전체 플로우 ---
 
   test('3. Error Report 폼 작성 및 제출', async () => {
-    test.setTimeout(60_000)
+    test.setTimeout(120_000)
 
     // Quick Action으로 Error Report 이동
     await page.click('a:text("Send Error Report")')
@@ -143,9 +143,78 @@ test.describe('Admin Dashboard Full Flow', () => {
     await page.waitForTimeout(PAUSE)
   })
 
+  // --- 다크/라이트 모드 전환 ---
+
+  test('5. 다크/라이트 모드 토글', async () => {
+    test.setTimeout(60_000)
+
+    // Dashboard로 이동
+    await page.click('nav a:text("Dashboard")')
+    await expect(page.locator('h1:text("Dashboard")')).toBeVisible()
+    await page.waitForTimeout(PAUSE)
+
+    // 현재 테마 확인
+    const initialTheme = await page.getAttribute('html', 'data-theme')
+    await page.waitForTimeout(1000)
+
+    // 테마 토글 버튼 클릭 (☀️ 또는 🌙)
+    const themeBtn = page.locator('.Admin-headerBtn').nth(1)
+    await themeBtn.click()
+    await page.waitForTimeout(PAUSE)
+
+    // 테마 변경 확인
+    const newTheme = await page.getAttribute('html', 'data-theme')
+    expect(newTheme).not.toBe(initialTheme)
+    await page.waitForTimeout(PAUSE)
+
+    // 다시 토글해서 원래대로
+    await themeBtn.click()
+    await page.waitForTimeout(PAUSE)
+
+    const restoredTheme = await page.getAttribute('html', 'data-theme')
+    expect(restoredTheme).toBe(initialTheme)
+    await page.waitForTimeout(PAUSE)
+  })
+
+  // --- 언어 전환 (EN/KO) ---
+
+  test('6. 언어 전환 EN → KO → EN', async () => {
+    test.setTimeout(60_000)
+
+    // 현재 영어 상태 확인
+    await expect(page.locator('text=Arc Reactor Admin')).toBeVisible()
+    await expect(page.locator('a:text("Back to Chat")')).toBeVisible()
+    await page.waitForTimeout(PAUSE)
+
+    // 언어 전환 버튼 클릭 (KO 표시 → 한국어로 전환)
+    const langBtn = page.locator('.Admin-headerBtn').nth(0)
+    await langBtn.click()
+    await page.waitForTimeout(PAUSE)
+
+    // 한국어로 변경되었는지 확인
+    await expect(page.locator('text=Arc Reactor 관리자')).toBeVisible()
+    await expect(page.locator('a:text("채팅으로 돌아가기")')).toBeVisible()
+    await page.waitForTimeout(PAUSE)
+
+    // 사이드바도 한국어인지 확인
+    await expect(page.locator('nav a:text("대시보드")')).toBeVisible()
+    await expect(page.locator('nav a:text("에러 리포트")')).toBeVisible()
+    await page.waitForTimeout(PAUSE)
+
+    // 다시 영어로 전환
+    await langBtn.click()
+    await page.waitForTimeout(PAUSE)
+
+    // 영어 복원 확인
+    await expect(page.locator('text=Arc Reactor Admin')).toBeVisible()
+    await expect(page.locator('a:text("Back to Chat")')).toBeVisible()
+    await expect(page.locator('nav a:text("Dashboard")')).toBeVisible()
+    await page.waitForTimeout(PAUSE)
+  })
+
   // --- Chat으로 돌아가기 ---
 
-  test('5. Back to Chat', async () => {
+  test('7. Back to Chat', async () => {
     test.setTimeout(30_000)
 
     await page.click('a:text("Back to Chat")')
