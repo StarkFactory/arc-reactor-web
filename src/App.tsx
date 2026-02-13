@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { ChatProvider, useChatContext } from './context/ChatContext'
 import { Header } from './components/layout/Header'
@@ -6,10 +7,15 @@ import { Sidebar } from './components/layout/Sidebar'
 import { ChatArea } from './components/chat/ChatArea'
 import { SettingsPanel } from './components/settings/SettingsPanel'
 import { LoginPage } from './components/auth/LoginPage'
+import { AdminLayout } from './components/admin/AdminLayout'
+import { DashboardPage } from './components/admin/pages/DashboardPage'
+import { ErrorReportPage } from './components/admin/pages/ErrorReportPage'
+import { McpServersPage } from './components/admin/pages/McpServersPage'
+import { PersonasPage } from './components/admin/pages/PersonasPage'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import './App.css'
 
-function AppLayout({
+function ChatLayout({
   settingsOpen,
   onToggleSettings,
   onOpenSettings,
@@ -57,13 +63,13 @@ function AppLayout({
   )
 }
 
-function AppContent() {
+function ChatPage() {
   const { user } = useAuth()
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   return (
     <ChatProvider key={user?.id || 'anonymous'}>
-      <AppLayout
+      <ChatLayout
         settingsOpen={settingsOpen}
         onToggleSettings={() => setSettingsOpen(prev => !prev)}
         onOpenSettings={() => setSettingsOpen(true)}
@@ -90,5 +96,15 @@ export default function App() {
     return <LoginPage />
   }
 
-  return <AppContent />
+  return (
+    <Routes>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="error-report" element={<ErrorReportPage />} />
+        <Route path="mcp-servers" element={<McpServersPage />} />
+        <Route path="personas" element={<PersonasPage />} />
+      </Route>
+      <Route path="*" element={<ChatPage />} />
+    </Routes>
+  )
 }
