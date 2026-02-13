@@ -1,0 +1,12 @@
+.McpServersPage-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.McpServersPage-desc {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin: 0 0 24px;
+  line-height: 1.5;
+}

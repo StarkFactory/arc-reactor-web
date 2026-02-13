@@ -1,0 +1,146 @@
+.Admin {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.Admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 56px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.Admin-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.Admin-headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.Admin-headerBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.Admin-headerBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.Admin-backLink {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-left: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.Admin-backLink:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.Admin-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.Admin-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  padding: 16px 12px;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+  gap: 4px;
+}
+
+.Admin-navItem {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+
+.Admin-navItem:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.Admin-navItem--active {
+  background: var(--bg-hover);
+  color: var(--accent);
+}
+
+.Admin-content {
+  flex: 1;
+  padding: 32px;
+  overflow-y: auto;
+  max-width: 960px;
+}
+
+@media (max-width: 768px) {
+  .Admin-sidebar {
+    width: 160px;
+    padding: 12px 8px;
+  }
+
+  .Admin-content {
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Admin-body {
+    flex-direction: column;
+  }
+
+  .Admin-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .Admin-navItem {
+    white-space: nowrap;
+    padding: 8px 12px;
+  }
+}

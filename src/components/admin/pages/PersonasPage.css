@@ -1,0 +1,209 @@
+.PersonasPage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.PersonasPage-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.PersonasPage-desc {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.PersonasPage-addBtn {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.PersonasPage-addBtn:hover {
+  background: var(--accent-hover);
+}
+
+.PersonasPage-error {
+  padding: 10px 16px;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 8px;
+  color: var(--error);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.PersonasPage-form {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.PersonasPage-formTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.PersonasPage-input,
+.PersonasPage-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-family: inherit;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.PersonasPage-textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.PersonasPage-input:focus,
+.PersonasPage-textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.PersonasPage-checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.PersonasPage-formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.PersonasPage-saveBtn {
+  padding: 8px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.PersonasPage-saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.PersonasPage-cancelBtn {
+  padding: 8px 20px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.PersonasPage-loading,
+.PersonasPage-empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+}
+
+.PersonasPage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.PersonasPage-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.PersonasPage-cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.PersonasPage-cardName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.PersonasPage-defaultBadge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--tool-badge-bg);
+  color: var(--tool-badge-color);
+}
+
+.PersonasPage-cardActions {
+  display: flex;
+  gap: 6px;
+}
+
+.PersonasPage-editBtn,
+.PersonasPage-deleteBtn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+
+.PersonasPage-editBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.PersonasPage-deleteBtn:hover {
+  background: var(--error-bg);
+  color: var(--error);
+  border-color: var(--error-border);
+}
+
+.PersonasPage-cardPrompt {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 120px;
+  overflow-y: auto;
+}

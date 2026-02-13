@@ -1,0 +1,144 @@
+.Dashboard-loading {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.Dashboard-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+.Dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.Dashboard-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.Dashboard-card--accent {
+  border-color: var(--accent);
+}
+
+.Dashboard-cardValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.Dashboard-cardLabel {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.Dashboard-cardSub {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.Dashboard-section {
+  margin-bottom: 32px;
+}
+
+.Dashboard-sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.Dashboard-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.Dashboard-actionBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.Dashboard-actionBtn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+.Dashboard-table {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.Dashboard-tableHeader,
+.Dashboard-tableRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 0.5fr;
+  padding: 10px 16px;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.Dashboard-tableHeader {
+  background: var(--code-header-bg);
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.Dashboard-tableRow {
+  border-top: 1px solid var(--border);
+}
+
+.Dashboard-tableRow:nth-child(even) {
+  background: var(--table-stripe);
+}
+
+.Dashboard-serverName {
+  font-weight: 500;
+}
+
+.Dashboard-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--tool-badge-bg);
+  color: var(--tool-badge-color);
+}
+
+.Dashboard-status {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.Dashboard-status--connected {
+  color: var(--success);
+}
+
+.Dashboard-status--disconnected,
+.Dashboard-status--error {
+  color: var(--error);
+}

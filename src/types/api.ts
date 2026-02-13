@@ -135,6 +135,21 @@ export interface McpConnectResponse {
   error?: string
 }
 
+// ---- Error Report Types ----
+
+export interface ErrorReportRequest {
+  stackTrace: string
+  serviceName: string
+  repoSlug: string
+  slackChannel: string
+  environment?: string
+}
+
+export interface ErrorReportResponse {
+  accepted: boolean
+  requestId: string
+}
+
 // ---- Approval Types (Human-in-the-Loop) ----
 
 export interface ApprovalSummary {
