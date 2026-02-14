@@ -82,6 +82,12 @@
   opacity: 0.7;
 }
 
+.ToolPolicy-fieldHelp {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
 .ToolPolicy-field {
   margin-top: 10px;
 }
@@ -122,6 +128,60 @@
   margin-top: 12px;
 }
 
+.ToolPolicy-filterRow {
+  margin-top: 8px;
+}
+
+.ToolPolicy-serverGroups {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ToolPolicy-serverGroup {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.ToolPolicy-serverHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.ToolPolicy-serverToggle {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0;
+}
+
+.ToolPolicy-serverName {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.ToolPolicy-serverMeta {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+.ToolPolicy-serverActions {
+  display: flex;
+  gap: 8px;
+}
+
 .ToolPolicy-toolsBar {
   display: flex;
   align-items: center;
@@ -150,6 +210,14 @@
   background: var(--bg-primary);
 }
 
+.ToolPolicy-toolsGrid--grouped {
+  margin-top: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 12px;
+  background: transparent;
+}
+
 .ToolPolicy-toolCheck {
   display: flex;
   align-items: center;
@@ -160,6 +228,43 @@
 .ToolPolicy-toolName {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 12px;
+}
+
+.ToolPolicy-empty--inline {
+  padding: 10px 12px;
+}
+
+.ToolPolicy-allowByChannel {
+  margin-top: 8px;
+}
+
+.ToolPolicy-allowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ToolPolicy-allowActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ToolPolicy-select {
+  min-width: 160px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.ToolPolicy-textarea--advanced {
+  margin-top: 10px;
 }
 
 .ToolPolicy-btn {
