@@ -89,6 +89,12 @@ export function DashboardPage() {
           <Link to="/admin/personas" className="Dashboard-actionBtn">
             {t('admin.dashboard.managePersonas')}
           </Link>
+          <Link to="/admin/intents" className="Dashboard-actionBtn">
+            {t('admin.dashboard.intents')}
+          </Link>
+          <Link to="/admin/output-guard" className="Dashboard-actionBtn">
+            {t('admin.dashboard.outputGuard')}
+          </Link>
         </div>
       </div>
 

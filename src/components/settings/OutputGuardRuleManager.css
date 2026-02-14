@@ -1,0 +1,270 @@
+.OutputGuardManager {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.OutputGuardManager-loading {
+  color: var(--text-secondary);
+}
+
+.OutputGuardManager-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.OutputGuardManager-count {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.OutputGuardManager-addBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.OutputGuardManager-error {
+  border: 1px solid rgba(255, 0, 0, 0.25);
+  background: rgba(255, 0, 0, 0.06);
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--text-primary);
+}
+
+.OutputGuardManager-form {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.OutputGuardManager-formTitle {
+  font-weight: 650;
+}
+
+.OutputGuardManager-sectionTitle {
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 650;
+}
+
+.OutputGuardManager-input,
+.OutputGuardManager-textarea,
+.OutputGuardManager-select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.OutputGuardManager-textarea {
+  resize: vertical;
+}
+
+.OutputGuardManager-row {
+  display: flex;
+  gap: 8px;
+}
+
+.OutputGuardManager-checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.OutputGuardManager-formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.OutputGuardManager-saveBtn {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  font-weight: 650;
+}
+
+.OutputGuardManager-cancelBtn {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.OutputGuardManager-empty {
+  color: var(--text-secondary);
+}
+
+.OutputGuardManager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.OutputGuardManager-item {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.OutputGuardManager-itemTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.OutputGuardManager-nameBtn {
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.OutputGuardManager-badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 160, 70, 0.35);
+  background: rgba(0, 160, 70, 0.08);
+  color: var(--text-secondary);
+}
+
+.OutputGuardManager-badge--disabled {
+  border-color: rgba(255, 140, 0, 0.35);
+  background: rgba(255, 140, 0, 0.08);
+}
+
+.OutputGuardManager-meta {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.OutputGuardManager-chip {
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: var(--text-secondary);
+}
+
+.OutputGuardManager-detail {
+  margin-top: 10px;
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+}
+
+.OutputGuardManager-pattern {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  color: var(--text-primary);
+}
+
+.OutputGuardManager-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.OutputGuardManager-actionBtn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.OutputGuardManager-actionBtn--danger {
+  border-color: rgba(255, 0, 0, 0.35);
+  color: rgba(255, 120, 120, 0.95);
+}
+
+.OutputGuardManager-sim {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.OutputGuardManager-simResult {
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.OutputGuardManager-simRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.OutputGuardManager-audits {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.OutputGuardManager-auditRow {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.OutputGuardManager-auditActor {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.OutputGuardManager-auditDetail {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.OutputGuardManager-hint {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}

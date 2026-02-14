@@ -15,6 +15,8 @@ export function AdminLayout() {
     { to: '/admin', label: t('admin.nav.dashboard'), end: true },
     { to: '/admin/mcp-servers', label: t('admin.nav.mcpServers') },
     { to: '/admin/personas', label: t('admin.nav.personas') },
+    { to: '/admin/intents', label: t('admin.nav.intents') },
+    { to: '/admin/output-guard', label: t('admin.nav.outputGuard') },
   ]
 
   return (

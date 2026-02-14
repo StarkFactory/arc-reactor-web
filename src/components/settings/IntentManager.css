@@ -1,0 +1,212 @@
+.IntentManager {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.IntentManager-loading {
+  color: var(--text-secondary);
+}
+
+.IntentManager-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.IntentManager-count {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.IntentManager-addBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.IntentManager-error {
+  border: 1px solid rgba(255, 0, 0, 0.25);
+  background: rgba(255, 0, 0, 0.06);
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--text-primary);
+}
+
+.IntentManager-form {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.IntentManager-formTitle {
+  font-weight: 650;
+}
+
+.IntentManager-formSection {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.IntentManager-input,
+.IntentManager-textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.IntentManager-textarea {
+  resize: vertical;
+}
+
+.IntentManager-row {
+  display: flex;
+  gap: 8px;
+}
+
+.IntentManager-checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.IntentManager-formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.IntentManager-saveBtn {
+  flex: 1;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  font-weight: 650;
+}
+
+.IntentManager-cancelBtn {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.IntentManager-empty {
+  color: var(--text-secondary);
+}
+
+.IntentManager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.IntentManager-item {
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.IntentManager-itemTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.IntentManager-nameBtn {
+  background: transparent;
+  border: 0;
+  color: var(--text-primary);
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+}
+
+.IntentManager-badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 160, 70, 0.35);
+  background: rgba(0, 160, 70, 0.08);
+  color: var(--text-secondary);
+}
+
+.IntentManager-badge--disabled {
+  border-color: rgba(255, 140, 0, 0.35);
+  background: rgba(255, 140, 0, 0.08);
+}
+
+.IntentManager-desc {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.IntentManager-detail {
+  margin-top: 10px;
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+}
+
+.IntentManager-detailRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.88rem;
+  margin-bottom: 6px;
+}
+
+.IntentManager-detailLabel {
+  color: var(--text-secondary);
+}
+
+.IntentManager-detailValue {
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.IntentManager-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.IntentManager-actionBtn {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.IntentManager-actionBtn--danger {
+  border-color: rgba(255, 0, 0, 0.35);
+  color: rgba(255, 120, 120, 0.95);
+}
+
+.IntentManager-hint {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
