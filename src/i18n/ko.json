@@ -220,7 +220,8 @@
       "mcpServers": "MCP 서버",
       "personas": "페르소나",
       "intents": "인텐트",
-      "outputGuard": "Output Guard"
+      "outputGuard": "Output Guard",
+      "toolPolicy": "Tool Policy"
     },
     "dashboard": {
       "title": "대시보드",
@@ -241,7 +242,8 @@
       "name": "이름",
       "transport": "전송 방식",
       "status": "상태",
-      "tools": "도구"
+      "tools": "도구",
+      "toolPolicy": "Tool Policy"
     },
     "errorReport": {
       "title": "에러 리포트",
@@ -300,6 +302,10 @@
       "loadError": "페르소나를 불러올 수 없습니다",
       "saveError": "페르소나 저장에 실패했습니다",
       "deleteError": "페르소나 삭제에 실패했습니다"
+    },
+    "toolPolicyPage": {
+      "title": "Tool Policy",
+      "description": "write tool 안전 정책과 채널 deny 규칙을 동적으로 관리합니다."
     }
   },
   "intent": {
@@ -386,5 +392,31 @@
     "http503": "서버가 일시적으로 사용할 수 없습니다.",
     "http504": "서버 응답 시간이 초과되었습니다.",
     "forbidden": "이 작업에 대한 권한이 없습니다."
+  },
+  "toolPolicy": {
+    "loading": "로딩 중...",
+    "loadError": "Tool policy를 불러오지 못했습니다",
+    "saveError": "Tool policy 저장에 실패했습니다",
+    "resetError": "Tool policy 초기화에 실패했습니다",
+    "resetConfirm": "저장된 tool policy를 설정 기본값으로 되돌릴까요?",
+    "retry": "재시도",
+    "edit": "수정",
+    "cancel": "취소",
+    "save": "저장",
+    "saving": "저장 중...",
+    "reset": "초기화",
+    "effective": "적용 중 정책",
+    "stored": "저장된 정책",
+    "noStored": "저장된 정책이 없습니다 (설정 기본값 사용)",
+    "editSection": "저장 정책 수정",
+    "enabled": "활성화",
+    "writeTools": "Write tools",
+    "denyChannels": "Deny 채널",
+    "denyMessage": "Deny 메시지",
+    "configEnabled": "설정 enabled",
+    "dynamicEnabled": "동적 enabled",
+    "writeToolsPlaceholder": "한 줄에 하나씩 tool name (예: jira_create_issue)",
+    "denyChannelsPlaceholder": "한 줄에 하나씩 channel (예: slack)",
+    "denyMessagePlaceholder": "도구 호출이 차단될 때 표시되는 메시지"
   }
 }

@@ -16,6 +16,7 @@ import { McpServersPage } from './components/admin/pages/McpServersPage'
 import { PersonasPage } from './components/admin/pages/PersonasPage'
 import { IntentsPage } from './components/admin/pages/IntentsPage'
 import { OutputGuardPage } from './components/admin/pages/OutputGuardPage'
+import { ToolPolicyPage } from './components/admin/pages/ToolPolicyPage'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import './App.css'
 
@@ -112,6 +113,7 @@ export default function App() {
         <Route path="personas" element={<PersonasPage />} />
         <Route path="intents" element={<IntentsPage />} />
         <Route path="output-guard" element={<OutputGuardPage />} />
+        <Route path="tool-policy" element={<ToolPolicyPage />} />
       </Route>
       <Route path="*" element={<ChatPage />} />
     </Routes>
