@@ -283,6 +283,7 @@ export interface ToolPolicyResponse {
   enabled: boolean
   writeToolNames: string[]
   denyWriteChannels: string[]
+  allowWriteToolNamesInDenyChannels: string[]
   denyWriteMessage: string
   createdAt: number
   updatedAt: number
@@ -299,5 +300,6 @@ export interface UpdateToolPolicyRequest {
   enabled: boolean
   writeToolNames: string[]
   denyWriteChannels: string[]
+  allowWriteToolNamesInDenyChannels: string[]
   denyWriteMessage: string
 }

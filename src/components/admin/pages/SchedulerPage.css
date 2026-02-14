@@ -1,0 +1,25 @@
+.SchedulerPage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.SchedulerPage-title {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.SchedulerPage-desc {
+  margin: 0;
+  color: var(--muted, #6b7280);
+}
+
+.SchedulerPage-note {
+  padding: 12px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text, #111827);
+}
+

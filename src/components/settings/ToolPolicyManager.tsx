@@ -31,6 +31,7 @@ export function ToolPolicyManager() {
   const [enabled, setEnabled] = useState(false)
   const [writeToolNamesText, setWriteToolNamesText] = useState('')
   const [denyWriteChannelsText, setDenyWriteChannelsText] = useState('slack')
+  const [allowWriteToolNamesInDenyChannelsText, setAllowWriteToolNamesInDenyChannelsText] = useState('')
   const [denyWriteMessage, setDenyWriteMessage] = useState(
     'Error: This tool is not allowed in this channel'
   )
@@ -42,6 +43,7 @@ export function ToolPolicyManager() {
     setEnabled(p.enabled)
     setWriteToolNamesText(joinLines(p.writeToolNames))
     setDenyWriteChannelsText(joinLines(p.denyWriteChannels))
+    setAllowWriteToolNamesInDenyChannelsText(joinLines(p.allowWriteToolNamesInDenyChannels))
     setDenyWriteMessage(p.denyWriteMessage)
   }, [])
 
@@ -80,6 +82,7 @@ export function ToolPolicyManager() {
         enabled,
         writeToolNames: splitLines(writeToolNamesText),
         denyWriteChannels: splitLines(denyWriteChannelsText),
+        allowWriteToolNamesInDenyChannels: splitLines(allowWriteToolNamesInDenyChannelsText),
         denyWriteMessage: denyWriteMessage.trim(),
       })
       setMode('view')
@@ -177,6 +180,10 @@ export function ToolPolicyManager() {
           <b>{effective.denyWriteChannels.length}</b>
         </div>
         <div className="ToolPolicy-row">
+          <span className="ToolPolicy-label">{t('toolPolicy.allowWriteToolsInDenyChannels')}</span>
+          <b>{effective.allowWriteToolNamesInDenyChannels.length}</b>
+        </div>
+        <div className="ToolPolicy-row">
           <span className="ToolPolicy-label">{t('toolPolicy.denyMessage')}</span>
           <span className="ToolPolicy-mono">{effective.denyWriteMessage}</span>
         </div>
@@ -197,6 +204,10 @@ export function ToolPolicyManager() {
             <div className="ToolPolicy-row">
               <span className="ToolPolicy-label">{t('toolPolicy.denyChannels')}</span>
               <b>{stored.denyWriteChannels.length}</b>
+            </div>
+            <div className="ToolPolicy-row">
+              <span className="ToolPolicy-label">{t('toolPolicy.allowWriteToolsInDenyChannels')}</span>
+              <b>{stored.allowWriteToolNamesInDenyChannels.length}</b>
             </div>
           </>
         ) : (
@@ -231,6 +242,18 @@ export function ToolPolicyManager() {
             onChange={e => setDenyWriteChannelsText(e.target.value)}
             placeholder={t('toolPolicy.denyChannelsPlaceholder')}
             rows={3}
+            disabled={mode !== 'edit'}
+          />
+        </div>
+
+        <div className="ToolPolicy-field">
+          <div className="ToolPolicy-fieldLabel">{t('toolPolicy.allowWriteToolsInDenyChannels')}</div>
+          <textarea
+            className="ToolPolicy-textarea"
+            value={allowWriteToolNamesInDenyChannelsText}
+            onChange={e => setAllowWriteToolNamesInDenyChannelsText(e.target.value)}
+            placeholder={t('toolPolicy.allowWriteToolsInDenyChannelsPlaceholder')}
+            rows={4}
             disabled={mode !== 'edit'}
           />
         </div>

@@ -315,6 +315,7 @@
     "schedulerPage": {
       "title": "스케줄러",
       "description": "Cron 기반 MCP 도구 자동 실행을 관리합니다.",
+      "comingSoon": "준비 중입니다.",
       "newJob": "새 작업",
       "createTitle": "스케줄 작업 생성",
       "editTitle": "스케줄 작업 수정",
@@ -553,11 +554,13 @@
     "enabled": "활성화",
     "writeTools": "Write tools",
     "denyChannels": "Deny 채널",
+    "allowWriteToolsInDenyChannels": "Deny 채널 예외(허용) write tools",
     "denyMessage": "Deny 메시지",
     "configEnabled": "설정 enabled",
     "dynamicEnabled": "동적 enabled",
     "writeToolsPlaceholder": "한 줄에 하나씩 tool name (예: jira_create_issue)",
     "denyChannelsPlaceholder": "한 줄에 하나씩 channel (예: slack)",
+    "allowWriteToolsInDenyChannelsPlaceholder": "한 줄에 하나씩 tool name (deny 채널에서도 허용됨)",
     "denyMessagePlaceholder": "도구 호출이 차단될 때 표시되는 메시지"
   }
 }
