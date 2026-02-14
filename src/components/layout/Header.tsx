@@ -30,6 +30,7 @@ export function Header({ onToggleSidebar, onOpenSettings }: HeaderProps) {
       <h1 className="Header-title">{t('app.title')}</h1>
       <span className="Header-subtitle">{t('app.subtitle')}</span>
       <div className="Header-actions">
+        <Link to="/apps" className="Header-appsLink">{t('header.apps')}</Link>
         {isAdmin && (
           <Link to="/admin" className="Header-adminLink">{t('header.admin')}</Link>
         )}

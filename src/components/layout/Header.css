@@ -45,6 +45,7 @@
   gap: 4px;
 }
 
+.Header-appsLink,
 .Header-adminLink {
   display: flex;
   align-items: center;
@@ -58,6 +59,7 @@
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
+.Header-appsLink:hover,
 .Header-adminLink:hover {
   background: var(--bg-hover);
   color: var(--accent);

@@ -13,7 +13,6 @@ export function AdminLayout() {
 
   const navItems = [
     { to: '/admin', label: t('admin.nav.dashboard'), end: true },
-    { to: '/admin/error-report', label: t('admin.nav.errorReport') },
     { to: '/admin/mcp-servers', label: t('admin.nav.mcpServers') },
     { to: '/admin/personas', label: t('admin.nav.personas') },
   ]
