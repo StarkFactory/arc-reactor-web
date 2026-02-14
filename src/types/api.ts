@@ -305,3 +305,47 @@ export interface UpdateToolPolicyRequest {
   allowWriteToolNamesByChannel: Record<string, string[]>
   denyWriteMessage: string
 }
+
+// ---- Scheduler Types ----
+
+export interface ScheduledJobResponse {
+  id: string
+  name: string
+  description: string | null
+  cronExpression: string
+  timezone: string
+  mcpServerName: string
+  toolName: string
+  toolArguments: Record<string, unknown>
+  slackChannelId: string | null
+  enabled: boolean
+  lastRunAt: number | null
+  lastStatus: string | null
+  lastResult: string | null
+  createdAt: number
+  updatedAt: number
+}
+
+export interface CreateScheduledJobRequest {
+  name: string
+  description?: string | null
+  cronExpression: string
+  timezone?: string
+  mcpServerName: string
+  toolName: string
+  toolArguments?: Record<string, unknown>
+  slackChannelId?: string | null
+  enabled?: boolean
+}
+
+export interface UpdateScheduledJobRequest {
+  name: string
+  description?: string | null
+  cronExpression: string
+  timezone?: string
+  mcpServerName: string
+  toolName: string
+  toolArguments?: Record<string, unknown>
+  slackChannelId?: string | null
+  enabled?: boolean
+}

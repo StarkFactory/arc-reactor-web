@@ -15,11 +15,4 @@
   color: var(--muted, #6b7280);
 }
 
-.SchedulerPage-note {
-  padding: 12px 14px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.03);
-  color: var(--text, #111827);
-}
-
+/* Placeholder note styles intentionally kept minimal; real UI is in SchedulerManager. */
