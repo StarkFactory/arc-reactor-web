@@ -166,3 +166,112 @@ export interface ApprovalActionResponse {
   success: boolean
   message: string
 }
+
+
+// ---- Intent Types ----
+
+export type IntentResponseFormat = 'TEXT' | 'JSON' | 'YAML'
+
+export interface IntentProfile {
+  model: string | null
+  temperature: number | null
+  maxToolCalls: number | null
+  allowedTools: string[] | null
+  systemPrompt: string | null
+  responseFormat: IntentResponseFormat | null
+}
+
+export interface IntentResponse {
+  name: string
+  description: string
+  examples: string[]
+  keywords: string[]
+  profile: IntentProfile
+  enabled: boolean
+  createdAt: number
+  updatedAt: number
+}
+
+export interface CreateIntentRequest {
+  name: string
+  description: string
+  examples?: string[]
+  keywords?: string[]
+  profile?: IntentProfile
+  enabled?: boolean
+}
+
+export interface UpdateIntentRequest {
+  description?: string
+  examples?: string[]
+  keywords?: string[]
+  profile?: IntentProfile
+  enabled?: boolean
+}
+
+// ---- Output Guard Types ----
+
+export interface OutputGuardRuleResponse {
+  id: string
+  name: string
+  pattern: string
+  action: string
+  priority: number
+  enabled: boolean
+  createdAt: number
+  updatedAt: number
+}
+
+export interface CreateOutputGuardRuleRequest {
+  name: string
+  pattern: string
+  action?: string
+  priority?: number
+  enabled?: boolean
+}
+
+export interface UpdateOutputGuardRuleRequest {
+  name?: string
+  pattern?: string
+  action?: string
+  priority?: number
+  enabled?: boolean
+}
+
+export interface OutputGuardSimulationRequest {
+  content: string
+  includeDisabled?: boolean
+}
+
+export interface OutputGuardSimulationMatchResponse {
+  ruleId: string
+  ruleName: string
+  action: string
+  priority: number
+}
+
+export interface OutputGuardSimulationInvalidRuleResponse {
+  ruleId: string
+  ruleName: string
+  reason: string
+}
+
+export interface OutputGuardSimulationResponse {
+  originalContent: string
+  resultContent: string
+  blocked: boolean
+  modified: boolean
+  blockedByRuleId: string | null
+  blockedByRuleName: string | null
+  matchedRules: OutputGuardSimulationMatchResponse[]
+  invalidRules: OutputGuardSimulationInvalidRuleResponse[]
+}
+
+export interface OutputGuardRuleAuditResponse {
+  id: string
+  ruleId: string | null
+  action: string
+  actor: string
+  detail: string | null
+  createdAt: number
+}
