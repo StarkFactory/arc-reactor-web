@@ -220,7 +220,8 @@
       "mcpServers": "MCP Servers",
       "personas": "Personas",
       "intents": "Intents",
-      "outputGuard": "Output Guard"
+      "outputGuard": "Output Guard",
+      "toolPolicy": "Tool Policy"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -241,7 +242,8 @@
       "name": "Name",
       "transport": "Transport",
       "status": "Status",
-      "tools": "Tools"
+      "tools": "Tools",
+      "toolPolicy": "Tool Policy"
     },
     "errorReport": {
       "title": "Error Report",
@@ -300,6 +302,10 @@
       "loadError": "Failed to load personas",
       "saveError": "Failed to save persona",
       "deleteError": "Failed to delete persona"
+    },
+    "toolPolicyPage": {
+      "title": "Tool Policy",
+      "description": "Manage write-tool safety policy and channel deny rules (dynamic)."
     }
   },
   "intent": {
@@ -386,5 +392,31 @@
     "http503": "Server is temporarily unavailable.",
     "http504": "Server response timed out.",
     "forbidden": "You don't have permission for this action."
+  },
+  "toolPolicy": {
+    "loading": "Loading...",
+    "loadError": "Failed to load tool policy",
+    "saveError": "Failed to save tool policy",
+    "resetError": "Failed to reset tool policy",
+    "resetConfirm": "Reset stored tool policy to config defaults?",
+    "retry": "Retry",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "reset": "Reset",
+    "effective": "Effective Policy",
+    "stored": "Stored Policy",
+    "noStored": "No stored policy (using config defaults)",
+    "editSection": "Edit Stored Policy",
+    "enabled": "Enabled",
+    "writeTools": "Write tools",
+    "denyChannels": "Deny channels",
+    "denyMessage": "Deny message",
+    "configEnabled": "Config enabled",
+    "dynamicEnabled": "Dynamic enabled",
+    "writeToolsPlaceholder": "One tool name per line (e.g., jira_create_issue)",
+    "denyChannelsPlaceholder": "One channel per line (e.g., slack)",
+    "denyMessagePlaceholder": "Shown when a tool call is denied"
   }
 }

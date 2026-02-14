@@ -275,3 +275,29 @@ export interface OutputGuardRuleAuditResponse {
   detail: string | null
   createdAt: number
 }
+
+
+// ---- Tool Policy Types ----
+
+export interface ToolPolicyResponse {
+  enabled: boolean
+  writeToolNames: string[]
+  denyWriteChannels: string[]
+  denyWriteMessage: string
+  createdAt: number
+  updatedAt: number
+}
+
+export interface ToolPolicyStateResponse {
+  configEnabled: boolean
+  dynamicEnabled: boolean
+  effective: ToolPolicyResponse
+  stored: ToolPolicyResponse | null
+}
+
+export interface UpdateToolPolicyRequest {
+  enabled: boolean
+  writeToolNames: string[]
+  denyWriteChannels: string[]
+  denyWriteMessage: string
+}

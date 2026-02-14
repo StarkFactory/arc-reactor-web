@@ -17,6 +17,7 @@ export function AdminLayout() {
     { to: '/admin/personas', label: t('admin.nav.personas') },
     { to: '/admin/intents', label: t('admin.nav.intents') },
     { to: '/admin/output-guard', label: t('admin.nav.outputGuard') },
+    { to: '/admin/tool-policy', label: t('admin.nav.toolPolicy') },
   ]
 
   return (

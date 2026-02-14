@@ -95,6 +95,9 @@ export function DashboardPage() {
           <Link to="/admin/output-guard" className="Dashboard-actionBtn">
             {t('admin.dashboard.outputGuard')}
           </Link>
+          <Link to="/admin/tool-policy" className="Dashboard-actionBtn">
+            {t('admin.dashboard.toolPolicy')}
+          </Link>
         </div>
       </div>
 

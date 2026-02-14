@@ -1,0 +1,8 @@
+.ToolPolicyPage-title {
+  margin: 0;
+}
+
+.ToolPolicyPage-desc {
+  margin-top: 8px;
+  color: var(--text-secondary);
+}

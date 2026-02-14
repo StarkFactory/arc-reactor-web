@@ -1,0 +1,173 @@
+.ToolPolicy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ToolPolicy-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ToolPolicy-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ToolPolicy-kv {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.ToolPolicy-k {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.ToolPolicy-v.on {
+  color: #16a34a;
+}
+
+.ToolPolicy-v.off {
+  color: #dc2626;
+}
+
+.ToolPolicy-sectionTitle {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.ToolPolicy-card {
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.ToolPolicy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.ToolPolicy-label {
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.ToolPolicy-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.84rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+.ToolPolicy-form {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+}
+
+.ToolPolicy-form--disabled {
+  opacity: 0.7;
+}
+
+.ToolPolicy-field {
+  margin-top: 10px;
+}
+
+.ToolPolicy-fieldLabel {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.ToolPolicy-input,
+.ToolPolicy-textarea {
+  width: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.88rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.ToolPolicy-textarea {
+  resize: vertical;
+}
+
+.ToolPolicy-check {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--text-primary);
+}
+
+.ToolPolicy-formActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.ToolPolicy-btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.ToolPolicy-btn:hover {
+  background: var(--bg-hover);
+}
+
+.ToolPolicy-btn--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+}
+
+.ToolPolicy-btn--danger {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.ToolPolicy-error {
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.ToolPolicy-empty {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.ToolPolicy-loading {
+  color: var(--text-secondary);
+}
+
+.ToolPolicy-retry {
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
