@@ -540,6 +540,9 @@
     "loadError": "Tool policy를 불러오지 못했습니다",
     "saveError": "Tool policy 저장에 실패했습니다",
     "resetError": "Tool policy 초기화에 실패했습니다",
+    "toolsLoadError": "MCP 도구 목록을 불러오지 못했습니다",
+    "toolsLoading": "도구 로딩 중...",
+    "refreshTools": "도구 새로고침",
     "resetConfirm": "저장된 tool policy를 설정 기본값으로 되돌릴까요?",
     "retry": "재시도",
     "edit": "수정",
@@ -555,12 +558,14 @@
     "writeTools": "Write tools",
     "denyChannels": "Deny 채널",
     "allowWriteToolsInDenyChannels": "Deny 채널 예외(허용) write tools",
+    "allowWriteToolsByChannel": "채널별 예외(허용) write tools",
     "denyMessage": "Deny 메시지",
     "configEnabled": "설정 enabled",
     "dynamicEnabled": "동적 enabled",
     "writeToolsPlaceholder": "한 줄에 하나씩 tool name (예: jira_create_issue)",
     "denyChannelsPlaceholder": "한 줄에 하나씩 channel (예: slack)",
     "allowWriteToolsInDenyChannelsPlaceholder": "한 줄에 하나씩 tool name (deny 채널에서도 허용됨)",
+    "allowWriteToolsByChannelPlaceholder": "한 줄에 하나씩: channel: tool1, tool2 (예: slack: jira_create_issue)",
     "denyMessagePlaceholder": "도구 호출이 차단될 때 표시되는 메시지"
   }
 }

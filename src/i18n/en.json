@@ -540,6 +540,9 @@
     "loadError": "Failed to load tool policy",
     "saveError": "Failed to save tool policy",
     "resetError": "Failed to reset tool policy",
+    "toolsLoadError": "Failed to load MCP tools",
+    "toolsLoading": "Loading tools...",
+    "refreshTools": "Refresh tools",
     "resetConfirm": "Reset stored tool policy to config defaults?",
     "retry": "Retry",
     "edit": "Edit",
@@ -555,12 +558,14 @@
     "writeTools": "Write tools",
     "denyChannels": "Deny channels",
     "allowWriteToolsInDenyChannels": "Allow write tools in deny channels",
+    "allowWriteToolsByChannel": "Allow write tools by channel",
     "denyMessage": "Deny message",
     "configEnabled": "Config enabled",
     "dynamicEnabled": "Dynamic enabled",
     "writeToolsPlaceholder": "One tool name per line (e.g., jira_create_issue)",
     "denyChannelsPlaceholder": "One channel per line (e.g., slack)",
     "allowWriteToolsInDenyChannelsPlaceholder": "One tool name per line (allowed even in deny channels)",
+    "allowWriteToolsByChannelPlaceholder": "One line per channel: channel: tool1, tool2 (e.g., slack: jira_create_issue)",
     "denyMessagePlaceholder": "Shown when a tool call is denied"
   }
 }

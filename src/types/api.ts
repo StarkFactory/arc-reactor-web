@@ -284,6 +284,7 @@ export interface ToolPolicyResponse {
   writeToolNames: string[]
   denyWriteChannels: string[]
   allowWriteToolNamesInDenyChannels: string[]
+  allowWriteToolNamesByChannel: Record<string, string[]>
   denyWriteMessage: string
   createdAt: number
   updatedAt: number
@@ -301,5 +302,6 @@ export interface UpdateToolPolicyRequest {
   writeToolNames: string[]
   denyWriteChannels: string[]
   allowWriteToolNamesInDenyChannels: string[]
+  allowWriteToolNamesByChannel: Record<string, string[]>
   denyWriteMessage: string
 }

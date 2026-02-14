@@ -2,9 +2,39 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ToolPolicyResponse, ToolPolicyStateResponse } from '../../types/api'
 import { deleteToolPolicy, getToolPolicy, updateToolPolicy } from '../../services/tool-policy'
+import { getMcpServer, listMcpServers } from '../../services/mcp'
 import './ToolPolicyManager.css'
 
 type Mode = 'view' | 'edit'
+
+function parseChannelToolMap(text: string): Record<string, string[]> {
+  const out: Record<string, string[]> = {}
+  for (const rawLine of text.split('\n')) {
+    const line = rawLine.trim()
+    if (!line) continue
+    const idx = line.indexOf(':')
+    if (idx <= 0) continue
+    const channel = line.slice(0, idx).trim().toLowerCase()
+    if (!channel) continue
+    const toolsPart = line.slice(idx + 1).trim()
+    if (!toolsPart) continue
+    const tools = toolsPart
+      .split(/[,\\s]+/g)
+      .map(s => s.trim())
+      .filter(Boolean)
+    if (tools.length === 0) continue
+    out[channel] = Array.from(new Set([...(out[channel] ?? []), ...tools]))
+  }
+  return out
+}
+
+function formatChannelToolMap(map: Record<string, string[]> | null | undefined): string {
+  if (!map) return ''
+  const channels = Object.keys(map).sort()
+  return channels
+    .map(ch => `${ch}: ${(map[ch] ?? []).join(', ')}`)
+    .join('\n')
+}
 
 function splitLines(text: string): string[] {
   return text
@@ -26,12 +56,16 @@ export function ToolPolicyManager() {
   const [error, setError] = useState<string | null>(null)
   const [mode, setMode] = useState<Mode>('view')
   const [saving, setSaving] = useState(false)
+  const [toolsLoading, setToolsLoading] = useState(false)
+  const [toolsError, setToolsError] = useState<string | null>(null)
+  const [mcpToolsByServer, setMcpToolsByServer] = useState<Record<string, string[]>>({})
 
   // Form fields
   const [enabled, setEnabled] = useState(false)
   const [writeToolNamesText, setWriteToolNamesText] = useState('')
   const [denyWriteChannelsText, setDenyWriteChannelsText] = useState('slack')
   const [allowWriteToolNamesInDenyChannelsText, setAllowWriteToolNamesInDenyChannelsText] = useState('')
+  const [allowWriteToolNamesByChannelText, setAllowWriteToolNamesByChannelText] = useState('')
   const [denyWriteMessage, setDenyWriteMessage] = useState(
     'Error: This tool is not allowed in this channel'
   )
@@ -44,6 +78,7 @@ export function ToolPolicyManager() {
     setWriteToolNamesText(joinLines(p.writeToolNames))
     setDenyWriteChannelsText(joinLines(p.denyWriteChannels))
     setAllowWriteToolNamesInDenyChannelsText(joinLines(p.allowWriteToolNamesInDenyChannels))
+    setAllowWriteToolNamesByChannelText(formatChannelToolMap(p.allowWriteToolNamesByChannel))
     setDenyWriteMessage(p.denyWriteMessage)
   }, [])
 
@@ -65,14 +100,55 @@ export function ToolPolicyManager() {
     }
   }, [seedForm, t])
 
+  const fetchMcpTools = useCallback(async () => {
+    try {
+      setToolsLoading(true)
+      setToolsError(null)
+      const servers = await listMcpServers()
+      const out: Record<string, string[]> = {}
+      for (const s of servers) {
+        try {
+          const detail = await getMcpServer(s.name)
+          const tools = (detail.tools ?? []).slice().sort()
+          out[s.name] = tools
+        } catch {
+          out[s.name] = []
+        }
+      }
+      setMcpToolsByServer(out)
+    } catch {
+      setToolsError(t('toolPolicy.toolsLoadError'))
+      setMcpToolsByServer({})
+    } finally {
+      setToolsLoading(false)
+    }
+  }, [t])
+
   useEffect(() => {
     fetchState()
   }, [fetchState])
+
+  useEffect(() => {
+    fetchMcpTools()
+  }, [fetchMcpTools])
 
   const canSave = useMemo(() => {
     if (!denyWriteMessage.trim()) return false
     return true
   }, [denyWriteMessage])
+
+  const allMcpToolsSorted = useMemo(() => {
+    const set = new Set<string>()
+    Object.values(mcpToolsByServer).forEach(tools => tools.forEach(t => set.add(t)))
+    return Array.from(set).sort()
+  }, [mcpToolsByServer])
+
+  const toggleWriteTool = (toolName: string, checked: boolean) => {
+    const current = new Set(splitLines(writeToolNamesText))
+    if (checked) current.add(toolName)
+    else current.delete(toolName)
+    setWriteToolNamesText(Array.from(current).sort().join('\n'))
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -83,6 +159,7 @@ export function ToolPolicyManager() {
         writeToolNames: splitLines(writeToolNamesText),
         denyWriteChannels: splitLines(denyWriteChannelsText),
         allowWriteToolNamesInDenyChannels: splitLines(allowWriteToolNamesInDenyChannelsText),
+        allowWriteToolNamesByChannel: parseChannelToolMap(allowWriteToolNamesByChannelText),
         denyWriteMessage: denyWriteMessage.trim(),
       })
       setMode('view')
@@ -184,6 +261,10 @@ export function ToolPolicyManager() {
           <b>{effective.allowWriteToolNamesInDenyChannels.length}</b>
         </div>
         <div className="ToolPolicy-row">
+          <span className="ToolPolicy-label">{t('toolPolicy.allowWriteToolsByChannel')}</span>
+          <b>{Object.keys(effective.allowWriteToolNamesByChannel || {}).length}</b>
+        </div>
+        <div className="ToolPolicy-row">
           <span className="ToolPolicy-label">{t('toolPolicy.denyMessage')}</span>
           <span className="ToolPolicy-mono">{effective.denyWriteMessage}</span>
         </div>
@@ -209,6 +290,10 @@ export function ToolPolicyManager() {
               <span className="ToolPolicy-label">{t('toolPolicy.allowWriteToolsInDenyChannels')}</span>
               <b>{stored.allowWriteToolNamesInDenyChannels.length}</b>
             </div>
+            <div className="ToolPolicy-row">
+              <span className="ToolPolicy-label">{t('toolPolicy.allowWriteToolsByChannel')}</span>
+              <b>{Object.keys(stored.allowWriteToolNamesByChannel || {}).length}</b>
+            </div>
           </>
         ) : (
           <div className="ToolPolicy-empty">{t('toolPolicy.noStored')}</div>
@@ -232,6 +317,34 @@ export function ToolPolicyManager() {
             rows={6}
             disabled={mode !== 'edit'}
           />
+          <div className="ToolPolicy-toolsBar">
+            <button
+              className="ToolPolicy-btn ToolPolicy-btn--small"
+              onClick={fetchMcpTools}
+              disabled={toolsLoading || mode !== 'edit'}
+              type="button"
+            >
+              {toolsLoading ? t('toolPolicy.toolsLoading') : t('toolPolicy.refreshTools')}
+            </button>
+            {toolsError && <div className="ToolPolicy-toolsError">{toolsError}</div>}
+          </div>
+          {mode === 'edit' && allMcpToolsSorted.length > 0 && (
+            <div className="ToolPolicy-toolsGrid">
+              {allMcpToolsSorted.map(tool => {
+                const checked = splitLines(writeToolNamesText).includes(tool)
+                return (
+                  <label key={tool} className="ToolPolicy-toolCheck">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={e => toggleWriteTool(tool, e.target.checked)}
+                    />
+                    <span className="ToolPolicy-toolName">{tool}</span>
+                  </label>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         <div className="ToolPolicy-field">
@@ -254,6 +367,18 @@ export function ToolPolicyManager() {
             onChange={e => setAllowWriteToolNamesInDenyChannelsText(e.target.value)}
             placeholder={t('toolPolicy.allowWriteToolsInDenyChannelsPlaceholder')}
             rows={4}
+            disabled={mode !== 'edit'}
+          />
+        </div>
+
+        <div className="ToolPolicy-field">
+          <div className="ToolPolicy-fieldLabel">{t('toolPolicy.allowWriteToolsByChannel')}</div>
+          <textarea
+            className="ToolPolicy-textarea"
+            value={allowWriteToolNamesByChannelText}
+            onChange={e => setAllowWriteToolNamesByChannelText(e.target.value)}
+            placeholder={t('toolPolicy.allowWriteToolsByChannelPlaceholder')}
+            rows={6}
             disabled={mode !== 'edit'}
           />
         </div>

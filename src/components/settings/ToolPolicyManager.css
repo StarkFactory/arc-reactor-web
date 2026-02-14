@@ -122,6 +122,46 @@
   margin-top: 12px;
 }
 
+.ToolPolicy-toolsBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.ToolPolicy-btn--small {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.ToolPolicy-toolsError {
+  color: #ef4444;
+  font-size: 12px;
+}
+
+.ToolPolicy-toolsGrid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px 12px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-primary);
+}
+
+.ToolPolicy-toolCheck {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.ToolPolicy-toolName {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+}
+
 .ToolPolicy-btn {
   padding: 8px 12px;
   border-radius: 10px;
