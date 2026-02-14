@@ -74,6 +74,8 @@ export function ToolPolicyManager() {
   const [collapsedServers, setCollapsedServers] = useState<Record<string, boolean>>({})
   const [selectedAllowChannel, setSelectedAllowChannel] = useState('')
   const [showAdvancedAllowByChannel, setShowAdvancedAllowByChannel] = useState(false)
+  const [denyChannelDraft, setDenyChannelDraft] = useState('')
+  const [denyChannelError, setDenyChannelError] = useState<string | null>(null)
 
   // Form fields
   const [enabled, setEnabled] = useState(false)
@@ -95,11 +97,9 @@ export function ToolPolicyManager() {
     return Array.from(new Set(splitLines(denyWriteChannelsText).map(normalizeChannel).filter(Boolean))).sort()
   }, [denyWriteChannelsText])
 
-  const allowChannels = useMemo(() => {
-    const set = new Set<string>(denyChannels)
-    Object.keys(allowByChannel).forEach(ch => set.add(normalizeChannel(ch)))
-    return Array.from(set).filter(Boolean).sort()
-  }, [allowByChannel, denyChannels])
+  // Only deny-channels are enforced, so keep the main UI scoped to them.
+  // Non-deny channels can still be edited via Advanced textarea.
+  const allowChannels = useMemo(() => denyChannels, [denyChannels])
 
   useEffect(() => {
     if (!allowChannels.length) {
@@ -111,6 +111,37 @@ export function ToolPolicyManager() {
     }
   }, [allowChannels, selectedAllowChannel])
 
+  const addDenyChannel = () => {
+    setDenyChannelError(null)
+    const ch = normalizeChannel(denyChannelDraft)
+    if (!ch) return
+
+    if (denyChannels.includes(ch)) {
+      setDenyChannelError(t('toolPolicy.channelExists'))
+      return
+    }
+
+    const next = [...denyChannels, ch].sort()
+    setDenyWriteChannelsText(next.join('\n'))
+    setDenyChannelDraft('')
+  }
+
+  const removeDenyChannel = (channel: string) => {
+    const ch = normalizeChannel(channel)
+    if (!ch) return
+
+    const next = denyChannels.filter(c => c !== ch)
+    setDenyWriteChannelsText(next.join('\n'))
+
+    // Also prune channel-scoped allowlist for that channel.
+    setAllowWriteToolNamesByChannelText(prev => {
+      const map = parseChannelToolMap(prev)
+      if (!(ch in map)) return prev
+      delete map[ch]
+      return formatChannelToolMap(map)
+    })
+  }
+
   const effective: ToolPolicyResponse | null = state?.effective ?? null
   const stored: ToolPolicyResponse | null = state?.stored ?? null
 
@@ -121,6 +152,8 @@ export function ToolPolicyManager() {
     setAllowWriteToolNamesInDenyChannelsText(joinLines(p.allowWriteToolNamesInDenyChannels))
     setAllowWriteToolNamesByChannelText(formatChannelToolMap(p.allowWriteToolNamesByChannel))
     setDenyWriteMessage(p.denyWriteMessage)
+    setDenyChannelDraft('')
+    setDenyChannelError(null)
   }, [])
 
   const fetchState = useCallback(async () => {
@@ -515,14 +548,66 @@ export function ToolPolicyManager() {
 
         <div className="ToolPolicy-field">
           <div className="ToolPolicy-fieldLabel">{t('toolPolicy.denyChannels')}</div>
-          <textarea
-            className="ToolPolicy-textarea"
-            value={denyWriteChannelsText}
-            onChange={e => setDenyWriteChannelsText(e.target.value)}
-            placeholder={t('toolPolicy.denyChannelsPlaceholder')}
-            rows={3}
-            disabled={mode !== 'edit'}
-          />
+          <div className="ToolPolicy-fieldHelp">{t('toolPolicy.denyChannelsHelp')}</div>
+
+          <div className="ToolPolicy-channelRow">
+            <input
+              className="ToolPolicy-input"
+              value={denyChannelDraft}
+              onChange={e => setDenyChannelDraft(e.target.value)}
+              placeholder={t('toolPolicy.channelPlaceholder')}
+              disabled={mode !== 'edit'}
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  addDenyChannel()
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="ToolPolicy-btn"
+              onClick={addDenyChannel}
+              disabled={mode !== 'edit' || !denyChannelDraft.trim()}
+            >
+              {t('toolPolicy.addChannel')}
+            </button>
+          </div>
+
+          {denyChannelError && <div className="ToolPolicy-toolsError">{denyChannelError}</div>}
+
+          {denyChannels.length === 0 ? (
+            <div className="ToolPolicy-empty ToolPolicy-empty--inline">{t('toolPolicy.noChannels')}</div>
+          ) : (
+            <div className="ToolPolicy-channelChips">
+              {denyChannels.map(ch => (
+                <span key={ch} className="ToolPolicy-chip">
+                  <span className="ToolPolicy-chipLabel">{ch}</span>
+                  <button
+                    type="button"
+                    className="ToolPolicy-chipRemove"
+                    onClick={() => removeDenyChannel(ch)}
+                    disabled={mode !== 'edit'}
+                    aria-label={`${t('toolPolicy.remove')} ${ch}`}
+                    title={t('toolPolicy.remove')}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {showAdvancedAllowByChannel && (
+            <textarea
+              className="ToolPolicy-textarea ToolPolicy-textarea--advanced"
+              value={denyWriteChannelsText}
+              onChange={e => setDenyWriteChannelsText(e.target.value)}
+              placeholder={t('toolPolicy.denyChannelsPlaceholder')}
+              rows={3}
+              disabled={mode !== 'edit'}
+            />
+          )}
         </div>
 
         <div className="ToolPolicy-field">
