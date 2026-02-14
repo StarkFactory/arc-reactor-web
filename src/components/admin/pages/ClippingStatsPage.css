@@ -1,0 +1,65 @@
+.ClipStatsPage-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.ClipStatsPage-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 8px; }
+.ClipStatsPage-desc { color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.5; }
+
+.ClipStatsPage-filters {
+  display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.ClipStatsPage-field { display: flex; flex-direction: column; gap: 4px; }
+.ClipStatsPage-label {
+  font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.03em;
+}
+.ClipStatsPage-input {
+  padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text-primary); font-size: 0.88rem; font-family: inherit;
+  box-sizing: border-box; transition: border-color 0.15s; min-width: 180px;
+}
+.ClipStatsPage-input:focus { border-color: var(--accent); outline: none; }
+
+.ClipStatsPage-error {
+  padding: 10px 16px; background: var(--error-bg); border: 1px solid var(--error-border);
+  border-radius: 8px; color: var(--error); font-size: 0.85rem; margin-bottom: 16px;
+}
+
+.ClipStatsPage-totals {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
+}
+@media (max-width: 640px) { .ClipStatsPage-totals { grid-template-columns: 1fr; } }
+
+.ClipStatsPage-totalCard {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px;
+  padding: 20px; text-align: center;
+}
+.ClipStatsPage-totalValue { font-size: 2rem; font-weight: 700; color: var(--accent); }
+.ClipStatsPage-totalLabel {
+  font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.03em; margin-top: 4px;
+}
+
+.ClipStatsPage-loading, .ClipStatsPage-empty {
+  padding: 40px; text-align: center; color: var(--text-secondary); font-size: 0.88rem;
+}
+
+.ClipStatsPage-table {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px;
+  overflow-x: auto;
+}
+.ClipStatsPage-table table { width: 100%; border-collapse: collapse; }
+.ClipStatsPage-table th {
+  padding: 12px 16px; text-align: left; font-size: 0.78rem; font-weight: 600;
+  color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.03em;
+  border-bottom: 1px solid var(--border); background: var(--bg-primary);
+}
+.ClipStatsPage-table td {
+  padding: 10px 16px; font-size: 0.85rem; border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+.ClipStatsPage-table tr:last-child td { border-bottom: none; }
+.ClipStatsPage-table tr:hover td { background: var(--bg-hover); }
+
+.ClipStatsPage-keywords { display: flex; flex-wrap: wrap; gap: 4px; }
+.ClipStatsPage-keyword {
+  font-size: 0.72rem; font-weight: 500; padding: 2px 6px; border-radius: 4px;
+  background: var(--bg-hover); color: var(--text-secondary);
+}

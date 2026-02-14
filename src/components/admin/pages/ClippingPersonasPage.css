@@ -1,0 +1,97 @@
+.ClipPersonaPage-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.ClipPersonaPage-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 8px; }
+.ClipPersonaPage-desc { color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.5; }
+
+.ClipPersonaPage-addBtn {
+  padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s;
+}
+.ClipPersonaPage-addBtn:hover { background: var(--accent-hover); }
+
+.ClipPersonaPage-error {
+  padding: 10px 16px; background: var(--error-bg); border: 1px solid var(--error-border);
+  border-radius: 8px; color: var(--error); font-size: 0.85rem; margin-bottom: 16px;
+}
+
+.ClipPersonaPage-form {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; margin-bottom: 24px;
+}
+.ClipPersonaPage-formTitle { font-size: 1rem; font-weight: 600; margin: 0 0 16px; }
+.ClipPersonaPage-formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 640px) { .ClipPersonaPage-formGrid { grid-template-columns: 1fr; } }
+.ClipPersonaPage-field { margin-bottom: 12px; }
+.ClipPersonaPage-formGrid .ClipPersonaPage-field { margin-bottom: 0; }
+.ClipPersonaPage-label {
+  display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em;
+}
+.ClipPersonaPage-input, .ClipPersonaPage-textarea {
+  width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text-primary); font-size: 0.88rem; font-family: inherit;
+  box-sizing: border-box; transition: border-color 0.15s;
+}
+.ClipPersonaPage-textarea {
+  resize: vertical; line-height: 1.5; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem;
+}
+.ClipPersonaPage-input:focus, .ClipPersonaPage-textarea:focus { border-color: var(--accent); outline: none; }
+
+.ClipPersonaPage-checkLabel {
+  display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;
+}
+
+.ClipPersonaPage-formActions { display: flex; gap: 8px; }
+.ClipPersonaPage-saveBtn {
+  padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.ClipPersonaPage-saveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ClipPersonaPage-cancelBtn {
+  padding: 8px 20px; background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer;
+}
+
+.ClipPersonaPage-loading, .ClipPersonaPage-empty {
+  padding: 40px; text-align: center; color: var(--text-secondary); font-size: 0.88rem;
+}
+
+.ClipPersonaPage-list { display: flex; flex-direction: column; gap: 12px; }
+.ClipPersonaPage-card {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px;
+}
+.ClipPersonaPage-cardHeader {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px;
+}
+.ClipPersonaPage-cardTitle { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.ClipPersonaPage-cardName { font-weight: 600; font-size: 0.95rem; }
+.ClipPersonaPage-badge {
+  font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: 0.03em;
+}
+.ClipPersonaPage-badgeActive { background: #16a34a20; color: #16a34a; }
+.ClipPersonaPage-badgeInactive { background: var(--bg-hover); color: var(--text-secondary); }
+
+.ClipPersonaPage-cardActions { display: flex; gap: 6px; flex-shrink: 0; }
+.ClipPersonaPage-editBtn, .ClipPersonaPage-deleteBtn {
+  padding: 4px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: background 0.15s, color 0.15s;
+}
+.ClipPersonaPage-editBtn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.ClipPersonaPage-deleteBtn:hover { background: var(--error-bg); color: var(--error); border-color: var(--error-border); }
+
+.ClipPersonaPage-cardDesc { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 10px; }
+
+.ClipPersonaPage-cardPrompt { margin-bottom: 10px; }
+.ClipPersonaPage-promptPre {
+  margin: 4px 0 0; padding: 8px 12px; background: var(--bg-primary); border: 1px solid var(--border);
+  border-radius: 6px; font-size: 0.78rem; font-family: 'SF Mono', 'Fira Code', monospace;
+  line-height: 1.5; white-space: pre-wrap; word-break: break-all; max-height: 120px;
+  overflow-y: auto; color: var(--text-secondary);
+}
+
+.ClipPersonaPage-cardMeta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--text-secondary); }
+.ClipPersonaPage-metaItem { display: flex; align-items: center; gap: 4px; }
+.ClipPersonaPage-metaLabel {
+  font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--text-secondary); opacity: 0.7;
+}
