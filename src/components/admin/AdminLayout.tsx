@@ -18,6 +18,11 @@ export function AdminLayout() {
     { to: '/admin/intents', label: t('admin.nav.intents') },
     { to: '/admin/output-guard', label: t('admin.nav.outputGuard') },
     { to: '/admin/tool-policy', label: t('admin.nav.toolPolicy') },
+    { to: '/admin/scheduler', label: t('admin.nav.scheduler') },
+    { to: '/admin/clipping/categories', label: t('admin.nav.clippingCategories') },
+    { to: '/admin/clipping/sources', label: t('admin.nav.clippingSources') },
+    { to: '/admin/clipping/personas', label: t('admin.nav.clippingPersonas') },
+    { to: '/admin/clipping/stats', label: t('admin.nav.clippingStats') },
   ]
 
   return (

@@ -1,0 +1,73 @@
+.ClipCatPage-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.ClipCatPage-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 8px; }
+.ClipCatPage-desc { color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.5; }
+
+.ClipCatPage-addBtn {
+  padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s;
+}
+.ClipCatPage-addBtn:hover { background: var(--accent-hover); }
+
+.ClipCatPage-error {
+  padding: 10px 16px; background: var(--error-bg); border: 1px solid var(--error-border);
+  border-radius: 8px; color: var(--error); font-size: 0.85rem; margin-bottom: 16px;
+}
+
+.ClipCatPage-form {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; margin-bottom: 24px;
+}
+.ClipCatPage-formTitle { font-size: 1rem; font-weight: 600; margin: 0 0 16px; }
+.ClipCatPage-formGrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 640px) { .ClipCatPage-formGrid { grid-template-columns: 1fr; } }
+.ClipCatPage-field { margin-bottom: 12px; }
+.ClipCatPage-formGrid .ClipCatPage-field { margin-bottom: 0; }
+.ClipCatPage-label {
+  display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em;
+}
+.ClipCatPage-input {
+  width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text-primary); font-size: 0.88rem; font-family: inherit;
+  box-sizing: border-box; transition: border-color 0.15s;
+}
+.ClipCatPage-input:focus { border-color: var(--accent); outline: none; }
+
+.ClipCatPage-formActions { display: flex; gap: 8px; }
+.ClipCatPage-saveBtn {
+  padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.ClipCatPage-saveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ClipCatPage-cancelBtn {
+  padding: 8px 20px; background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer;
+}
+
+.ClipCatPage-loading, .ClipCatPage-empty {
+  padding: 40px; text-align: center; color: var(--text-secondary); font-size: 0.88rem;
+}
+
+.ClipCatPage-list { display: flex; flex-direction: column; gap: 12px; }
+.ClipCatPage-card {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px;
+}
+.ClipCatPage-cardHeader {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px;
+}
+.ClipCatPage-cardName { font-weight: 600; font-size: 0.95rem; }
+.ClipCatPage-cardActions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.ClipCatPage-editBtn, .ClipCatPage-deleteBtn {
+  padding: 4px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: background 0.15s, color 0.15s;
+}
+.ClipCatPage-editBtn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.ClipCatPage-deleteBtn:hover { background: var(--error-bg); color: var(--error); border-color: var(--error-border); }
+
+.ClipCatPage-cardMeta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--text-secondary); }
+.ClipCatPage-metaItem { display: flex; align-items: center; gap: 4px; }
+.ClipCatPage-metaLabel {
+  font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--text-secondary); opacity: 0.7;
+}

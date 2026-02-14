@@ -1,0 +1,99 @@
+.ClipSrcPage-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.ClipSrcPage-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 8px; }
+.ClipSrcPage-desc { color: var(--text-secondary); font-size: 0.88rem; margin: 0; line-height: 1.5; }
+
+.ClipSrcPage-addBtn {
+  padding: 8px 16px; background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.15s;
+}
+.ClipSrcPage-addBtn:hover { background: var(--accent-hover); }
+
+.ClipSrcPage-error {
+  padding: 10px 16px; background: var(--error-bg); border: 1px solid var(--error-border);
+  border-radius: 8px; color: var(--error); font-size: 0.85rem; margin-bottom: 16px;
+}
+
+.ClipSrcPage-form {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; margin-bottom: 24px;
+}
+.ClipSrcPage-formTitle { font-size: 1rem; font-weight: 600; margin: 0 0 16px; }
+.ClipSrcPage-formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+@media (max-width: 640px) { .ClipSrcPage-formGrid { grid-template-columns: 1fr; } }
+.ClipSrcPage-field { margin-bottom: 12px; }
+.ClipSrcPage-formGrid .ClipSrcPage-field { margin-bottom: 0; }
+.ClipSrcPage-label {
+  display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.03em;
+}
+.ClipSrcPage-input {
+  width: 100%; padding: 10px 12px; background: var(--bg-primary); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text-primary); font-size: 0.88rem; font-family: inherit;
+  box-sizing: border-box; transition: border-color 0.15s;
+}
+.ClipSrcPage-input:focus { border-color: var(--accent); outline: none; }
+
+.ClipSrcPage-formActions { display: flex; gap: 8px; }
+.ClipSrcPage-saveBtn {
+  padding: 8px 20px; background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+}
+.ClipSrcPage-saveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ClipSrcPage-cancelBtn {
+  padding: 8px 20px; background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; cursor: pointer;
+}
+
+.ClipSrcPage-loading, .ClipSrcPage-empty {
+  padding: 40px; text-align: center; color: var(--text-secondary); font-size: 0.88rem;
+}
+
+.ClipSrcPage-list { display: flex; flex-direction: column; gap: 12px; }
+.ClipSrcPage-card {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px;
+}
+.ClipSrcPage-cardHeader {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 12px;
+}
+.ClipSrcPage-cardTitle { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.ClipSrcPage-cardName { font-weight: 600; font-size: 0.95rem; }
+
+.ClipSrcPage-badge {
+  font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: 0.03em;
+}
+.ClipSrcPage-badgeVerified { background: #16a34a20; color: #16a34a; }
+.ClipSrcPage-badgeApproved { background: #2563eb20; color: #2563eb; }
+.ClipSrcPage-badgePending { background: var(--bg-hover); color: var(--text-secondary); }
+.ClipSrcPage-badgeError { background: var(--error-bg); color: var(--error); }
+
+.ClipSrcPage-cardActions { display: flex; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+
+.ClipSrcPage-verifyBtn, .ClipSrcPage-approveBtn, .ClipSrcPage-revokeBtn,
+.ClipSrcPage-editBtn, .ClipSrcPage-deleteBtn {
+  padding: 4px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: background 0.15s, color 0.15s;
+}
+.ClipSrcPage-verifyBtn { border-color: #8b5cf6; color: #8b5cf6; }
+.ClipSrcPage-verifyBtn:hover { background: #8b5cf6; color: #fff; }
+.ClipSrcPage-verifyBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ClipSrcPage-approveBtn { border-color: #16a34a; color: #16a34a; }
+.ClipSrcPage-approveBtn:hover { background: #16a34a; color: #fff; }
+.ClipSrcPage-approveBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ClipSrcPage-revokeBtn { border-color: #ea580c; color: #ea580c; }
+.ClipSrcPage-revokeBtn:hover { background: #ea580c; color: #fff; }
+.ClipSrcPage-revokeBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ClipSrcPage-editBtn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.ClipSrcPage-deleteBtn:hover { background: var(--error-bg); color: var(--error); border-color: var(--error-border); }
+
+.ClipSrcPage-cardUrl { font-size: 0.82rem; margin-bottom: 10px; }
+.ClipSrcPage-cardUrl a { color: var(--accent); text-decoration: none; }
+.ClipSrcPage-cardUrl a:hover { text-decoration: underline; }
+
+.ClipSrcPage-cardMeta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--text-secondary); }
+.ClipSrcPage-metaItem { display: flex; align-items: center; gap: 4px; }
+.ClipSrcPage-metaLabel {
+  font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--text-secondary); opacity: 0.7;
+}
+.ClipSrcPage-metaError { color: var(--error); }
