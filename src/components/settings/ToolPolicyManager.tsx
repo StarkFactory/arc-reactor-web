@@ -7,6 +7,10 @@ import './ToolPolicyManager.css'
 
 type Mode = 'view' | 'edit'
 
+function normalizeChannel(s: string): string {
+  return s.trim().toLowerCase()
+}
+
 function parseChannelToolMap(text: string): Record<string, string[]> {
   const out: Record<string, string[]> = {}
   for (const rawLine of text.split('\n')) {
@@ -14,7 +18,7 @@ function parseChannelToolMap(text: string): Record<string, string[]> {
     if (!line) continue
     const idx = line.indexOf(':')
     if (idx <= 0) continue
-    const channel = line.slice(0, idx).trim().toLowerCase()
+    const channel = normalizeChannel(line.slice(0, idx))
     if (!channel) continue
     const toolsPart = line.slice(idx + 1).trim()
     if (!toolsPart) continue
@@ -49,6 +53,12 @@ function joinLines(items: string[] | Set<string> | null | undefined): string {
   return arr.join('\n')
 }
 
+function matchesFilter(value: string, filter: string): boolean {
+  const f = filter.trim().toLowerCase()
+  if (!f) return true
+  return value.toLowerCase().includes(f)
+}
+
 export function ToolPolicyManager() {
   const { t } = useTranslation()
   const [state, setState] = useState<ToolPolicyStateResponse | null>(null)
@@ -59,6 +69,11 @@ export function ToolPolicyManager() {
   const [toolsLoading, setToolsLoading] = useState(false)
   const [toolsError, setToolsError] = useState<string | null>(null)
   const [mcpToolsByServer, setMcpToolsByServer] = useState<Record<string, string[]>>({})
+  const [writeToolFilter, setWriteToolFilter] = useState('')
+  const [allowToolFilter, setAllowToolFilter] = useState('')
+  const [collapsedServers, setCollapsedServers] = useState<Record<string, boolean>>({})
+  const [selectedAllowChannel, setSelectedAllowChannel] = useState('')
+  const [showAdvancedAllowByChannel, setShowAdvancedAllowByChannel] = useState(false)
 
   // Form fields
   const [enabled, setEnabled] = useState(false)
@@ -69,6 +84,32 @@ export function ToolPolicyManager() {
   const [denyWriteMessage, setDenyWriteMessage] = useState(
     'Error: This tool is not allowed in this channel'
   )
+
+  const writeToolSet = useMemo(() => new Set(splitLines(writeToolNamesText)), [writeToolNamesText])
+  const allowByChannel = useMemo(
+    () => parseChannelToolMap(allowWriteToolNamesByChannelText),
+    [allowWriteToolNamesByChannelText]
+  )
+
+  const denyChannels = useMemo(() => {
+    return Array.from(new Set(splitLines(denyWriteChannelsText).map(normalizeChannel).filter(Boolean))).sort()
+  }, [denyWriteChannelsText])
+
+  const allowChannels = useMemo(() => {
+    const set = new Set<string>(denyChannels)
+    Object.keys(allowByChannel).forEach(ch => set.add(normalizeChannel(ch)))
+    return Array.from(set).filter(Boolean).sort()
+  }, [allowByChannel, denyChannels])
+
+  useEffect(() => {
+    if (!allowChannels.length) {
+      if (selectedAllowChannel) setSelectedAllowChannel('')
+      return
+    }
+    if (!selectedAllowChannel || !allowChannels.includes(selectedAllowChannel)) {
+      setSelectedAllowChannel(allowChannels[0])
+    }
+  }, [allowChannels, selectedAllowChannel])
 
   const effective: ToolPolicyResponse | null = state?.effective ?? null
   const stored: ToolPolicyResponse | null = state?.stored ?? null
@@ -137,17 +178,78 @@ export function ToolPolicyManager() {
     return true
   }, [denyWriteMessage])
 
-  const allMcpToolsSorted = useMemo(() => {
-    const set = new Set<string>()
-    Object.values(mcpToolsByServer).forEach(tools => tools.forEach(t => set.add(t)))
-    return Array.from(set).sort()
-  }, [mcpToolsByServer])
+  const serversSorted = useMemo(() => Object.keys(mcpToolsByServer).sort(), [mcpToolsByServer])
+
+  const visibleToolsByServer = useMemo(() => {
+    const out: Record<string, string[]> = {}
+    for (const server of serversSorted) {
+      const tools = (mcpToolsByServer[server] ?? []).filter(tn => matchesFilter(tn, writeToolFilter))
+      out[server] = tools
+    }
+    return out
+  }, [mcpToolsByServer, serversSorted, writeToolFilter])
+
+  const writeToolsByServerForAllowlist = useMemo(() => {
+    const out: Record<string, string[]> = {}
+    const remaining = new Set(Array.from(writeToolSet))
+
+    for (const server of serversSorted) {
+      const serverTools = (mcpToolsByServer[server] ?? []).filter(tn => remaining.has(tn))
+      if (serverTools.length) {
+        out[server] = serverTools.slice().sort()
+        serverTools.forEach(tn => remaining.delete(tn))
+      }
+    }
+
+    if (remaining.size) {
+      out['_unknown'] = Array.from(remaining).sort()
+    }
+    return out
+  }, [mcpToolsByServer, serversSorted, writeToolSet])
 
   const toggleWriteTool = (toolName: string, checked: boolean) => {
-    const current = new Set(splitLines(writeToolNamesText))
+    const current = new Set(writeToolSet)
     if (checked) current.add(toolName)
     else current.delete(toolName)
     setWriteToolNamesText(Array.from(current).sort().join('\n'))
+  }
+
+  const updateWriteToolsBulk = (server: string, action: 'select' | 'clear') => {
+    const serverTools = visibleToolsByServer[server] ?? []
+    if (!serverTools.length) return
+    const next = new Set(writeToolSet)
+    if (action === 'select') serverTools.forEach(tn => next.add(tn))
+    else serverTools.forEach(tn => next.delete(tn))
+    setWriteToolNamesText(Array.from(next).sort().join('\n'))
+  }
+
+  const toggleAllowToolForChannel = (channel: string, toolName: string, checked: boolean) => {
+    const ch = normalizeChannel(channel)
+    if (!ch) return
+    setAllowWriteToolNamesByChannelText(prev => {
+      const map = parseChannelToolMap(prev)
+      const current = new Set(map[ch] ?? [])
+      if (checked) current.add(toolName)
+      else current.delete(toolName)
+      if (current.size === 0) delete map[ch]
+      else map[ch] = Array.from(current).sort()
+      return formatChannelToolMap(map)
+    })
+  }
+
+  const setAllowAllForChannel = (channel: string, action: 'select' | 'clear') => {
+    const ch = normalizeChannel(channel)
+    if (!ch) return
+    const tools = Array.from(writeToolSet).filter(tn => matchesFilter(tn, allowToolFilter)).sort()
+    setAllowWriteToolNamesByChannelText(prev => {
+      const map = parseChannelToolMap(prev)
+      if (action === 'clear') {
+        delete map[ch]
+      } else {
+        map[ch] = tools
+      }
+      return formatChannelToolMap(map)
+    })
   }
 
   const handleSave = async () => {
@@ -317,6 +419,7 @@ export function ToolPolicyManager() {
             rows={6}
             disabled={mode !== 'edit'}
           />
+          <div className="ToolPolicy-fieldHelp">{t('toolPolicy.writeToolsHelp')}</div>
           <div className="ToolPolicy-toolsBar">
             <button
               className="ToolPolicy-btn ToolPolicy-btn--small"
@@ -328,22 +431,85 @@ export function ToolPolicyManager() {
             </button>
             {toolsError && <div className="ToolPolicy-toolsError">{toolsError}</div>}
           </div>
-          {mode === 'edit' && allMcpToolsSorted.length > 0 && (
-            <div className="ToolPolicy-toolsGrid">
-              {allMcpToolsSorted.map(tool => {
-                const checked = splitLines(writeToolNamesText).includes(tool)
-                return (
-                  <label key={tool} className="ToolPolicy-toolCheck">
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={e => toggleWriteTool(tool, e.target.checked)}
-                    />
-                    <span className="ToolPolicy-toolName">{tool}</span>
-                  </label>
-                )
-              })}
-            </div>
+          {mode === 'edit' && serversSorted.length > 0 && (
+            <>
+              <div className="ToolPolicy-filterRow">
+                <input
+                  className="ToolPolicy-input"
+                  value={writeToolFilter}
+                  onChange={e => setWriteToolFilter(e.target.value)}
+                  placeholder={t('toolPolicy.filterToolsPlaceholder')}
+                />
+              </div>
+              <div className="ToolPolicy-serverGroups">
+                {serversSorted.map(server => {
+                  const tools = visibleToolsByServer[server] ?? []
+                  const selectedCount = tools.filter(tn => writeToolSet.has(tn)).length
+                  const collapsed = !!collapsedServers[`write:${server}`]
+                  return (
+                    <div key={server} className="ToolPolicy-serverGroup">
+                      <div className="ToolPolicy-serverHeader">
+                        <button
+                          type="button"
+                          className="ToolPolicy-serverToggle"
+                          onClick={() =>
+                            setCollapsedServers(prev => ({
+                              ...prev,
+                              [`write:${server}`]: !prev[`write:${server}`],
+                            }))
+                          }
+                        >
+                          <span className="ToolPolicy-serverName">{server}</span>
+                          <span className="ToolPolicy-serverMeta">
+                            {selectedCount}/{tools.length}
+                          </span>
+                        </button>
+                        <div className="ToolPolicy-serverActions">
+                          <button
+                            type="button"
+                            className="ToolPolicy-btn ToolPolicy-btn--small"
+                            onClick={() => updateWriteToolsBulk(server, 'select')}
+                            disabled={mode !== 'edit' || toolsLoading || tools.length === 0}
+                          >
+                            {t('toolPolicy.selectAll')}
+                          </button>
+                          <button
+                            type="button"
+                            className="ToolPolicy-btn ToolPolicy-btn--small"
+                            onClick={() => updateWriteToolsBulk(server, 'clear')}
+                            disabled={mode !== 'edit' || toolsLoading || tools.length === 0}
+                          >
+                            {t('toolPolicy.clearAll')}
+                          </button>
+                        </div>
+                      </div>
+                      {!collapsed && tools.length > 0 && (
+                        <div className="ToolPolicy-toolsGrid ToolPolicy-toolsGrid--grouped">
+                          {tools.map(tool => {
+                            const checked = writeToolSet.has(tool)
+                            return (
+                              <label key={tool} className="ToolPolicy-toolCheck">
+                                <input
+                                  type="checkbox"
+                                  checked={checked}
+                                  onChange={e => toggleWriteTool(tool, e.target.checked)}
+                                />
+                                <span className="ToolPolicy-toolName">{tool}</span>
+                              </label>
+                            )
+                          })}
+                        </div>
+                      )}
+                      {!collapsed && tools.length === 0 && (
+                        <div className="ToolPolicy-empty ToolPolicy-empty--inline">
+                          {t('toolPolicy.noToolsForFilter')}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </>
           )}
         </div>
 
@@ -369,18 +535,143 @@ export function ToolPolicyManager() {
             rows={4}
             disabled={mode !== 'edit'}
           />
+          <div className="ToolPolicy-fieldHelp">{t('toolPolicy.allowWriteToolsInDenyChannelsHelp')}</div>
         </div>
 
         <div className="ToolPolicy-field">
           <div className="ToolPolicy-fieldLabel">{t('toolPolicy.allowWriteToolsByChannel')}</div>
-          <textarea
-            className="ToolPolicy-textarea"
-            value={allowWriteToolNamesByChannelText}
-            onChange={e => setAllowWriteToolNamesByChannelText(e.target.value)}
-            placeholder={t('toolPolicy.allowWriteToolsByChannelPlaceholder')}
-            rows={6}
-            disabled={mode !== 'edit'}
-          />
+          <div className="ToolPolicy-fieldHelp">{t('toolPolicy.allowWriteToolsByChannelHelp')}</div>
+
+          {mode === 'edit' && (
+            <div className="ToolPolicy-allowByChannel">
+              {allowChannels.length === 0 ? (
+                <div className="ToolPolicy-empty">{t('toolPolicy.noChannels')}</div>
+              ) : (
+                <>
+                  <div className="ToolPolicy-allowHeader">
+                    <select
+                      className="ToolPolicy-select"
+                      value={selectedAllowChannel}
+                      onChange={e => setSelectedAllowChannel(e.target.value)}
+                      disabled={mode !== 'edit'}
+                    >
+                      {allowChannels.map(ch => (
+                        <option key={ch} value={ch}>
+                          {ch}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="ToolPolicy-allowActions">
+                      <button
+                        type="button"
+                        className="ToolPolicy-btn ToolPolicy-btn--small"
+                        onClick={() => setAllowAllForChannel(selectedAllowChannel, 'select')}
+                        disabled={mode !== 'edit' || !selectedAllowChannel || writeToolSet.size === 0}
+                      >
+                        {t('toolPolicy.selectAll')}
+                      </button>
+                      <button
+                        type="button"
+                        className="ToolPolicy-btn ToolPolicy-btn--small"
+                        onClick={() => setAllowAllForChannel(selectedAllowChannel, 'clear')}
+                        disabled={mode !== 'edit' || !selectedAllowChannel}
+                      >
+                        {t('toolPolicy.clearAll')}
+                      </button>
+                      <button
+                        type="button"
+                        className="ToolPolicy-btn ToolPolicy-btn--small"
+                        onClick={() => setShowAdvancedAllowByChannel(v => !v)}
+                        disabled={mode !== 'edit'}
+                      >
+                        {showAdvancedAllowByChannel ? t('toolPolicy.hideAdvanced') : t('toolPolicy.showAdvanced')}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="ToolPolicy-filterRow">
+                    <input
+                      className="ToolPolicy-input"
+                      value={allowToolFilter}
+                      onChange={e => setAllowToolFilter(e.target.value)}
+                      placeholder={t('toolPolicy.filterAllowToolsPlaceholder')}
+                      disabled={mode !== 'edit'}
+                    />
+                  </div>
+
+                  {writeToolSet.size === 0 ? (
+                    <div className="ToolPolicy-empty">{t('toolPolicy.noWriteToolsSelected')}</div>
+                  ) : (
+                    <div className="ToolPolicy-serverGroups">
+                      {Object.keys(writeToolsByServerForAllowlist).sort().map(server => {
+                        const tools = (writeToolsByServerForAllowlist[server] ?? []).filter(tn =>
+                          matchesFilter(tn, allowToolFilter)
+                        )
+                        const allowSet = new Set(allowByChannel[selectedAllowChannel] ?? [])
+                        const selectedCount = tools.filter(tn => allowSet.has(tn)).length
+                        const label = server === '_unknown' ? t('toolPolicy.unknownServer') : server
+                        const collapsed = !!collapsedServers[`allow:${selectedAllowChannel}:${server}`]
+                        return (
+                          <div key={server} className="ToolPolicy-serverGroup">
+                            <div className="ToolPolicy-serverHeader">
+                              <button
+                                type="button"
+                                className="ToolPolicy-serverToggle"
+                                onClick={() =>
+                                  setCollapsedServers(prev => ({
+                                    ...prev,
+                                    [`allow:${selectedAllowChannel}:${server}`]: !prev[`allow:${selectedAllowChannel}:${server}`],
+                                  }))
+                                }
+                              >
+                                <span className="ToolPolicy-serverName">{label}</span>
+                                <span className="ToolPolicy-serverMeta">
+                                  {selectedCount}/{tools.length}
+                                </span>
+                              </button>
+                            </div>
+                            {!collapsed && tools.length > 0 && (
+                              <div className="ToolPolicy-toolsGrid ToolPolicy-toolsGrid--grouped">
+                                {tools.map(tool => {
+                                  const checked = allowSet.has(tool)
+                                  return (
+                                    <label key={tool} className="ToolPolicy-toolCheck">
+                                      <input
+                                        type="checkbox"
+                                        checked={checked}
+                                        onChange={e => toggleAllowToolForChannel(selectedAllowChannel, tool, e.target.checked)}
+                                      />
+                                      <span className="ToolPolicy-toolName">{tool}</span>
+                                    </label>
+                                  )
+                                })}
+                              </div>
+                            )}
+                            {!collapsed && tools.length === 0 && (
+                              <div className="ToolPolicy-empty ToolPolicy-empty--inline">
+                                {t('toolPolicy.noToolsForFilter')}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {showAdvancedAllowByChannel && (
+                    <textarea
+                      className="ToolPolicy-textarea ToolPolicy-textarea--advanced"
+                      value={allowWriteToolNamesByChannelText}
+                      onChange={e => setAllowWriteToolNamesByChannelText(e.target.value)}
+                      placeholder={t('toolPolicy.allowWriteToolsByChannelPlaceholder')}
+                      rows={6}
+                      disabled={mode !== 'edit'}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="ToolPolicy-field">
