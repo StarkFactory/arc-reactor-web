@@ -18,6 +18,7 @@ export function AdminLayout() {
     { to: '/admin/intents', label: t('admin.nav.intents') },
     { to: '/admin/output-guard', label: t('admin.nav.outputGuard') },
     { to: '/admin/tool-policy', label: t('admin.nav.toolPolicy') },
+    { to: '/admin/scheduler', label: t('admin.nav.scheduler') },
   ]
 
   return (

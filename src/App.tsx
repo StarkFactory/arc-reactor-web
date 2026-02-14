@@ -17,6 +17,7 @@ import { PersonasPage } from './components/admin/pages/PersonasPage'
 import { IntentsPage } from './components/admin/pages/IntentsPage'
 import { OutputGuardPage } from './components/admin/pages/OutputGuardPage'
 import { ToolPolicyPage } from './components/admin/pages/ToolPolicyPage'
+import { SchedulerPage } from './components/admin/pages/SchedulerPage'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import './App.css'
 
@@ -114,6 +115,7 @@ export default function App() {
         <Route path="intents" element={<IntentsPage />} />
         <Route path="output-guard" element={<OutputGuardPage />} />
         <Route path="tool-policy" element={<ToolPolicyPage />} />
+        <Route path="scheduler" element={<SchedulerPage />} />
       </Route>
       <Route path="*" element={<ChatPage />} />
     </Routes>

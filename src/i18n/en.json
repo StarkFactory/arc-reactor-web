@@ -221,7 +221,8 @@
       "personas": "Personas",
       "intents": "Intents",
       "outputGuard": "Output Guard",
-      "toolPolicy": "Tool Policy"
+      "toolPolicy": "Tool Policy",
+      "scheduler": "Scheduler"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -306,6 +307,45 @@
     "toolPolicyPage": {
       "title": "Tool Policy",
       "description": "Manage write-tool safety policy and channel deny rules (dynamic)."
+    },
+    "schedulerPage": {
+      "title": "Scheduler",
+      "description": "Manage cron-based scheduled MCP tool executions.",
+      "newJob": "New Job",
+      "createTitle": "Create Scheduled Job",
+      "editTitle": "Edit Scheduled Job",
+      "name": "Name",
+      "namePlaceholder": "e.g. daily-rss-collect",
+      "descriptionPlaceholder": "What this job does",
+      "cron": "Cron",
+      "mcpServer": "MCP Server",
+      "mcpServerPlaceholder": "e.g. clipping-mcp-server",
+      "toolName": "Tool",
+      "toolNamePlaceholder": "e.g. clip_collect",
+      "toolArgs": "Tool Arguments (JSON)",
+      "timezone": "Timezone",
+      "slackChannel": "Slack Channel",
+      "slackChannelPlaceholder": "e.g. #daily-digest",
+      "enabled": "Enabled",
+      "active": "Active",
+      "inactive": "Inactive",
+      "trigger": "Run Now",
+      "triggering": "Running...",
+      "edit": "Edit",
+      "delete": "Delete",
+      "create": "Create",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "lastRun": "Last Run",
+      "lastResult": "Last Result",
+      "loading": "Loading scheduled jobs...",
+      "empty": "No scheduled jobs yet. Create one to get started.",
+      "loadError": "Failed to load scheduled jobs",
+      "saveError": "Failed to save scheduled job",
+      "deleteError": "Failed to delete scheduled job",
+      "deleteConfirm": "Delete this scheduled job?",
+      "triggerError": "Failed to trigger job execution"
     }
   },
   "intent": {

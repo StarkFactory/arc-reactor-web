@@ -221,7 +221,8 @@
       "personas": "페르소나",
       "intents": "인텐트",
       "outputGuard": "Output Guard",
-      "toolPolicy": "Tool Policy"
+      "toolPolicy": "Tool Policy",
+      "scheduler": "스케줄러"
     },
     "dashboard": {
       "title": "대시보드",
@@ -306,6 +307,45 @@
     "toolPolicyPage": {
       "title": "Tool Policy",
       "description": "write tool 안전 정책과 채널 deny 규칙을 동적으로 관리합니다."
+    },
+    "schedulerPage": {
+      "title": "스케줄러",
+      "description": "Cron 기반 MCP 도구 자동 실행을 관리합니다.",
+      "newJob": "새 작업",
+      "createTitle": "스케줄 작업 생성",
+      "editTitle": "스케줄 작업 수정",
+      "name": "이름",
+      "namePlaceholder": "예: daily-rss-collect",
+      "descriptionPlaceholder": "작업 설명",
+      "cron": "Cron",
+      "mcpServer": "MCP 서버",
+      "mcpServerPlaceholder": "예: clipping-mcp-server",
+      "toolName": "도구",
+      "toolNamePlaceholder": "예: clip_collect",
+      "toolArgs": "도구 인수 (JSON)",
+      "timezone": "시간대",
+      "slackChannel": "Slack 채널",
+      "slackChannelPlaceholder": "예: #daily-digest",
+      "enabled": "활성화",
+      "active": "활성",
+      "inactive": "비활성",
+      "trigger": "즉시 실행",
+      "triggering": "실행 중...",
+      "edit": "수정",
+      "delete": "삭제",
+      "create": "생성",
+      "save": "저장",
+      "saving": "저장 중...",
+      "cancel": "취소",
+      "lastRun": "마지막 실행",
+      "lastResult": "마지막 결과",
+      "loading": "스케줄 작업을 불러오는 중...",
+      "empty": "아직 스케줄 작업이 없습니다. 새 작업을 만들어보세요.",
+      "loadError": "스케줄 작업을 불러오지 못했습니다",
+      "saveError": "스케줄 작업 저장에 실패했습니다",
+      "deleteError": "스케줄 작업 삭제에 실패했습니다",
+      "deleteConfirm": "이 스케줄 작업을 삭제하시겠습니까?",
+      "triggerError": "작업 실행에 실패했습니다"
     }
   },
   "intent": {

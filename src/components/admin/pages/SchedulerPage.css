@@ -1,0 +1,339 @@
+.SchedulerPage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.SchedulerPage-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.SchedulerPage-desc {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.SchedulerPage-addBtn {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.SchedulerPage-addBtn:hover {
+  background: var(--accent-hover);
+}
+
+.SchedulerPage-error {
+  padding: 10px 16px;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 8px;
+  color: var(--error);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.SchedulerPage-form {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.SchedulerPage-formTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.SchedulerPage-formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+  .SchedulerPage-formGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.SchedulerPage-field {
+  margin-bottom: 12px;
+}
+
+.SchedulerPage-formGrid .SchedulerPage-field {
+  margin-bottom: 0;
+}
+
+.SchedulerPage-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.SchedulerPage-input,
+.SchedulerPage-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.SchedulerPage-textarea {
+  resize: vertical;
+  line-height: 1.5;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.82rem;
+}
+
+.SchedulerPage-input:focus,
+.SchedulerPage-textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.SchedulerPage-checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.SchedulerPage-formActions {
+  display: flex;
+  gap: 8px;
+}
+
+.SchedulerPage-saveBtn {
+  padding: 8px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.SchedulerPage-saveBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.SchedulerPage-cancelBtn {
+  padding: 8px 20px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.SchedulerPage-loading,
+.SchedulerPage-empty {
+  padding: 40px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+}
+
+.SchedulerPage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.SchedulerPage-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+
+.SchedulerPage-cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
+.SchedulerPage-cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.SchedulerPage-cardName {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.SchedulerPage-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.SchedulerPage-badgeActive {
+  background: #16a34a20;
+  color: #16a34a;
+}
+
+.SchedulerPage-badgeInactive {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.SchedulerPage-statusSuccess {
+  background: #16a34a20;
+  color: #16a34a;
+}
+
+.SchedulerPage-statusFailed {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.SchedulerPage-statusRunning {
+  background: #2563eb20;
+  color: #2563eb;
+}
+
+.SchedulerPage-cardActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.SchedulerPage-triggerBtn,
+.SchedulerPage-editBtn,
+.SchedulerPage-deleteBtn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  transition: background 0.15s, color 0.15s;
+}
+
+.SchedulerPage-triggerBtn {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.SchedulerPage-triggerBtn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.SchedulerPage-triggerBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.SchedulerPage-editBtn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.SchedulerPage-deleteBtn:hover {
+  background: var(--error-bg);
+  color: var(--error);
+  border-color: var(--error-border);
+}
+
+.SchedulerPage-cardDesc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.SchedulerPage-cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.SchedulerPage-metaItem {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.SchedulerPage-metaLabel {
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.SchedulerPage-metaItem code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.78rem;
+  padding: 1px 6px;
+  background: var(--bg-hover);
+  border-radius: 4px;
+}
+
+.SchedulerPage-cardResult {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.SchedulerPage-resultPre {
+  margin: 4px 0 0;
+  padding: 8px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 120px;
+  overflow-y: auto;
+  color: var(--text-secondary);
+}
