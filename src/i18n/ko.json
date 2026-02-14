@@ -4,6 +4,9 @@
     "subtitle": "AI Agent Chat",
     "loading": "로딩 중..."
   },
+  "header": {
+    "admin": "관리자"
+  },
   "chat": {
     "placeholder": "메시지를 입력하세요...",
     "send": "보내기",

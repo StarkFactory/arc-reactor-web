@@ -4,6 +4,9 @@
     "subtitle": "AI Agent Chat",
     "loading": "Loading..."
   },
+  "header": {
+    "admin": "Admin"
+  },
   "chat": {
     "placeholder": "Type a message...",
     "send": "Send",

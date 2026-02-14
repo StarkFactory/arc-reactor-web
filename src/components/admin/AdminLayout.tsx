@@ -1,11 +1,15 @@
-import { NavLink, Outlet, Link } from 'react-router-dom'
+import { NavLink, Outlet, Link, Navigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from '../../context/AuthContext'
 import { useSettings } from '../../hooks/useSettings'
 import './AdminLayout.css'
 
 export function AdminLayout() {
   const { t, i18n } = useTranslation()
+  const { isAdmin } = useAuth()
   const { settings, updateSettings } = useSettings()
+
+  if (!isAdmin) return <Navigate to="/" replace />
 
   const navItems = [
     { to: '/admin', label: t('admin.nav.dashboard'), end: true },

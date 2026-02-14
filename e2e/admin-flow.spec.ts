@@ -9,6 +9,21 @@ test.describe('Admin Dashboard Full Flow', () => {
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage()
+
+    // Mock auth: ADMIN 유저로 로그인된 상태
+    await page.addInitScript(() => {
+      localStorage.setItem('arc-reactor-auth-token', 'mock-admin-token')
+    })
+    await page.route('**/api/auth/me', route => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ id: '1', email: 'admin@test.com', name: 'Admin', role: 'ADMIN' }),
+      })
+    })
+    await page.route('**/api/models', route => {
+      route.fulfill({ status: 401 })
+    })
   })
 
   test.afterAll(async () => {

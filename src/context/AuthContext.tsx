@@ -44,21 +44,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function init() {
       try {
-        const required = await authApi.checkAuthRequired()
+        await authApi.checkAuthRequired()
         if (cancelled) return
 
-        setIsAuthRequired(required)
+        setIsAuthRequired(true)
 
-        if (required) {
-          const token = getAuthToken()
-          if (token) {
-            try {
-              const me = await authApi.getMe()
-              if (!cancelled) setUser(me)
-            } catch {
-              // Token expired or invalid
-              removeAuthToken()
-            }
+        const token = getAuthToken()
+        if (token) {
+          try {
+            const me = await authApi.getMe()
+            if (!cancelled) setUser(me)
+          } catch {
+            // Token expired or invalid
+            removeAuthToken()
           }
         }
       } finally {

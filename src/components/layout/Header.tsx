@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from '../../context/AuthContext'
 import { useChatContext } from '../../context/ChatContext'
 import './Header.css'
 
@@ -9,6 +11,7 @@ interface HeaderProps {
 
 export function Header({ onToggleSidebar, onOpenSettings }: HeaderProps) {
   const { t } = useTranslation()
+  const { isAdmin } = useAuth()
   const { settings, updateSettings } = useChatContext()
 
   return (
@@ -27,6 +30,9 @@ export function Header({ onToggleSidebar, onOpenSettings }: HeaderProps) {
       <h1 className="Header-title">{t('app.title')}</h1>
       <span className="Header-subtitle">{t('app.subtitle')}</span>
       <div className="Header-actions">
+        {isAdmin && (
+          <Link to="/admin" className="Header-adminLink">{t('header.admin')}</Link>
+        )}
         <button
           className="Header-iconBtn"
           onClick={onOpenSettings}
