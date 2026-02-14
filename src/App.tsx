@@ -7,9 +7,11 @@ import { Sidebar } from './components/layout/Sidebar'
 import { ChatArea } from './components/chat/ChatArea'
 import { SettingsPanel } from './components/settings/SettingsPanel'
 import { LoginPage } from './components/auth/LoginPage'
+import { AppsLayout } from './components/apps/AppsLayout'
+import { AppsPage } from './components/apps/AppsPage'
+import { ErrorReportPage } from './components/apps/ErrorReportPage'
 import { AdminLayout } from './components/admin/AdminLayout'
 import { DashboardPage } from './components/admin/pages/DashboardPage'
-import { ErrorReportPage } from './components/admin/pages/ErrorReportPage'
 import { McpServersPage } from './components/admin/pages/McpServersPage'
 import { PersonasPage } from './components/admin/pages/PersonasPage'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
@@ -98,9 +100,12 @@ export default function App() {
 
   return (
     <Routes>
+      <Route path="/apps" element={<AppsLayout />}>
+        <Route index element={<AppsPage />} />
+        <Route path="error-report" element={<ErrorReportPage />} />
+      </Route>
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<DashboardPage />} />
-        <Route path="error-report" element={<ErrorReportPage />} />
         <Route path="mcp-servers" element={<McpServersPage />} />
         <Route path="personas" element={<PersonasPage />} />
       </Route>

@@ -1,0 +1,76 @@
+.AppsPage-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.AppsPage-desc {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin: 0 0 32px;
+}
+
+.AppsPage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.AppsPage-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.AppsPage-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.AppsPage-cardIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.AppsPage-cardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.AppsPage-cardName {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.AppsPage-cardDesc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.AppsPage-cardArrow {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.AppsPage-card:hover .AppsPage-cardArrow {
+  color: var(--accent);
+  transform: translateX(2px);
+}
+
+@media (max-width: 480px) {
+  .AppsPage-grid {
+    grid-template-columns: 1fr;
+  }
+}

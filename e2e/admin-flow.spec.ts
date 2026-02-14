@@ -42,7 +42,7 @@ test.describe('Admin Dashboard Full Flow', () => {
     // 카드 확인
     await expect(page.locator('.Dashboard-cardLabel:text("MCP Servers")')).toBeVisible()
     await expect(page.locator('.Dashboard-cardLabel:text("Personas")')).toBeVisible()
-    await expect(page.locator('.Dashboard-cardLabel:text("Error Report")')).toBeVisible()
+    await expect(page.locator('.Dashboard-cardLabel:text("Apps")')).toBeVisible()
     await page.waitForTimeout(PAUSE)
   })
 
@@ -50,11 +50,6 @@ test.describe('Admin Dashboard Full Flow', () => {
 
   test('2. 사이드바 네비게이션', async () => {
     test.setTimeout(60_000)
-
-    // Error Report 페이지로 이동
-    await page.click('nav a:text("Error Report")')
-    await expect(page.locator('h1:text("Error Report")')).toBeVisible()
-    await page.waitForTimeout(PAUSE)
 
     // MCP Servers 페이지로 이동
     await page.click('nav a:text("MCP Servers")')
@@ -72,101 +67,30 @@ test.describe('Admin Dashboard Full Flow', () => {
     await page.waitForTimeout(PAUSE)
   })
 
-  // --- Error Report 전체 플로우 ---
+  // --- Quick Action: Open Apps ---
 
-  test('3. Error Report 폼 작성 및 제출', async () => {
-    test.setTimeout(120_000)
+  test('3. Quick Action에서 Apps로 이동', async () => {
+    test.setTimeout(30_000)
 
-    // Quick Action으로 Error Report 이동
-    await page.click('a:text("Send Error Report")')
-    await expect(page.locator('h1:text("Error Report")')).toBeVisible()
+    // Open Apps 링크 클릭
+    await page.click('a:text("Open Apps")')
     await page.waitForTimeout(PAUSE)
 
-    // Submit 버튼 비활성 확인
-    const submitBtn = page.locator('button:text("Submit Error Report")')
-    await expect(submitBtn).toBeDisabled()
-    await page.waitForTimeout(1000)
-
-    // Stack Trace 입력
-    await page.fill('textarea', 'java.lang.NullPointerException\n\tat com.example.PaymentService.processPayment(PaymentService.kt:42)\n\tat com.example.OrderController.checkout(OrderController.kt:88)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)')
-    await page.waitForTimeout(2000)
-
-    // Service Name 입력
-    await page.fill('input[placeholder="my-service"]', 'payment-service')
-    await page.waitForTimeout(1500)
-
-    // Repository Slug 입력
-    await page.fill('input[placeholder="my-org/my-service"]', 'arc-org/payment-service')
-    await page.waitForTimeout(1500)
-
-    // Slack Channel 입력
-    await page.fill('input[placeholder="#error-alerts"]', '#backend-errors')
-    await page.waitForTimeout(1500)
-
-    // Environment 입력
-    await page.fill('input[placeholder="production"]', 'production')
-    await page.waitForTimeout(1500)
-
-    // Submit 버튼 활성화 확인
-    await expect(submitBtn).toBeEnabled()
+    // Apps 페이지 확인
+    await expect(page.locator('h1:text("Apps")')).toBeVisible()
+    await expect(page.locator('.AppsPage-card')).toBeVisible()
     await page.waitForTimeout(PAUSE)
 
-    // 제출!
-    await page.click('button:text("Submit Error Report")')
-    await page.waitForTimeout(2000)
-
-    // 결과 확인
-    const result = page.locator('.ErrorReport-result--success, .ErrorReport-result--error')
-    await expect(result).toBeVisible({ timeout: 10_000 })
-
-    const successResult = page.locator('.ErrorReport-result--success')
-    if (await successResult.isVisible()) {
-      await expect(successResult).toContainText('Accepted')
-      await expect(successResult).toContainText('Request ID')
-    }
-    await page.waitForTimeout(PAUSE)
-
-    // 히스토리 확인
-    await expect(page.locator('.ErrorReport-historyItem').first()).toBeVisible()
-    await expect(page.locator('.ErrorReport-historyService').first()).toContainText('payment-service')
-    await page.waitForTimeout(PAUSE)
-  })
-
-  test('4. 두 번째 Error Report 제출', async () => {
-    test.setTimeout(60_000)
-
-    // 새 에러 입력
-    await page.fill('textarea', 'kotlin.KotlinNullPointerException\n\tat com.example.OrderService.process(OrderService.kt:55)\n\tat com.example.ApiGateway.handle(ApiGateway.kt:23)')
-    await page.waitForTimeout(1500)
-
-    await page.fill('input[placeholder="my-service"]', 'order-service')
-    await page.waitForTimeout(1500)
-
-    await page.fill('input[placeholder="my-org/my-service"]', 'arc-org/order-service')
-    await page.waitForTimeout(1500)
-
-    // 제출
-    await page.click('button:text("Submit Error Report")')
-    await page.waitForTimeout(2000)
-
-    const result = page.locator('.ErrorReport-result--success, .ErrorReport-result--error')
-    await expect(result).toBeVisible({ timeout: 10_000 })
-    await page.waitForTimeout(PAUSE)
-
-    // 히스토리에 2개 확인
-    await expect(page.locator('.ErrorReport-historyItem')).toHaveCount(2, { timeout: 5_000 })
+    // Admin으로 돌아가기
+    await page.goto('/admin')
+    await expect(page.locator('h1:text("Dashboard")')).toBeVisible()
     await page.waitForTimeout(PAUSE)
   })
 
   // --- 다크/라이트 모드 전환 ---
 
-  test('5. 다크/라이트 모드 토글', async () => {
+  test('4. 다크/라이트 모드 토글', async () => {
     test.setTimeout(60_000)
-
-    // Dashboard로 이동
-    await page.click('nav a:text("Dashboard")')
-    await expect(page.locator('h1:text("Dashboard")')).toBeVisible()
-    await page.waitForTimeout(PAUSE)
 
     // 현재 테마 확인
     const initialTheme = await page.getAttribute('html', 'data-theme')
@@ -193,7 +117,7 @@ test.describe('Admin Dashboard Full Flow', () => {
 
   // --- 언어 전환 (EN/KO) ---
 
-  test('6. 언어 전환 EN → KO → EN', async () => {
+  test('5. 언어 전환 EN → KO → EN', async () => {
     test.setTimeout(60_000)
 
     // 현재 영어 상태 확인
@@ -213,7 +137,7 @@ test.describe('Admin Dashboard Full Flow', () => {
 
     // 사이드바도 한국어인지 확인
     await expect(page.locator('nav a:text("대시보드")')).toBeVisible()
-    await expect(page.locator('nav a:text("에러 리포트")')).toBeVisible()
+    await expect(page.locator('nav a:text("MCP 서버")')).toBeVisible()
     await page.waitForTimeout(PAUSE)
 
     // 다시 영어로 전환
@@ -229,7 +153,7 @@ test.describe('Admin Dashboard Full Flow', () => {
 
   // --- Chat으로 돌아가기 ---
 
-  test('7. Back to Chat', async () => {
+  test('6. Back to Chat', async () => {
     test.setTimeout(30_000)
 
     await page.click('a:text("Back to Chat")')

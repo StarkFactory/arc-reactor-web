@@ -71,17 +71,17 @@ export function DashboardPage() {
         </div>
 
         <div className="Dashboard-card Dashboard-card--accent">
-          <div className="Dashboard-cardValue">API</div>
-          <div className="Dashboard-cardLabel">{t('admin.dashboard.errorReport')}</div>
-          <div className="Dashboard-cardSub">{t('admin.dashboard.apiEndpoint')}</div>
+          <div className="Dashboard-cardValue">1</div>
+          <div className="Dashboard-cardLabel">{t('admin.dashboard.apps')}</div>
+          <div className="Dashboard-cardSub">{t('admin.dashboard.appsAvailable')}</div>
         </div>
       </div>
 
       <div className="Dashboard-section">
         <h2 className="Dashboard-sectionTitle">{t('admin.dashboard.quickActions')}</h2>
         <div className="Dashboard-actions">
-          <Link to="/admin/error-report" className="Dashboard-actionBtn">
-            {t('admin.dashboard.sendErrorReport')}
+          <Link to="/apps" className="Dashboard-actionBtn">
+            {t('admin.dashboard.openApps')}
           </Link>
           <Link to="/admin/mcp-servers" className="Dashboard-actionBtn">
             {t('admin.dashboard.manageMcpServers')}
