@@ -315,6 +315,7 @@
     "schedulerPage": {
       "title": "Scheduler",
       "description": "Manage cron-based scheduled MCP tool executions.",
+      "comingSoon": "Coming soon.",
       "newJob": "New Job",
       "createTitle": "Create Scheduled Job",
       "editTitle": "Edit Scheduled Job",
@@ -553,11 +554,13 @@
     "enabled": "Enabled",
     "writeTools": "Write tools",
     "denyChannels": "Deny channels",
+    "allowWriteToolsInDenyChannels": "Allow write tools in deny channels",
     "denyMessage": "Deny message",
     "configEnabled": "Config enabled",
     "dynamicEnabled": "Dynamic enabled",
     "writeToolsPlaceholder": "One tool name per line (e.g., jira_create_issue)",
     "denyChannelsPlaceholder": "One channel per line (e.g., slack)",
+    "allowWriteToolsInDenyChannelsPlaceholder": "One tool name per line (allowed even in deny channels)",
     "denyMessagePlaceholder": "Shown when a tool call is denied"
   }
 }
