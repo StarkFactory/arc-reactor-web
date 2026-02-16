@@ -353,3 +353,55 @@
   font-size: 0.78rem;
   color: #ef4444;
 }
+
+.McpManager-policyPanel {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-primary);
+}
+
+.McpManager-policyTitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.McpManager-policyMeta {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.McpManager-policyGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.McpManager-textarea {
+  width: 100%;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.78rem;
+  font-family: 'SF Mono', 'Consolas', monospace;
+  outline: none;
+  resize: vertical;
+}
+
+.McpManager-policyActions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+@media (max-width: 900px) {
+  .McpManager-policyGrid {
+    grid-template-columns: 1fr;
+  }
+}
