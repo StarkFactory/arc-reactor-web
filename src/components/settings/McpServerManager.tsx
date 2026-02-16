@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { McpServerResponse, McpServerDetailResponse } from '../../types/api'
+import type { McpServerResponse, McpServerDetailResponse, McpAccessPolicyResponse } from '../../types/api'
 import {
   listMcpServers,
   getMcpServer,
@@ -9,6 +9,11 @@ import {
   connectMcpServer,
   disconnectMcpServer,
 } from '../../services/mcp'
+import {
+  getMcpAccessPolicy,
+  updateMcpAccessPolicy,
+  clearMcpAccessPolicy,
+} from '../../services/mcp-access-policy'
 import './McpServerManager.css'
 
 export function McpServerManager() {
@@ -20,11 +25,19 @@ export function McpServerManager() {
   const [expandedServer, setExpandedServer] = useState<string | null>(null)
   const [serverDetail, setServerDetail] = useState<McpServerDetailResponse | null>(null)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [policyByServer, setPolicyByServer] = useState<Record<string, McpAccessPolicyResponse | undefined>>({})
+  const [policyLoadingByServer, setPolicyLoadingByServer] = useState<Record<string, boolean>>({})
+  const [policySavingByServer, setPolicySavingByServer] = useState<Record<string, boolean>>({})
+  const [policyErrorByServer, setPolicyErrorByServer] = useState<Record<string, string | null>>({})
+  const [policyJiraDraftByServer, setPolicyJiraDraftByServer] = useState<Record<string, string>>({})
+  const [policyConfluenceDraftByServer, setPolicyConfluenceDraftByServer] = useState<Record<string, string>>({})
 
   // Register form state
   const [formName, setFormName] = useState('')
   const [formTransport, setFormTransport] = useState('SSE')
   const [formUrl, setFormUrl] = useState('')
+  const [formAdminUrl, setFormAdminUrl] = useState('')
+  const [formAdminToken, setFormAdminToken] = useState('')
   const [formCommand, setFormCommand] = useState('')
   const [formArgs, setFormArgs] = useState('')
   const [formDescription, setFormDescription] = useState('')
@@ -49,6 +62,88 @@ export function McpServerManager() {
     fetchServers()
   }, [fetchServers])
 
+  const splitKeys = (text: string): string[] => {
+    return Array.from(new Set(
+      text
+        .split(/[\n,]+/g)
+        .map(s => s.trim().toUpperCase())
+        .filter(Boolean)
+    ))
+  }
+
+  const isAtlassianDetail = (detail: McpServerDetailResponse | null, name: string): boolean => {
+    if (!detail) return false
+    if (name.toLowerCase().includes('atlassian')) return true
+    return detail.tools.some(tool => tool.startsWith('jira_') || tool.startsWith('confluence_'))
+  }
+
+  const loadPolicy = async (name: string) => {
+    setPolicyLoadingByServer(prev => ({ ...prev, [name]: true }))
+    setPolicyErrorByServer(prev => ({ ...prev, [name]: null }))
+    try {
+      const policy = await getMcpAccessPolicy(name)
+      setPolicyByServer(prev => ({ ...prev, [name]: policy }))
+      setPolicyJiraDraftByServer(prev => ({
+        ...prev,
+        [name]: (policy.allowedJiraProjectKeys ?? []).join('\n'),
+      }))
+      setPolicyConfluenceDraftByServer(prev => ({
+        ...prev,
+        [name]: (policy.allowedConfluenceSpaceKeys ?? []).join('\n'),
+      }))
+    } catch (e) {
+      setPolicyErrorByServer(prev => ({
+        ...prev,
+        [name]: e instanceof Error ? e.message : t('mcp.accessPolicyLoadError'),
+      }))
+    } finally {
+      setPolicyLoadingByServer(prev => ({ ...prev, [name]: false }))
+    }
+  }
+
+  const savePolicy = async (name: string) => {
+    setPolicySavingByServer(prev => ({ ...prev, [name]: true }))
+    setPolicyErrorByServer(prev => ({ ...prev, [name]: null }))
+    try {
+      const policy = await updateMcpAccessPolicy(name, {
+        allowedJiraProjectKeys: splitKeys(policyJiraDraftByServer[name] ?? ''),
+        allowedConfluenceSpaceKeys: splitKeys(policyConfluenceDraftByServer[name] ?? ''),
+      })
+      setPolicyByServer(prev => ({ ...prev, [name]: policy }))
+      setPolicyJiraDraftByServer(prev => ({
+        ...prev,
+        [name]: (policy.allowedJiraProjectKeys ?? []).join('\n'),
+      }))
+      setPolicyConfluenceDraftByServer(prev => ({
+        ...prev,
+        [name]: (policy.allowedConfluenceSpaceKeys ?? []).join('\n'),
+      }))
+    } catch (e) {
+      setPolicyErrorByServer(prev => ({
+        ...prev,
+        [name]: e instanceof Error ? e.message : t('mcp.accessPolicySaveError'),
+      }))
+    } finally {
+      setPolicySavingByServer(prev => ({ ...prev, [name]: false }))
+    }
+  }
+
+  const resetPolicyToEnv = async (name: string) => {
+    setPolicySavingByServer(prev => ({ ...prev, [name]: true }))
+    setPolicyErrorByServer(prev => ({ ...prev, [name]: null }))
+    try {
+      await clearMcpAccessPolicy(name)
+      await loadPolicy(name)
+    } catch (e) {
+      setPolicyErrorByServer(prev => ({
+        ...prev,
+        [name]: e instanceof Error ? e.message : t('mcp.accessPolicyResetError'),
+      }))
+    } finally {
+      setPolicySavingByServer(prev => ({ ...prev, [name]: false }))
+    }
+  }
+
   const handleToggleDetail = async (name: string) => {
     if (expandedServer === name) {
       setExpandedServer(null)
@@ -59,6 +154,9 @@ export function McpServerManager() {
       const detail = await getMcpServer(name)
       setServerDetail(detail)
       setExpandedServer(name)
+      if (isAtlassianDetail(detail, name)) {
+        await loadPolicy(name)
+      }
     } catch {
       setError(t('mcp.detailError'))
     }
@@ -128,6 +226,8 @@ export function McpServerManager() {
         if (formCommand.trim()) config.command = formCommand.trim()
         if (formArgs.trim()) config.args = formArgs.split(',').map(a => a.trim()).filter(Boolean)
       }
+      if (formAdminUrl.trim()) config.adminUrl = formAdminUrl.trim()
+      if (formAdminToken.trim()) config.adminToken = formAdminToken.trim()
 
       await registerMcpServer({
         name: formName.trim(),
@@ -141,6 +241,8 @@ export function McpServerManager() {
       setFormName('')
       setFormTransport('SSE')
       setFormUrl('')
+      setFormAdminUrl('')
+      setFormAdminToken('')
       setFormCommand('')
       setFormArgs('')
       setFormDescription('')
@@ -219,6 +321,20 @@ export function McpServerManager() {
               placeholder={t('mcp.urlPlaceholder')}
             />
           )}
+
+          <input
+            className="McpManager-input"
+            value={formAdminUrl}
+            onChange={e => setFormAdminUrl(e.target.value)}
+            placeholder={t('mcp.adminUrlPlaceholder')}
+          />
+
+          <input
+            className="McpManager-input"
+            value={formAdminToken}
+            onChange={e => setFormAdminToken(e.target.value)}
+            placeholder={t('mcp.adminTokenPlaceholder')}
+          />
 
           {formTransport === 'STDIO' && (
             <>
@@ -342,6 +458,71 @@ export function McpServerManager() {
                   )}
                   {serverDetail.tools.length === 0 && server.status !== 'CONNECTED' && (
                     <div className="McpManager-detailLabel">{t('mcp.connectToSeeTools')}</div>
+                  )}
+
+                  {isAtlassianDetail(serverDetail, server.name) && (
+                    <div className="McpManager-policyPanel">
+                      <div className="McpManager-policyTitle">{t('mcp.accessPolicyTitle')}</div>
+                      {policyErrorByServer[server.name] && (
+                        <div className="McpManager-inlineError">{policyErrorByServer[server.name]}</div>
+                      )}
+                      <div className="McpManager-policyMeta">
+                        {policyByServer[server.name]?.dynamicEnabled
+                          ? t('mcp.accessPolicyDynamic')
+                          : t('mcp.accessPolicyEnv')}
+                      </div>
+
+                      <div className="McpManager-policyGrid">
+                        <div>
+                          <div className="McpManager-detailLabel">{t('mcp.allowedJiraProjects')}</div>
+                          <textarea
+                            className="McpManager-textarea"
+                            rows={5}
+                            value={policyJiraDraftByServer[server.name] ?? ''}
+                            onChange={e =>
+                              setPolicyJiraDraftByServer(prev => ({ ...prev, [server.name]: e.target.value }))
+                            }
+                            placeholder={t('mcp.allowedJiraProjectsPlaceholder')}
+                          />
+                        </div>
+                        <div>
+                          <div className="McpManager-detailLabel">{t('mcp.allowedConfluenceSpaces')}</div>
+                          <textarea
+                            className="McpManager-textarea"
+                            rows={5}
+                            value={policyConfluenceDraftByServer[server.name] ?? ''}
+                            onChange={e =>
+                              setPolicyConfluenceDraftByServer(prev => ({ ...prev, [server.name]: e.target.value }))
+                            }
+                            placeholder={t('mcp.allowedConfluenceSpacesPlaceholder')}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="McpManager-policyActions">
+                        <button
+                          className="McpManager-actionBtn"
+                          onClick={() => loadPolicy(server.name)}
+                          disabled={!!policyLoadingByServer[server.name] || !!policySavingByServer[server.name]}
+                        >
+                          {policyLoadingByServer[server.name] ? t('mcp.loading') : t('mcp.reloadPolicy')}
+                        </button>
+                        <button
+                          className="McpManager-actionBtn McpManager-actionBtn--connect"
+                          onClick={() => savePolicy(server.name)}
+                          disabled={!!policySavingByServer[server.name]}
+                        >
+                          {policySavingByServer[server.name] ? t('mcp.savingPolicy') : t('mcp.savePolicy')}
+                        </button>
+                        <button
+                          className="McpManager-actionBtn McpManager-actionBtn--disconnect"
+                          onClick={() => resetPolicyToEnv(server.name)}
+                          disabled={!!policySavingByServer[server.name]}
+                        >
+                          {t('mcp.resetPolicyToEnv')}
+                        </button>
+                      </div>
+                    </div>
                   )}
                 </div>
               )}

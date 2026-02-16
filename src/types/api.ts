@@ -135,6 +135,18 @@ export interface McpConnectResponse {
   error?: string
 }
 
+export interface McpAccessPolicyResponse {
+  ok: boolean
+  dynamicEnabled?: boolean
+  allowedJiraProjectKeys: string[]
+  allowedConfluenceSpaceKeys: string[]
+}
+
+export interface UpdateMcpAccessPolicyRequest {
+  allowedJiraProjectKeys: string[]
+  allowedConfluenceSpaceKeys: string[]
+}
+
 // ---- Error Report Types ----
 
 export interface ErrorReportRequest {
