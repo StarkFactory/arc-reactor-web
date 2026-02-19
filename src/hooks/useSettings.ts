@@ -1,23 +1,20 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import type { ChatSettings } from '../types/chat'
 import { DEFAULT_SETTINGS } from '../utils/constants'
-import { useLocalStorage } from './useLocalStorage'
+import { useUiStore } from '../stores/uiStore'
 
-const BASE_KEY = 'arc-reactor-settings'
+const toKey = (userId?: string) => userId ?? '__anon'
 
 export function useSettings(userId?: string) {
-  const storageKey = userId ? `${BASE_KEY}:${userId}` : BASE_KEY
-  const [settings, setSettings] = useLocalStorage<ChatSettings>(storageKey, DEFAULT_SETTINGS)
+  const key = toKey(userId)
+  const settings = useUiStore((state) => state.settingsByUser[key] ?? DEFAULT_SETTINGS)
+  const storeUpdate = useUiStore((state) => state.updateSettings)
+  const storeReset = useUiStore((state) => state.resetSettings)
 
-  const updateSettings = useCallback((partial: Partial<ChatSettings>) => {
-    setSettings(prev => ({ ...prev, ...partial }))
-  }, [setSettings])
+  const updateSettings = (partial: Partial<ChatSettings>) => storeUpdate(partial, userId)
+  const resetSettings = () => storeReset(userId)
 
-  const resetSettings = useCallback(() => {
-    setSettings(DEFAULT_SETTINGS)
-  }, [setSettings])
-
-  // Apply dark mode to document
+  // Sync dark mode preference to the document root element
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', settings.darkMode ? 'dark' : 'light')
   }, [settings.darkMode])
