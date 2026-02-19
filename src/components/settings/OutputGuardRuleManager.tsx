@@ -1,171 +1,129 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
-import type {
-  CreateOutputGuardRuleRequest,
-  OutputGuardRuleResponse,
-  OutputGuardSimulationResponse,
-} from '../../types/api'
+import type { OutputGuardSimulationResponse } from '../../types/api'
 import {
-  createOutputGuardRule,
-  deleteOutputGuardRule,
-  listOutputGuardAudits,
-  listOutputGuardRules,
-  simulateOutputGuard,
-  updateOutputGuardRule,
-} from '../../services/output-guard'
+  useOutputGuardRules,
+  useOutputGuardAudits,
+  useCreateOutputGuardRule,
+  useUpdateOutputGuardRule,
+  useDeleteOutputGuardRule,
+  useSimulateOutputGuard,
+} from '../../hooks/useOutputGuard'
+import {
+  OutputGuardFormSchema,
+  EMPTY_OUTPUT_GUARD_FORM,
+  type OutputGuardFormInput,
+} from '../../schemas/output-guard'
 import './OutputGuardRuleManager.css'
 
 type Mode = 'none' | 'create' | 'edit'
 
 export function OutputGuardRuleManager() {
   const { t } = useTranslation()
-  const [items, setItems] = useState<OutputGuardRuleResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
   const [expanded, setExpanded] = useState<string | null>(null)
   const [mode, setMode] = useState<Mode>('none')
-  const [saving, setSaving] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
-  // Form
-  const [name, setName] = useState('')
-  const [pattern, setPattern] = useState('')
-  const [action, setAction] = useState('MASK')
-  const [priority, setPriority] = useState('100')
-  const [enabled, setEnabled] = useState(true)
-
-  // Simulation
+  // Simulation local state (not a form)
   const [simContent, setSimContent] = useState('')
   const [simIncludeDisabled, setSimIncludeDisabled] = useState(false)
   const [simResult, setSimResult] = useState<OutputGuardSimulationResponse | null>(null)
-  const [simLoading, setSimLoading] = useState(false)
 
-  // Audits
-  const [audits, setAudits] = useState<Array<{ action: string; actor: string; detail: string | null; createdAt: number }>>([])
+  const { data: items = [], isLoading } = useOutputGuardRules()
+  const { data: audits = [] } = useOutputGuardAudits()
+  const createRule = useCreateOutputGuardRule()
+  const updateRule = useUpdateOutputGuardRule()
+  const deleteRule = useDeleteOutputGuardRule()
+  const simulate = useSimulateOutputGuard()
 
-  const fetchAll = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await listOutputGuardRules()
-      setItems(data)
-    } catch {
-      setError(t('outputGuard.loadError'))
-      setItems([])
-    } finally {
-      setLoading(false)
-    }
-  }, [t])
-
-  const fetchAudits = useCallback(async () => {
-    try {
-      const data = await listOutputGuardAudits(50)
-      setAudits(data.map(a => ({ action: a.action, actor: a.actor, detail: a.detail, createdAt: a.createdAt })))
-    } catch {
-      setAudits([])
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchAll()
-    fetchAudits()
-  }, [fetchAll, fetchAudits])
-
-  const selected = useMemo(() => {
-    if (!expanded) return null
-    return items.find(i => i.id === expanded) ?? null
-  }, [expanded, items])
-
-  const resetForm = () => {
-    setName('')
-    setPattern('')
-    setAction('MASK')
-    setPriority('100')
-    setEnabled(true)
-  }
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<OutputGuardFormInput>({
+    resolver: zodResolver(OutputGuardFormSchema),
+    defaultValues: EMPTY_OUTPUT_GUARD_FORM,
+    mode: 'onChange',
+  })
 
   const openCreate = () => {
-    resetForm()
+    reset(EMPTY_OUTPUT_GUARD_FORM)
     setEditId(null)
     setMode('create')
+    setActionError(null)
   }
 
-  const openEdit = (rule: OutputGuardRuleResponse) => {
+  const openEdit = (rule: { id: string; name: string; pattern: string; action: string; priority: number; enabled: boolean }) => {
+    reset({
+      name: rule.name,
+      pattern: rule.pattern,
+      action: rule.action,
+      priority: String(rule.priority),
+      enabled: rule.enabled,
+    })
     setEditId(rule.id)
     setMode('edit')
-    setName(rule.name)
-    setPattern(rule.pattern)
-    setAction(rule.action)
-    setPriority(String(rule.priority))
-    setEnabled(rule.enabled)
+    setActionError(null)
   }
 
   const closeForm = () => {
     setMode('none')
     setEditId(null)
+    setActionError(null)
   }
 
-  const handleSave = async () => {
-    if (!name.trim() || !pattern.trim()) return
+  const onSubmit = async (values: OutputGuardFormInput) => {
+    setActionError(null)
+    const body = {
+      name: values.name.trim(),
+      pattern: values.pattern.trim(),
+      action: values.action.trim() || 'MASK',
+      priority: Number(values.priority) || 100,
+      enabled: values.enabled,
+    }
 
-    setSaving(true)
-    setError(null)
     try {
-      const body: CreateOutputGuardRuleRequest = {
-        name: name.trim(),
-        pattern: pattern.trim(),
-        action: action.trim() || 'MASK',
-        priority: Number(priority) || 100,
-        enabled,
-      }
-
       if (mode === 'create') {
-        await createOutputGuardRule(body)
+        await createRule.mutateAsync(body)
       } else if (mode === 'edit' && editId) {
-        await updateOutputGuardRule(editId, body)
+        await updateRule.mutateAsync({ id: editId, data: body })
       }
-
       closeForm()
-      await fetchAll()
-      await fetchAudits()
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('outputGuard.saveError'))
-    } finally {
-      setSaving(false)
+      setActionError(e instanceof Error ? e.message : t('outputGuard.saveError'))
     }
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm(t('outputGuard.deleteConfirm'))) return
-    setError(null)
+    setActionError(null)
     try {
-      await deleteOutputGuardRule(id)
+      await deleteRule.mutateAsync(id)
       if (expanded === id) setExpanded(null)
-      await fetchAll()
-      await fetchAudits()
     } catch {
-      setError(t('outputGuard.deleteError'))
+      setActionError(t('outputGuard.deleteError'))
     }
   }
 
   const handleSimulate = async () => {
     if (!simContent.trim()) return
-    setSimLoading(true)
-    setError(null)
     setSimResult(null)
+    setActionError(null)
     try {
-      const res = await simulateOutputGuard({ content: simContent.trim(), includeDisabled: simIncludeDisabled })
+      const res = await simulate.mutateAsync({ content: simContent.trim(), includeDisabled: simIncludeDisabled })
       setSimResult(res)
-      await fetchAudits()
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('outputGuard.simulateError'))
-    } finally {
-      setSimLoading(false)
+      setActionError(e instanceof Error ? e.message : t('outputGuard.simulateError'))
     }
   }
 
-  if (loading) {
+  const isSaving = createRule.isPending || updateRule.isPending
+
+  if (isLoading) {
     return <div className="OutputGuardManager-loading">{t('outputGuard.loading')}</div>
   }
 
@@ -175,65 +133,69 @@ export function OutputGuardRuleManager() {
         <span className="OutputGuardManager-count">
           {items.length > 0 ? t('outputGuard.count', { count: items.length }) : ''}
         </span>
-        <button className="OutputGuardManager-addBtn" onClick={mode === 'none' ? openCreate : closeForm}>
+        <button
+          className="OutputGuardManager-addBtn"
+          onClick={mode === 'none' ? openCreate : closeForm}
+        >
           {mode === 'none' ? '+' : '\u00d7'}
         </button>
       </div>
 
-      {error && <div className="OutputGuardManager-error">{error}</div>}
+      {actionError && <div className="OutputGuardManager-error">{actionError}</div>}
 
       {mode !== 'none' && (
-        <div className="OutputGuardManager-form">
+        <form className="OutputGuardManager-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="OutputGuardManager-formTitle">
             {mode === 'create' ? t('outputGuard.createTitle') : t('outputGuard.editTitle')}
           </div>
 
           <input
             className="OutputGuardManager-input"
-            value={name}
-            onChange={e => setName(e.target.value)}
+            {...register('name')}
             placeholder={t('outputGuard.namePlaceholder')}
           />
+          {errors.name && <span className="OutputGuardManager-fieldError">{errors.name.message}</span>}
 
           <textarea
             className="OutputGuardManager-textarea"
-            value={pattern}
-            onChange={e => setPattern(e.target.value)}
+            {...register('pattern')}
             placeholder={t('outputGuard.patternPlaceholder')}
             rows={3}
           />
+          {errors.pattern && (
+            <span className="OutputGuardManager-fieldError">{errors.pattern.message}</span>
+          )}
 
           <div className="OutputGuardManager-row">
-            <select className="OutputGuardManager-select" value={action} onChange={e => setAction(e.target.value)}>
+            <select className="OutputGuardManager-select" {...register('action')}>
               <option value="MASK">MASK</option>
               <option value="REJECT">REJECT</option>
             </select>
             <input
               className="OutputGuardManager-input"
-              value={priority}
-              onChange={e => setPriority(e.target.value)}
+              {...register('priority')}
               placeholder={t('outputGuard.priorityPlaceholder')}
             />
           </div>
 
           <label className="OutputGuardManager-checkLabel">
-            <input type="checkbox" checked={enabled} onChange={e => setEnabled(e.target.checked)} />
+            <input type="checkbox" {...register('enabled')} />
             {t('outputGuard.enabled')}
           </label>
 
           <div className="OutputGuardManager-formActions">
             <button
+              type="submit"
               className="OutputGuardManager-saveBtn"
-              onClick={handleSave}
-              disabled={saving || !name.trim() || !pattern.trim()}
+              disabled={isSaving || !isValid}
             >
-              {saving ? t('outputGuard.saving') : t('outputGuard.save')}
+              {isSaving ? t('outputGuard.saving') : t('outputGuard.save')}
             </button>
-            <button className="OutputGuardManager-cancelBtn" onClick={closeForm}>
+            <button type="button" className="OutputGuardManager-cancelBtn" onClick={closeForm}>
               {t('outputGuard.cancel')}
             </button>
           </div>
-        </div>
+        </form>
       )}
 
       <div className="OutputGuardManager-sectionTitle">{t('outputGuard.rules')}</div>
@@ -251,13 +213,17 @@ export function OutputGuardRuleManager() {
                 >
                   {rule.name}
                 </button>
-                <span className={`OutputGuardManager-badge${rule.enabled ? '' : ' OutputGuardManager-badge--disabled'}`}>
+                <span
+                  className={`OutputGuardManager-badge${rule.enabled ? '' : ' OutputGuardManager-badge--disabled'}`}
+                >
                   {rule.enabled ? t('outputGuard.enabledYes') : t('outputGuard.enabledNo')}
                 </span>
               </div>
               <div className="OutputGuardManager-meta">
                 <span className="OutputGuardManager-chip">{rule.action}</span>
-                <span className="OutputGuardManager-chip">{t('outputGuard.priority', { value: rule.priority })}</span>
+                <span className="OutputGuardManager-chip">
+                  {t('outputGuard.priority', { value: rule.priority })}
+                </span>
               </div>
 
               {expanded === rule.id && (
@@ -267,7 +233,10 @@ export function OutputGuardRuleManager() {
                     <button className="OutputGuardManager-actionBtn" onClick={() => openEdit(rule)}>
                       {t('outputGuard.edit')}
                     </button>
-                    <button className="OutputGuardManager-actionBtn OutputGuardManager-actionBtn--danger" onClick={() => handleDelete(rule.id)}>
+                    <button
+                      className="OutputGuardManager-actionBtn OutputGuardManager-actionBtn--danger"
+                      onClick={() => handleDelete(rule.id)}
+                    >
                       {t('outputGuard.delete')}
                     </button>
                   </div>
@@ -298,9 +267,9 @@ export function OutputGuardRuleManager() {
         <button
           className="OutputGuardManager-saveBtn"
           onClick={handleSimulate}
-          disabled={simLoading || !simContent.trim()}
+          disabled={simulate.isPending || !simContent.trim()}
         >
-          {simLoading ? t('outputGuard.simulating') : t('outputGuard.simulate')}
+          {simulate.isPending ? t('outputGuard.simulating') : t('outputGuard.simulate')}
         </button>
 
         {simResult && (
@@ -338,10 +307,6 @@ export function OutputGuardRuleManager() {
           ))
         )}
       </div>
-
-      {selected == null && items.length > 0 && (
-        <div className="OutputGuardManager-hint">{t('outputGuard.hint')}</div>
-      )}
     </div>
   )
 }
