@@ -24,6 +24,7 @@ export function AdminLayout() {
     { to: '/admin/clipping/personas', label: t('admin.nav.clippingPersonas') },
     { to: '/admin/clipping/stats', label: t('admin.nav.clippingStats') },
     { to: '/admin/audit-logs', label: t('admin.nav.auditLogs') },
+    { to: '/admin/users', label: t('admin.nav.users') },
   ]
 
   return (

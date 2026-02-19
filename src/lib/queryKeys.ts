@@ -36,6 +36,10 @@ export const queryKeys = {
     all: () => ['auditLogs'] as const,
     list: (params: Record<string, unknown>) => ['auditLogs', 'list', params] as const,
   },
+  users: {
+    all: () => ['users'] as const,
+    list: (params: Record<string, unknown>) => ['users', 'list', params] as const,
+  },
   approval: {
     all: () => ['approval'] as const,
     list: () => ['approval', 'list'] as const,
