@@ -1,0 +1,332 @@
+.ApprovalWorkflowPage {
+  padding: 0;
+}
+
+.ApprovalWorkflowPage-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.ApprovalWorkflowPage-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.ApprovalWorkflowPage-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.ApprovalWorkflowPage-headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ApprovalWorkflowPage-notifOn {
+  font-size: 0.8rem;
+  color: var(--success, #22c55e);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ApprovalWorkflowPage-pollingBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--accent-bg, #eff6ff);
+  color: var(--accent, #3b82f6);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.ApprovalWorkflowPage-section {
+  margin-bottom: 2rem;
+}
+
+.ApprovalWorkflowPage-sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ApprovalWorkflowPage-countBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--error, #ef4444);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.ApprovalWorkflowPage-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+.ApprovalWorkflowPage-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.ApprovalWorkflowPage-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+  background: var(--bg-secondary);
+}
+
+.ApprovalWorkflowPage-card--pending {
+  border-color: var(--warn, #f59e0b);
+  background: var(--warn-bg, #fffbeb);
+}
+
+.ApprovalWorkflowPage-cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.ApprovalWorkflowPage-toolName {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-family: monospace;
+}
+
+.ApprovalWorkflowPage-requestedAt {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.ApprovalWorkflowPage-userId {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.ApprovalWorkflowPage-args {
+  margin-bottom: 1rem;
+}
+
+.ApprovalWorkflowPage-argsLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.ApprovalWorkflowPage-argsContent {
+  font-size: 0.8rem;
+  background: var(--bg-primary, #fff);
+  border-radius: 6px;
+  padding: 0.625rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--text-primary);
+  margin: 0;
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+}
+
+.ApprovalWorkflowPage-cardActions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.ApprovalWorkflowPage-btnApprove {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  background: var(--success, #22c55e);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ApprovalWorkflowPage-btnApprove:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ApprovalWorkflowPage-btnReject {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  background: var(--error, #ef4444);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ApprovalWorkflowPage-btnReject:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ApprovalWorkflowPage-tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.ApprovalWorkflowPage-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.ApprovalWorkflowPage-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+
+.ApprovalWorkflowPage-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.ApprovalWorkflowPage-table tr:last-child td {
+  border-bottom: none;
+}
+
+.ApprovalWorkflowPage-statusBadge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ApprovalWorkflowPage-statusBadge--approved {
+  background: var(--success-bg, #f0fdf4);
+  color: var(--success, #22c55e);
+}
+
+.ApprovalWorkflowPage-statusBadge--rejected {
+  background: var(--error-bg, #fef2f2);
+  color: var(--error, #ef4444);
+}
+
+.ApprovalWorkflowPage-statusBadge--timed_out {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.ApprovalWorkflowPage-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.ApprovalWorkflowPage-error {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--error-bg, #fef2f2);
+  border: 1px solid var(--error, #ef4444);
+  border-radius: 8px;
+  color: var(--error, #ef4444);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.ApprovalWorkflowPage-btn {
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.ApprovalWorkflowPage-btnSecondary {
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.ApprovalWorkflowPage-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.ApprovalWorkflowPage-dialog {
+  background: var(--bg-primary, #fff);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  max-width: 440px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ApprovalWorkflowPage-dialogText {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.ApprovalWorkflowPage-textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.ApprovalWorkflowPage-dialogActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}

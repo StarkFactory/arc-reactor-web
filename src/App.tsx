@@ -27,6 +27,8 @@ import { UserManagementPage } from './components/admin/pages/UserManagementPage'
 import { PromptTemplatesPage } from './components/admin/pages/PromptTemplatesPage'
 import { RagIngestionPage } from './components/admin/pages/RagIngestionPage'
 import { FeedbackPage } from './components/admin/pages/FeedbackPage'
+import { SessionsPage } from './components/admin/pages/SessionsPage'
+import { ApprovalWorkflowPage } from './components/admin/pages/ApprovalWorkflowPage'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import './App.css'
 
@@ -134,6 +136,8 @@ export default function App() {
         <Route path="prompt-templates" element={<PromptTemplatesPage />} />
         <Route path="rag" element={<RagIngestionPage />} />
         <Route path="feedback" element={<FeedbackPage />} />
+        <Route path="sessions" element={<SessionsPage />} />
+        <Route path="approvals" element={<ApprovalWorkflowPage />} />
       </Route>
       <Route path="*" element={<ChatPage />} />
     </Routes>

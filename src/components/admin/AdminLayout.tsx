@@ -4,6 +4,17 @@ import { useAuth } from '../../context/AuthContext'
 import { useSettings } from '../../hooks/useSettings'
 import './AdminLayout.css'
 
+interface NavItem {
+  to: string
+  label: string
+  end?: boolean
+}
+
+interface NavGroup {
+  label: string
+  items: NavItem[]
+}
+
 export function AdminLayout() {
   const { t, i18n } = useTranslation()
   const { isAdmin } = useAuth()
@@ -11,23 +22,55 @@ export function AdminLayout() {
 
   if (!isAdmin) return <Navigate to="/" replace />
 
-  const navItems = [
-    { to: '/admin', label: t('admin.nav.dashboard'), end: true },
-    { to: '/admin/mcp-servers', label: t('admin.nav.mcpServers') },
-    { to: '/admin/personas', label: t('admin.nav.personas') },
-    { to: '/admin/intents', label: t('admin.nav.intents') },
-    { to: '/admin/output-guard', label: t('admin.nav.outputGuard') },
-    { to: '/admin/tool-policy', label: t('admin.nav.toolPolicy') },
-    { to: '/admin/scheduler', label: t('admin.nav.scheduler') },
-    { to: '/admin/clipping/categories', label: t('admin.nav.clippingCategories') },
-    { to: '/admin/clipping/sources', label: t('admin.nav.clippingSources') },
-    { to: '/admin/clipping/personas', label: t('admin.nav.clippingPersonas') },
-    { to: '/admin/clipping/stats', label: t('admin.nav.clippingStats') },
-    { to: '/admin/audit-logs', label: t('admin.nav.auditLogs') },
-    { to: '/admin/users', label: t('admin.nav.users') },
-    { to: '/admin/prompt-templates', label: t('admin.nav.promptTemplates') },
-    { to: '/admin/rag', label: t('admin.nav.rag') },
-    { to: '/admin/feedback', label: t('admin.nav.feedback') },
+  const navGroups: NavGroup[] = [
+    {
+      label: t('admin.navGroup.overview'),
+      items: [
+        { to: '/admin', label: t('admin.nav.dashboard'), end: true },
+      ],
+    },
+    {
+      label: t('admin.navGroup.aiConfig'),
+      items: [
+        { to: '/admin/mcp-servers', label: t('admin.nav.mcpServers') },
+        { to: '/admin/personas', label: t('admin.nav.personas') },
+        { to: '/admin/intents', label: t('admin.nav.intents') },
+        { to: '/admin/prompt-templates', label: t('admin.nav.promptTemplates') },
+      ],
+    },
+    {
+      label: t('admin.navGroup.safety'),
+      items: [
+        { to: '/admin/output-guard', label: t('admin.nav.outputGuard') },
+        { to: '/admin/tool-policy', label: t('admin.nav.toolPolicy') },
+        { to: '/admin/scheduler', label: t('admin.nav.scheduler') },
+        { to: '/admin/approvals', label: t('admin.nav.approvals') },
+      ],
+    },
+    {
+      label: t('admin.navGroup.usersAndSessions'),
+      items: [
+        { to: '/admin/users', label: t('admin.nav.users') },
+        { to: '/admin/sessions', label: t('admin.nav.sessions') },
+      ],
+    },
+    {
+      label: t('admin.navGroup.analytics'),
+      items: [
+        { to: '/admin/feedback', label: t('admin.nav.feedback') },
+        { to: '/admin/audit-logs', label: t('admin.nav.auditLogs') },
+        { to: '/admin/rag', label: t('admin.nav.rag') },
+      ],
+    },
+    {
+      label: t('admin.navGroup.clipping'),
+      items: [
+        { to: '/admin/clipping/categories', label: t('admin.nav.clippingCategories') },
+        { to: '/admin/clipping/sources', label: t('admin.nav.clippingSources') },
+        { to: '/admin/clipping/personas', label: t('admin.nav.clippingPersonas') },
+        { to: '/admin/clipping/stats', label: t('admin.nav.clippingStats') },
+      ],
+    },
   ]
 
   return (
@@ -54,17 +97,22 @@ export function AdminLayout() {
       </header>
       <div className="Admin-body">
         <nav className="Admin-sidebar">
-          {navItems.map(item => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) =>
-                `Admin-navItem${isActive ? ' Admin-navItem--active' : ''}`
-              }
-            >
-              {item.label}
-            </NavLink>
+          {navGroups.map((group) => (
+            <div key={group.label} className="Admin-navGroup">
+              <div className="Admin-navGroupLabel">{group.label}</div>
+              {group.items.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  className={({ isActive }) =>
+                    `Admin-navItem${isActive ? ' Admin-navItem--active' : ''}`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
         <main className="Admin-content">
