@@ -1,98 +1,67 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import type { PersonaResponse } from '../../../types/api'
-import { listPersonas, createPersona, updatePersona, deletePersona } from '../../../services/personas'
+import { usePersonas, useCreatePersona, useUpdatePersona, useDeletePersona } from '../../../hooks/usePersonas'
+import { CreatePersonaSchema, type CreatePersonaInput } from '../../../schemas/persona'
 import './PersonasPage.css'
 
 type EditMode = 'none' | 'create' | 'edit'
 
 export function PersonasPage() {
   const { t } = useTranslation()
-  const [personas, setPersonas] = useState<PersonaResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [editMode, setEditMode] = useState<EditMode>('none')
   const [editId, setEditId] = useState<string | null>(null)
-  const [formName, setFormName] = useState('')
-  const [formPrompt, setFormPrompt] = useState('')
-  const [formIsDefault, setFormIsDefault] = useState(false)
-  const [saving, setSaving] = useState(false)
 
-  const fetchPersonas = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await listPersonas()
-      setPersonas(data)
-    } catch {
-      setError(t('admin.personasPage.loadError'))
-    } finally {
-      setLoading(false)
-    }
-  }, [t])
+  const { data: personas = [], isLoading, error } = usePersonas()
+  const createMutation = useCreatePersona()
+  const updateMutation = useUpdatePersona()
+  const deleteMutation = useDeletePersona()
 
-  useEffect(() => {
-    fetchPersonas()
-  }, [fetchPersonas])
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CreatePersonaInput>({
+    resolver: zodResolver(CreatePersonaSchema),
+    defaultValues: { name: '', systemPrompt: '', isDefault: false },
+  })
 
   const openCreate = () => {
     setEditMode('create')
     setEditId(null)
-    setFormName('')
-    setFormPrompt('')
-    setFormIsDefault(false)
+    reset({ name: '', systemPrompt: '', isDefault: false })
   }
 
   const openEdit = (persona: PersonaResponse) => {
     setEditMode('edit')
     setEditId(persona.id)
-    setFormName(persona.name)
-    setFormPrompt(persona.systemPrompt)
-    setFormIsDefault(persona.isDefault)
+    reset({ name: persona.name, systemPrompt: persona.systemPrompt, isDefault: persona.isDefault })
   }
 
   const closeForm = () => {
     setEditMode('none')
     setEditId(null)
+    reset()
   }
 
-  const handleSave = async () => {
-    if (!formName.trim() || !formPrompt.trim()) return
-    setSaving(true)
-    setError(null)
-    try {
-      if (editMode === 'create') {
-        await createPersona({
-          name: formName.trim(),
-          systemPrompt: formPrompt.trim(),
-          isDefault: formIsDefault,
-        })
-      } else if (editMode === 'edit' && editId) {
-        await updatePersona(editId, {
-          name: formName.trim(),
-          systemPrompt: formPrompt.trim(),
-          isDefault: formIsDefault,
-        })
-      }
-      await fetchPersonas()
-      closeForm()
-    } catch {
-      setError(t('admin.personasPage.saveError'))
-    } finally {
-      setSaving(false)
+  const onSubmit = handleSubmit(async (data) => {
+    if (editMode === 'create') {
+      await createMutation.mutateAsync(data)
+    } else if (editMode === 'edit' && editId) {
+      await updateMutation.mutateAsync({ id: editId, data })
     }
-  }
+    closeForm()
+  })
 
   const handleDelete = async (id: string) => {
     if (!confirm(t('admin.personasPage.deleteConfirm'))) return
-    setError(null)
-    try {
-      await deletePersona(id)
-      await fetchPersonas()
-    } catch {
-      setError(t('admin.personasPage.deleteError'))
-    }
+    await deleteMutation.mutateAsync(id)
   }
+
+  const mutationError = createMutation.error ?? updateMutation.error ?? deleteMutation.error
 
   return (
     <div className="PersonasPage">
@@ -108,50 +77,50 @@ export function PersonasPage() {
         )}
       </div>
 
-      {error && <div className="PersonasPage-error">{error}</div>}
+      {(error || mutationError) && (
+        <div className="PersonasPage-error">
+          {error ? t('admin.personasPage.loadError') : t('admin.personasPage.saveError')}
+        </div>
+      )}
 
       {editMode !== 'none' && (
-        <div className="PersonasPage-form">
+        <form className="PersonasPage-form" onSubmit={onSubmit}>
           <h3 className="PersonasPage-formTitle">
             {editMode === 'create' ? t('admin.personasPage.createTitle') : t('admin.personasPage.editTitle')}
           </h3>
           <input
             className="PersonasPage-input"
-            value={formName}
-            onChange={e => setFormName(e.target.value)}
+            {...register('name')}
             placeholder={t('admin.personasPage.namePlaceholder')}
           />
+          {errors.name && <p className="PersonasPage-fieldError">{errors.name.message}</p>}
           <textarea
             className="PersonasPage-textarea"
-            value={formPrompt}
-            onChange={e => setFormPrompt(e.target.value)}
+            {...register('systemPrompt')}
             placeholder={t('admin.personasPage.promptPlaceholder')}
             rows={6}
           />
+          {errors.systemPrompt && <p className="PersonasPage-fieldError">{errors.systemPrompt.message}</p>}
           <label className="PersonasPage-checkLabel">
-            <input
-              type="checkbox"
-              checked={formIsDefault}
-              onChange={e => setFormIsDefault(e.target.checked)}
-            />
+            <input type="checkbox" {...register('isDefault')} />
             {t('admin.personasPage.setDefault')}
           </label>
           <div className="PersonasPage-formActions">
-            <button
-              className="PersonasPage-saveBtn"
-              onClick={handleSave}
-              disabled={saving || !formName.trim() || !formPrompt.trim()}
-            >
-              {saving ? t('admin.personasPage.saving') : editMode === 'create' ? t('admin.personasPage.create') : t('admin.personasPage.save')}
+            <button className="PersonasPage-saveBtn" type="submit" disabled={isSubmitting}>
+              {isSubmitting
+                ? t('admin.personasPage.saving')
+                : editMode === 'create'
+                  ? t('admin.personasPage.create')
+                  : t('admin.personasPage.save')}
             </button>
-            <button className="PersonasPage-cancelBtn" onClick={closeForm}>
+            <button type="button" className="PersonasPage-cancelBtn" onClick={closeForm}>
               {t('admin.personasPage.cancel')}
             </button>
           </div>
-        </div>
+        </form>
       )}
 
-      {loading ? (
+      {isLoading ? (
         <div className="PersonasPage-loading">{t('admin.personasPage.loading')}</div>
       ) : personas.length === 0 ? (
         <div className="PersonasPage-empty">{t('admin.personasPage.empty')}</div>
