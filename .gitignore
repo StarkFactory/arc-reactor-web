@@ -27,6 +27,9 @@ dist-ssr
 test-results/
 playwright-report/
 
+# npm lockfile (this project uses pnpm)
+package-lock.json
+
 # Environment
 .env
 .env.local
