@@ -318,6 +318,52 @@ export interface UpdateToolPolicyRequest {
   denyWriteMessage: string
 }
 
+// ---- Ops Dashboard Types ----
+
+export interface SchedulerJobSummary {
+  successCount: number
+  failedCount: number
+  disabledCount: number
+}
+
+export interface OpsDashboardResponse {
+  totalChats: number
+  activeUsers: number
+  successRate: number
+  avgLatencyMs: number
+  schedulerJobSummary: SchedulerJobSummary
+  recentAuditLogs: AdminAuditLogResponse[]
+}
+
+// ---- Admin Audit Log Types ----
+
+export interface AdminAuditLogResponse {
+  id: string
+  category: string
+  action: string
+  actor: string
+  resourceId: string | null
+  detail: Record<string, unknown> | null
+  createdAt: number
+}
+
+export interface AuditLogsPageResponse {
+  content: AdminAuditLogResponse[]
+  totalElements: number
+  totalPages: number
+  page: number
+  size: number
+}
+
+export interface AuditLogsParams {
+  page?: number
+  size?: number
+  category?: string
+  actor?: string
+  from?: string
+  to?: string
+}
+
 // ---- Scheduler Types ----
 
 export interface ScheduledJobResponse {

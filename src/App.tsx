@@ -22,6 +22,7 @@ import { ClippingCategoriesPage } from './components/admin/pages/ClippingCategor
 import { ClippingSourcesPage } from './components/admin/pages/ClippingSourcesPage'
 import { ClippingPersonasPage } from './components/admin/pages/ClippingPersonasPage'
 import { ClippingStatsPage } from './components/admin/pages/ClippingStatsPage'
+import { AuditLogsPage } from './components/admin/pages/AuditLogsPage'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import './App.css'
 
@@ -124,6 +125,7 @@ export default function App() {
         <Route path="clipping/sources" element={<ClippingSourcesPage />} />
         <Route path="clipping/personas" element={<ClippingPersonasPage />} />
         <Route path="clipping/stats" element={<ClippingStatsPage />} />
+        <Route path="audit-logs" element={<AuditLogsPage />} />
       </Route>
       <Route path="*" element={<ChatPage />} />
     </Routes>
