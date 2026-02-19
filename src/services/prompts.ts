@@ -6,82 +6,28 @@ import type {
   VersionResponse,
   CreateVersionRequest,
 } from '../types/api'
-import { API_BASE } from '../utils/constants'
-import { fetchWithAuth } from '../utils/api-client'
+import { api } from '../lib/http'
 
-const BASE = `${API_BASE}/api/prompt-templates`
+export const listTemplates = (): Promise<TemplateResponse[]> =>
+  api.get('prompt-templates').json()
 
-export async function listTemplates(): Promise<TemplateResponse[]> {
-  const res = await fetchWithAuth(BASE)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const getTemplate = (id: string): Promise<TemplateDetailResponse> =>
+  api.get(`prompt-templates/${id}`).json()
 
-export async function getTemplate(id: string): Promise<TemplateDetailResponse> {
-  const res = await fetchWithAuth(`${BASE}/${id}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const createTemplate = (request: CreateTemplateRequest): Promise<TemplateResponse> =>
+  api.post('prompt-templates', { json: request }).json()
 
-export async function createTemplate(request: CreateTemplateRequest): Promise<TemplateResponse> {
-  const res = await fetchWithAuth(BASE, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const updateTemplate = (id: string, request: UpdateTemplateRequest): Promise<TemplateResponse> =>
+  api.put(`prompt-templates/${id}`, { json: request }).json()
 
-export async function updateTemplate(
-  id: string,
-  request: UpdateTemplateRequest
-): Promise<TemplateResponse> {
-  const res = await fetchWithAuth(`${BASE}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const deleteTemplate = (id: string): Promise<void> =>
+  api.delete(`prompt-templates/${id}`).then(() => undefined)
 
-export async function deleteTemplate(id: string): Promise<void> {
-  const res = await fetchWithAuth(`${BASE}/${id}`, { method: 'DELETE' })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-}
+export const createVersion = (templateId: string, request: CreateVersionRequest): Promise<VersionResponse> =>
+  api.post(`prompt-templates/${templateId}/versions`, { json: request }).json()
 
-export async function createVersion(
-  templateId: string,
-  request: CreateVersionRequest
-): Promise<VersionResponse> {
-  const res = await fetchWithAuth(`${BASE}/${templateId}/versions`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const activateVersion = (templateId: string, versionId: string): Promise<VersionResponse> =>
+  api.put(`prompt-templates/${templateId}/versions/${versionId}/activate`).json()
 
-export async function activateVersion(
-  templateId: string,
-  versionId: string
-): Promise<VersionResponse> {
-  const res = await fetchWithAuth(`${BASE}/${templateId}/versions/${versionId}/activate`, {
-    method: 'PUT',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
-
-export async function archiveVersion(
-  templateId: string,
-  versionId: string
-): Promise<VersionResponse> {
-  const res = await fetchWithAuth(`${BASE}/${templateId}/versions/${versionId}/archive`, {
-    method: 'PUT',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const archiveVersion = (templateId: string, versionId: string): Promise<VersionResponse> =>
+  api.put(`prompt-templates/${templateId}/versions/${versionId}/archive`).json()

@@ -1,42 +1,17 @@
 import type { PersonaResponse, CreatePersonaRequest, UpdatePersonaRequest } from '../types/api'
-import { API_BASE } from '../utils/constants'
-import { fetchWithAuth } from '../utils/api-client'
+import { api } from '../lib/http'
 
-export async function listPersonas(): Promise<PersonaResponse[]> {
-  const res = await fetchWithAuth(`${API_BASE}/api/personas`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const listPersonas = (): Promise<PersonaResponse[]> =>
+  api.get('personas').json()
 
-export async function getPersona(id: string): Promise<PersonaResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/personas/${id}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const getPersona = (id: string): Promise<PersonaResponse> =>
+  api.get(`personas/${id}`).json()
 
-export async function createPersona(request: CreatePersonaRequest): Promise<PersonaResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/personas`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const createPersona = (request: CreatePersonaRequest): Promise<PersonaResponse> =>
+  api.post('personas', { json: request }).json()
 
-export async function updatePersona(id: string, request: UpdatePersonaRequest): Promise<PersonaResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/personas/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const updatePersona = (id: string, request: UpdatePersonaRequest): Promise<PersonaResponse> =>
+  api.put(`personas/${id}`, { json: request }).json()
 
-export async function deletePersona(id: string): Promise<void> {
-  const res = await fetchWithAuth(`${API_BASE}/api/personas/${id}`, {
-    method: 'DELETE',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-}
+export const deletePersona = (id: string): Promise<void> =>
+  api.delete(`personas/${id}`).then(() => undefined)

@@ -6,55 +6,22 @@ import type {
   OutputGuardSimulationResponse,
   OutputGuardRuleAuditResponse,
 } from '../types/api'
-import { API_BASE } from '../utils/constants'
-import { fetchWithAuth } from '../utils/api-client'
+import { api } from '../lib/http'
 
-const BASE = `${API_BASE}/api/output-guard/rules`
+export const listOutputGuardRules = (): Promise<OutputGuardRuleResponse[]> =>
+  api.get('output-guard/rules').json()
 
-export async function listOutputGuardRules(): Promise<OutputGuardRuleResponse[]> {
-  const res = await fetchWithAuth(BASE)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const createOutputGuardRule = (request: CreateOutputGuardRuleRequest): Promise<OutputGuardRuleResponse> =>
+  api.post('output-guard/rules', { json: request }).json()
 
-export async function createOutputGuardRule(request: CreateOutputGuardRuleRequest): Promise<OutputGuardRuleResponse> {
-  const res = await fetchWithAuth(BASE, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const updateOutputGuardRule = (id: string, request: UpdateOutputGuardRuleRequest): Promise<void> =>
+  api.put(`output-guard/rules/${encodeURIComponent(id)}`, { json: request }).then(() => undefined)
 
-export async function updateOutputGuardRule(id: string, request: UpdateOutputGuardRuleRequest): Promise<void> {
-  const res = await fetchWithAuth(`${BASE}/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-}
+export const deleteOutputGuardRule = (id: string): Promise<void> =>
+  api.delete(`output-guard/rules/${encodeURIComponent(id)}`).then(() => undefined)
 
-export async function deleteOutputGuardRule(id: string): Promise<void> {
-  const res = await fetchWithAuth(`${BASE}/${encodeURIComponent(id)}`, {
-    method: 'DELETE',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-}
+export const simulateOutputGuard = (request: OutputGuardSimulationRequest): Promise<OutputGuardSimulationResponse> =>
+  api.post('output-guard/rules/simulate', { json: request }).json()
 
-export async function simulateOutputGuard(request: OutputGuardSimulationRequest): Promise<OutputGuardSimulationResponse> {
-  const res = await fetchWithAuth(`${BASE}/simulate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
-
-export async function listOutputGuardAudits(limit = 100): Promise<OutputGuardRuleAuditResponse[]> {
-  const res = await fetchWithAuth(`${BASE}/audits?limit=${limit}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const listOutputGuardAudits = (limit = 100): Promise<OutputGuardRuleAuditResponse[]> =>
+  api.get(`output-guard/rules/audits?limit=${limit}`).json()
