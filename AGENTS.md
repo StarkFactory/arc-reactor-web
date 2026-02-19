@@ -84,6 +84,7 @@ e2e/              # Playwright tests
 5. **Verify admin guards** (`isAdmin` / role check) when adding or changing admin-only features.
 6. **Do not add manual memoization** (`useMemo`, `useCallback`, `React.memo`) without justification — the React Compiler handles this automatically for opted-in files.
 7. **Validate changes with tests** — at minimum `pnpm lint` + related unit tests; include E2E tests for route or auth changes.
+8. **`any` type is forbidden.** Use `unknown`, precise types, or generics instead. This applies to all TypeScript files including tests.
 
 ## Data Fetching Patterns
 
