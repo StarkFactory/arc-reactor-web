@@ -40,6 +40,26 @@ export const queryKeys = {
     all: () => ['users'] as const,
     list: (params: Record<string, unknown>) => ['users', 'list', params] as const,
   },
+  promptTemplates: {
+    all: () => ['promptTemplates'] as const,
+    list: () => ['promptTemplates', 'list'] as const,
+    detail: (id: string) => ['promptTemplates', 'detail', id] as const,
+  },
+  rag: {
+    all: () => ['rag'] as const,
+    policy: () => ['rag', 'policy'] as const,
+    candidates: (params: Record<string, unknown>) => ['rag', 'candidates', params] as const,
+  },
+  feedback: {
+    all: () => ['feedback'] as const,
+    list: (params: Record<string, unknown>) => ['feedback', 'list', params] as const,
+    detail: (id: string) => ['feedback', 'detail', id] as const,
+  },
+  sessions: {
+    all: () => ['sessions'] as const,
+    list: (params: Record<string, unknown>) => ['sessions', 'list', params] as const,
+    detail: (id: string) => ['sessions', 'detail', id] as const,
+  },
   approval: {
     all: () => ['approval'] as const,
     list: () => ['approval', 'list'] as const,

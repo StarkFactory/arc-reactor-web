@@ -364,6 +364,77 @@ export interface AuditLogsParams {
   to?: string
 }
 
+// ---- RAG Ingestion Types ----
+
+export interface RagIngestionPolicy {
+  enabled: boolean
+  requireReview: boolean
+  allowedChannels: string[]
+  minQueryLength: number
+  blockPatterns: string[]
+}
+
+export type RagCandidateStatus = 'PENDING' | 'INGESTED' | 'REJECTED'
+
+export interface RagCandidateResponse {
+  id: string
+  query: string
+  answer: string
+  channel: string
+  status: RagCandidateStatus
+  rejectionReason: string | null
+  createdAt: number
+}
+
+export interface RagCandidatePageResponse {
+  content: RagCandidateResponse[]
+  totalElements: number
+  totalPages: number
+  page: number
+  size: number
+}
+
+export interface RagCandidateParams {
+  page?: number
+  size?: number
+  status?: RagCandidateStatus
+  channel?: string
+}
+
+// ---- Feedback Types ----
+
+export type FeedbackRating = 'POSITIVE' | 'NEGATIVE'
+
+export interface FeedbackResponse {
+  id: string
+  rating: FeedbackRating
+  userId: string
+  intentName: string | null
+  model: string | null
+  durationMs: number | null
+  query: string | null
+  answer: string | null
+  toolsUsed: string[]
+  createdAt: number
+}
+
+export interface FeedbackPageResponse {
+  content: FeedbackResponse[]
+  totalElements: number
+  totalPages: number
+  page: number
+  size: number
+}
+
+export interface FeedbackParams {
+  page?: number
+  size?: number
+  rating?: FeedbackRating
+  intentName?: string
+  from?: string
+  to?: string
+}
+
 // ---- Admin User Types ----
 
 export type UserRole = 'USER' | 'ADMIN'
@@ -403,6 +474,50 @@ export interface UpdateUserStatusRequest {
 
 export interface ResetPasswordResponse {
   temporaryPassword: string
+}
+
+// ---- Session Types ----
+
+export interface SessionMessage {
+  role: 'user' | 'assistant'
+  content: string
+  createdAt: number
+}
+
+export interface SessionResponse {
+  id: string
+  userId: string
+  userEmail: string | null
+  title: string | null
+  messageCount: number
+  lastMessage: string | null
+  createdAt: number
+  updatedAt: number
+}
+
+export interface SessionDetailResponse {
+  id: string
+  userId: string
+  userEmail: string | null
+  title: string | null
+  messages: SessionMessage[]
+  createdAt: number
+  updatedAt: number
+}
+
+export interface SessionPageResponse {
+  content: SessionResponse[]
+  totalElements: number
+  totalPages: number
+  page: number
+  size: number
+}
+
+export interface SessionParams {
+  page?: number
+  size?: number
+  userId?: string
+  search?: string
 }
 
 // ---- Scheduler Types ----
