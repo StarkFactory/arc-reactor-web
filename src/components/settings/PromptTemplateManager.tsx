@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TemplateResponse, TemplateDetailResponse, VersionResponse } from '../../types/api'
 import {
@@ -45,7 +45,7 @@ export function PromptTemplateManager({ value, onChange }: PromptTemplateManager
   const [versionChangeLog, setVersionChangeLog] = useState('')
   const [versionSaving, setVersionSaving] = useState(false)
 
-  const fetchTemplates = useCallback(async () => {
+  const fetchTemplates = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -57,9 +57,9 @@ export function PromptTemplateManager({ value, onChange }: PromptTemplateManager
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }
 
-  const fetchDetail = useCallback(async (id: string) => {
+  const fetchDetail = async (id: string) => {
     try {
       setDetailLoading(true)
       const data = await getTemplate(id)
@@ -70,11 +70,11 @@ export function PromptTemplateManager({ value, onChange }: PromptTemplateManager
     } finally {
       setDetailLoading(false)
     }
-  }, [t])
+  }
 
   useEffect(() => {
     fetchTemplates()
-  }, [fetchTemplates])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (value) {
@@ -82,7 +82,7 @@ export function PromptTemplateManager({ value, onChange }: PromptTemplateManager
     } else {
       setDetail(null)
     }
-  }, [value, fetchDetail])
+  }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value || null

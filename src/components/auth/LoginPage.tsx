@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
@@ -14,22 +14,22 @@ export function LoginPage() {
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
 
-  const switchMode = useCallback((newMode: Mode) => {
+  const switchMode = (newMode: Mode) => {
     setMode(newMode)
     clearError()
     setEmail('')
     setPassword('')
     setName('')
-  }, [clearError])
+  }
 
-  const handleSubmit = useCallback(async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (mode === 'login') {
       await login(email, password)
     } else {
       await register(email, password, name)
     }
-  }, [mode, email, password, name, login, register])
+  }
 
   const isValid = mode === 'login'
     ? email.trim() && password.trim()

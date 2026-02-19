@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useChatContext } from '../../context/ChatContext'
 import { fetchPendingApprovals, approveToolCall, rejectToolCall } from '../../services/approval'
@@ -14,10 +14,10 @@ export function ApprovalBanner() {
   const [processing, setProcessing] = useState<string | null>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const poll = useCallback(async () => {
+  const poll = async () => {
     const pending = await fetchPendingApprovals()
     setApprovals(pending)
-  }, [])
+  }
 
   useEffect(() => {
     if (!isLoading) {
@@ -30,9 +30,9 @@ export function ApprovalBanner() {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
-  }, [isLoading, poll])
+  }, [isLoading])
 
-  const handleApprove = useCallback(async (id: string) => {
+  const handleApprove = async (id: string) => {
     setProcessing(id)
     try {
       await approveToolCall(id)
@@ -42,9 +42,9 @@ export function ApprovalBanner() {
     } finally {
       setProcessing(null)
     }
-  }, [])
+  }
 
-  const handleReject = useCallback(async (id: string) => {
+  const handleReject = async (id: string) => {
     setProcessing(id)
     try {
       await rejectToolCall(id)
@@ -54,7 +54,7 @@ export function ApprovalBanner() {
     } finally {
       setProcessing(null)
     }
-  }, [])
+  }
 
   if (approvals.length === 0) return null
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import type { ChatSettings } from '../types/chat'
 import { DEFAULT_SETTINGS } from '../utils/constants'
 import { useLocalStorage } from './useLocalStorage'
@@ -9,13 +9,13 @@ export function useSettings(userId?: string) {
   const storageKey = userId ? `${BASE_KEY}:${userId}` : BASE_KEY
   const [settings, setSettings] = useLocalStorage<ChatSettings>(storageKey, DEFAULT_SETTINGS)
 
-  const updateSettings = useCallback((partial: Partial<ChatSettings>) => {
+  const updateSettings = (partial: Partial<ChatSettings>) => {
     setSettings(prev => ({ ...prev, ...partial }))
-  }, [setSettings])
+  }
 
-  const resetSettings = useCallback(() => {
+  const resetSettings = () => {
     setSettings(DEFAULT_SETTINGS)
-  }, [setSettings])
+  }
 
   // Apply dark mode to document
   useEffect(() => {

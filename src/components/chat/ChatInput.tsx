@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback, type FormEvent } from 'react'
+import { useState, useRef, useEffect, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import './ChatInput.css'
 
@@ -43,7 +43,7 @@ export function ChatInput({ onSend, onStop, disabled, initialValue }: ChatInputP
     }
   }, [previews])
 
-  const addFiles = useCallback((newFiles: FileList | null) => {
+  const addFiles = (newFiles: FileList | null) => {
     if (!newFiles) return
     const validFiles: File[] = []
     const newPreviews: string[] = []
@@ -60,21 +60,21 @@ export function ChatInput({ onSend, onStop, disabled, initialValue }: ChatInputP
 
     setFiles(prev => [...prev, ...validFiles])
     setPreviews(prev => [...prev, ...newPreviews])
-  }, [])
+  }
 
-  const removeFile = useCallback((index: number) => {
+  const removeFile = (index: number) => {
     setPreviews(prev => {
       if (prev[index]) URL.revokeObjectURL(prev[index])
       return prev.filter((_, i) => i !== index)
     })
     setFiles(prev => prev.filter((_, i) => i !== index))
-  }, [])
+  }
 
-  const clearFiles = useCallback(() => {
+  const clearFiles = () => {
     previews.forEach(url => { if (url) URL.revokeObjectURL(url) })
     setFiles([])
     setPreviews([])
-  }, [previews])
+  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()

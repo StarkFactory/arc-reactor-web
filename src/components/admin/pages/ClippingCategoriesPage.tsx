@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ClippingCategory, ClippingPersona } from '../../../types/clipping'
 import {
@@ -26,7 +26,7 @@ export function ClippingCategoriesPage() {
   const [formMaxItems, setFormMaxItems] = useState('5')
   const [formPersonaId, setFormPersonaId] = useState('')
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -38,9 +38,9 @@ export function ClippingCategoriesPage() {
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }
 
-  useEffect(() => { fetchData() }, [fetchData])
+  useEffect(() => { fetchData() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetForm = () => {
     setFormName('')

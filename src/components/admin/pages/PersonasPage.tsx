@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { PersonaResponse } from '../../../types/api'
 import { listPersonas, createPersona, updatePersona, deletePersona } from '../../../services/personas'
@@ -18,7 +18,7 @@ export function PersonasPage() {
   const [formIsDefault, setFormIsDefault] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  const fetchPersonas = useCallback(async () => {
+  const fetchPersonas = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -29,11 +29,11 @@ export function PersonasPage() {
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }
 
   useEffect(() => {
     fetchPersonas()
-  }, [fetchPersonas])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const openCreate = () => {
     setEditMode('create')

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import type { ChatMessage } from '../types/chat'
 import type { ChatSettings } from '../types/chat'
 import { streamChat, sendChat, sendChatMultipart } from '../services/api'
@@ -42,7 +42,7 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
     onMessagesChange?.(messages)
   }, [messages]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const updateAssistantMessage = useCallback((content: string, final: boolean) => {
+  const updateAssistantMessage = (content: string, final: boolean) => {
     setMessages(prev => {
       const updated = [...prev]
       const last = updated[updated.length - 1]
@@ -58,9 +58,9 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
       }
       return updated
     })
-  }, [])
+  }
 
-  const tickAnimation = useCallback(() => {
+  const tickAnimation = () => {
     cancelAnimationFrame(rafIdRef.current)
 
     const step = () => {
@@ -82,9 +82,9 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
       }
     }
     rafIdRef.current = requestAnimationFrame(step)
-  }, [updateAssistantMessage])
+  }
 
-  const waitForAnimationDone = useCallback((): Promise<void> => {
+  const waitForAnimationDone = (): Promise<void> => {
     if (displayedLenRef.current >= targetTextRef.current.length) {
       updateAssistantMessage(targetTextRef.current, true)
       return Promise.resolve()
@@ -93,9 +93,9 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
       animationDoneResolveRef.current = resolve
       tickAnimation()
     })
-  }, [tickAnimation, updateAssistantMessage])
+  }
 
-  const sendMessage = useCallback(async (text: string, files?: File[]) => {
+  const sendMessage = async (text: string, files?: File[]) => {
     if (!text.trim() || isLoading) return
 
     // Build attachment metadata for display
@@ -238,13 +238,13 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
       setIsLoading(false)
       setActiveTool(null)
     }
-  }, [isLoading, sessionId, settings, userId, tickAnimation, waitForAnimationDone, updateAssistantMessage])
+  }
 
-  const stopGeneration = useCallback(() => {
+  const stopGeneration = () => {
     abortControllerRef.current?.abort()
-  }, [])
+  }
 
-  const retryLastMessage = useCallback(async () => {
+  const retryLastMessage = async () => {
     const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')
     if (!lastUserMsg) return
 
@@ -264,7 +264,7 @@ export function useChat({ sessionId, settings, userId, initialMessages = [], onM
     // Wait a tick for state to update, then resend
     await new Promise(r => setTimeout(r, 0))
     await sendMessage(lastUserMsg.content)
-  }, [messages, sendMessage])
+  }
 
   return {
     messages,

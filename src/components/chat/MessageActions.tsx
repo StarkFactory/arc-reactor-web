@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import './MessageActions.css'
 
@@ -11,7 +11,7 @@ export function MessageActions({ content, onRetry }: MessageActionsProps) {
   const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = () => {
     navigator.clipboard.writeText(content).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -28,7 +28,7 @@ export function MessageActions({ content, onRetry }: MessageActionsProps) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
-  }, [content])
+  }
 
   return (
     <div className="MessageActions">

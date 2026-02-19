@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useChatContext } from '../../context/ChatContext'
 import { ChatMessage } from './ChatMessage'
 import { ChatInput } from './ChatInput'
@@ -22,14 +22,14 @@ export function ChatArea({ onOpenSettings }: ChatAreaProps) {
     if (el) el.scrollTop = el.scrollHeight
   }, [messages])
 
-  const handleSuggestion = useCallback((text: string) => {
+  const handleSuggestion = (text: string) => {
     setSuggestion(text)
     setTimeout(() => setSuggestion(undefined), 100)
-  }, [])
+  }
 
-  const handleSend = useCallback((text: string, files?: File[]) => {
+  const handleSend = (text: string, files?: File[]) => {
     sendMessage(text, files)
-  }, [sendMessage])
+  }
 
   return (
     <div className="ChatArea">

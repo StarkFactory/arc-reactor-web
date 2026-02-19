@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ClippingPersona } from '../../../types/clipping'
 import {
@@ -29,16 +29,16 @@ export function ClippingPersonasPage() {
   const [formLanguage, setFormLanguage] = useState('ko')
   const [formIsActive, setFormIsActive] = useState(true)
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     try {
       setLoading(true); setError(null)
       setPersonas(await listClippingPersonas())
     } catch {
       setError(t('admin.clipping.personas.loadError'))
     } finally { setLoading(false) }
-  }, [t])
+  }
 
-  useEffect(() => { fetchData() }, [fetchData])
+  useEffect(() => { fetchData() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const resetForm = () => {
     setFormName(''); setFormSystemPrompt(''); setFormDescription('')
