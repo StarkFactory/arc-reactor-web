@@ -28,6 +28,14 @@ export const queryKeys = {
     all: () => ['scheduler'] as const,
     list: () => ['scheduler', 'list'] as const,
   },
+  opsDashboard: {
+    all: () => ['opsDashboard'] as const,
+    metrics: () => ['opsDashboard', 'metrics'] as const,
+  },
+  auditLogs: {
+    all: () => ['auditLogs'] as const,
+    list: (params: Record<string, unknown>) => ['auditLogs', 'list', params] as const,
+  },
   approval: {
     all: () => ['approval'] as const,
     list: () => ['approval', 'list'] as const,
