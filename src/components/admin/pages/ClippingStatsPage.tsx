@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ClippingStat, ClippingCategory } from '../../../types/clipping'
 import { getClippingMonthlyStats, listClippingCategories } from '../../../services/clipping'
@@ -16,25 +16,30 @@ export function ClippingStatsPage() {
   })
   const [categoryId, setCategoryId] = useState('')
 
-  const fetchCategories = useCallback(async () => {
+  const fetchCategories = async () => {
     try {
       setCategories(await listClippingCategories())
     } catch {
       // ignore
     }
-  }, [])
+  }
 
-  const fetchStats = useCallback(async () => {
+  const fetchStats = async () => {
     try {
       setLoading(true); setError(null)
       setStats(await getClippingMonthlyStats(yearMonth, categoryId || undefined))
     } catch {
       setError(t('admin.clipping.stats.loadError'))
     } finally { setLoading(false) }
-  }, [yearMonth, categoryId, t])
+  }
 
-  useEffect(() => { fetchCategories() }, [fetchCategories])
-  useEffect(() => { fetchStats() }, [fetchStats])
+  useEffect(() => { fetchCategories() }, [])
+
+  // Use a ref to always hold the latest fetchStats without making it a
+  // dependency, so the effect only re-runs when the filter inputs change.
+  const fetchStatsRef = useRef(fetchStats)
+  fetchStatsRef.current = fetchStats
+  useEffect(() => { fetchStatsRef.current() }, [yearMonth, categoryId])
 
   const categoryName = (id: string) => categories.find(c => c.id === id)?.name || id
 

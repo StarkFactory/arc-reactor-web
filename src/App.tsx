@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import { ChatProvider, useChatContext } from './context/ChatContext'
@@ -51,10 +51,10 @@ function ChatLayout({
   }, [])
 
   // Global keyboard shortcuts
-  const shortcuts = useMemo(() => ({
+  const shortcuts = {
     'n': () => createSession(),
     ',': onToggleSettings,
-  }), [createSession, onToggleSettings])
+  }
 
   useKeyboardShortcuts(shortcuts)
 

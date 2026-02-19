@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { McpServerResponse, McpServerDetailResponse, McpAccessPolicyResponse } from '../../types/api'
 import {
@@ -44,7 +44,7 @@ export function McpServerManager() {
   const [formAutoConnect, setFormAutoConnect] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const fetchServers = useCallback(async () => {
+  const fetchServers = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -56,11 +56,11 @@ export function McpServerManager() {
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }
 
   useEffect(() => {
     fetchServers()
-  }, [fetchServers])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const splitKeys = (text: string): string[] => {
     return Array.from(new Set(

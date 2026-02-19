@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ToolPolicyResponse, ToolPolicyStateResponse } from '../../types/api'
 import { deleteToolPolicy, getToolPolicy, updateToolPolicy } from '../../services/tool-policy'
@@ -87,19 +87,14 @@ export function ToolPolicyManager() {
     'Error: This tool is not allowed in this channel'
   )
 
-  const writeToolSet = useMemo(() => new Set(splitLines(writeToolNamesText)), [writeToolNamesText])
-  const allowByChannel = useMemo(
-    () => parseChannelToolMap(allowWriteToolNamesByChannelText),
-    [allowWriteToolNamesByChannelText]
-  )
+  const writeToolSet = new Set(splitLines(writeToolNamesText))
+  const allowByChannel = parseChannelToolMap(allowWriteToolNamesByChannelText)
 
-  const denyChannels = useMemo(() => {
-    return Array.from(new Set(splitLines(denyWriteChannelsText).map(normalizeChannel).filter(Boolean))).sort()
-  }, [denyWriteChannelsText])
+  const denyChannels = Array.from(new Set(splitLines(denyWriteChannelsText).map(normalizeChannel).filter(Boolean))).sort()
 
   // Only deny-channels are enforced, so keep the main UI scoped to them.
   // Non-deny channels can still be edited via Advanced textarea.
-  const allowChannels = useMemo(() => denyChannels, [denyChannels])
+  const allowChannels = denyChannels
 
   useEffect(() => {
     if (!allowChannels.length) {
@@ -145,7 +140,7 @@ export function ToolPolicyManager() {
   const effective: ToolPolicyResponse | null = state?.effective ?? null
   const stored: ToolPolicyResponse | null = state?.stored ?? null
 
-  const seedForm = useCallback((p: ToolPolicyResponse) => {
+  const seedForm = (p: ToolPolicyResponse) => {
     setEnabled(p.enabled)
     setWriteToolNamesText(joinLines(p.writeToolNames))
     setDenyWriteChannelsText(joinLines(p.denyWriteChannels))
@@ -154,9 +149,9 @@ export function ToolPolicyManager() {
     setDenyWriteMessage(p.denyWriteMessage)
     setDenyChannelDraft('')
     setDenyChannelError(null)
-  }, [])
+  }
 
-  const fetchState = useCallback(async () => {
+  const fetchState = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -172,9 +167,9 @@ export function ToolPolicyManager() {
     } finally {
       setLoading(false)
     }
-  }, [seedForm, t])
+  }
 
-  const fetchMcpTools = useCallback(async () => {
+  const fetchMcpTools = async () => {
     try {
       setToolsLoading(true)
       setToolsError(null)
@@ -196,49 +191,40 @@ export function ToolPolicyManager() {
     } finally {
       setToolsLoading(false)
     }
-  }, [t])
+  }
 
   useEffect(() => {
     fetchState()
-  }, [fetchState])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     fetchMcpTools()
-  }, [fetchMcpTools])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const canSave = useMemo(() => {
-    if (!denyWriteMessage.trim()) return false
-    return true
-  }, [denyWriteMessage])
+  const canSave = !!denyWriteMessage.trim()
 
-  const serversSorted = useMemo(() => Object.keys(mcpToolsByServer).sort(), [mcpToolsByServer])
+  const serversSorted = Object.keys(mcpToolsByServer).sort()
 
-  const visibleToolsByServer = useMemo(() => {
-    const out: Record<string, string[]> = {}
-    for (const server of serversSorted) {
-      const tools = (mcpToolsByServer[server] ?? []).filter(tn => matchesFilter(tn, writeToolFilter))
-      out[server] = tools
+  const visibleToolsByServer: Record<string, string[]> = {}
+  for (const server of serversSorted) {
+    const tools = (mcpToolsByServer[server] ?? []).filter(tn => matchesFilter(tn, writeToolFilter))
+    visibleToolsByServer[server] = tools
+  }
+
+  const writeToolsByServerForAllowlist: Record<string, string[]> = {}
+  const remaining = new Set(Array.from(writeToolSet))
+
+  for (const server of serversSorted) {
+    const serverTools = (mcpToolsByServer[server] ?? []).filter(tn => remaining.has(tn))
+    if (serverTools.length) {
+      writeToolsByServerForAllowlist[server] = serverTools.slice().sort()
+      serverTools.forEach(tn => remaining.delete(tn))
     }
-    return out
-  }, [mcpToolsByServer, serversSorted, writeToolFilter])
+  }
 
-  const writeToolsByServerForAllowlist = useMemo(() => {
-    const out: Record<string, string[]> = {}
-    const remaining = new Set(Array.from(writeToolSet))
-
-    for (const server of serversSorted) {
-      const serverTools = (mcpToolsByServer[server] ?? []).filter(tn => remaining.has(tn))
-      if (serverTools.length) {
-        out[server] = serverTools.slice().sort()
-        serverTools.forEach(tn => remaining.delete(tn))
-      }
-    }
-
-    if (remaining.size) {
-      out['_unknown'] = Array.from(remaining).sort()
-    }
-    return out
-  }, [mcpToolsByServer, serversSorted, writeToolSet])
+  if (remaining.size) {
+    writeToolsByServerForAllowlist['_unknown'] = Array.from(remaining).sort()
+  }
 
   const toggleWriteTool = (toolName: string, checked: boolean) => {
     const current = new Set(writeToolSet)

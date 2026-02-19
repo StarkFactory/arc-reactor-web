@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type {
   CreateScheduledJobRequest,
@@ -95,7 +95,7 @@ export function SchedulerManager() {
   const [enabled, setEnabled] = useState(true)
   const [formError, setFormError] = useState<string | null>(null)
 
-  const fetchJobs = useCallback(async () => {
+  const fetchJobs = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -112,9 +112,9 @@ export function SchedulerManager() {
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }
 
-  const fetchMcpTools = useCallback(async () => {
+  const fetchMcpTools = async () => {
     try {
       setToolsLoading(true)
       const servers = await listMcpServers()
@@ -136,21 +136,19 @@ export function SchedulerManager() {
     } finally {
       setToolsLoading(false)
     }
-  }, [])
+  }
 
   useEffect(() => {
     fetchJobs()
-  }, [fetchJobs])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     fetchMcpTools()
-  }, [fetchMcpTools])
+  }, [])
 
-  const toolsForSelectedServer = useMemo(() => {
-    return (mcpToolsByServer[mcpServerName] ?? []).slice()
-  }, [mcpServerName, mcpToolsByServer])
+  const toolsForSelectedServer = (mcpToolsByServer[mcpServerName] ?? []).slice()
 
-  const resetForm = useCallback(() => {
+  const resetForm = () => {
     setEditingId(null)
     setName('')
     setDescription('')
@@ -162,7 +160,7 @@ export function SchedulerManager() {
     setSlackChannelId('')
     setEnabled(true)
     setFormError(null)
-  }, [])
+  }
 
   const openCreate = () => {
     resetForm()
@@ -189,7 +187,7 @@ export function SchedulerManager() {
     setMode('view')
   }
 
-  const canSubmit = useMemo(() => {
+  const canSubmit = (() => {
     if (!name.trim()) return false
     if (!cronExpression.trim()) return false
     if (!mcpServerName.trim()) return false
@@ -197,7 +195,7 @@ export function SchedulerManager() {
     const parsed = parseJsonObject(toolArgsText)
     if (!parsed.ok) return false
     return true
-  }, [name, cronExpression, mcpServerName, toolName, toolArgsText])
+  })()
 
   const submit = async () => {
     setFormError(null)

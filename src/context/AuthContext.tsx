@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { User } from '../types/auth'
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => { cancelled = true }
   }, [])
 
-  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     setError(null)
     setIsLoading(true)
     try {
@@ -86,9 +86,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setIsLoading(false)
     }
-  }, [t])
+  }
 
-  const register = useCallback(async (email: string, password: string, name: string): Promise<boolean> => {
+  const register = async (email: string, password: string, name: string): Promise<boolean> => {
     setError(null)
     setIsLoading(true)
     try {
@@ -106,21 +106,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       setIsLoading(false)
     }
-  }, [t])
+  }
 
-  const logout = useCallback(() => {
+  const logout = () => {
     removeAuthToken()
     setUser(null)
     setError(null)
+  }
+
+  // Register auto-logout callback for 401 responses.
+  // Inline the logout logic so the effect only depends on stable setState
+  // functions (guaranteed stable by React) — no eslint-disable needed.
+  useEffect(() => {
+    setOnUnauthorized(() => {
+      removeAuthToken()
+      setUser(null)
+      setError(null)
+    })
+    return () => setOnUnauthorized(null)
   }, [])
 
-  // Register auto-logout callback for 401 responses
-  useEffect(() => {
-    setOnUnauthorized(logout)
-    return () => setOnUnauthorized(null)
-  }, [logout])
-
-  const clearError = useCallback(() => setError(null), [])
+  const clearError = () => setError(null)
 
   return (
     <AuthContext.Provider

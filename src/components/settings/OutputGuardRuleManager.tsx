@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type {
   CreateOutputGuardRuleRequest,
@@ -44,7 +44,7 @@ export function OutputGuardRuleManager() {
   // Audits
   const [audits, setAudits] = useState<Array<{ action: string; actor: string; detail: string | null; createdAt: number }>>([])
 
-  const fetchAll = useCallback(async () => {
+  const fetchAll = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -56,26 +56,23 @@ export function OutputGuardRuleManager() {
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }
 
-  const fetchAudits = useCallback(async () => {
+  const fetchAudits = async () => {
     try {
       const data = await listOutputGuardAudits(50)
       setAudits(data.map(a => ({ action: a.action, actor: a.actor, detail: a.detail, createdAt: a.createdAt })))
     } catch {
       setAudits([])
     }
-  }, [])
+  }
 
   useEffect(() => {
     fetchAll()
     fetchAudits()
-  }, [fetchAll, fetchAudits])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const selected = useMemo(() => {
-    if (!expanded) return null
-    return items.find(i => i.id === expanded) ?? null
-  }, [expanded, items])
+  const selected = !expanded ? null : items.find(i => i.id === expanded) ?? null
 
   const resetForm = () => {
     setName('')

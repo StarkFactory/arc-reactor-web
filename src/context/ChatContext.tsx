@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ChatMessage, Session, ChatSettings } from '../types/chat'
 import { useAuth } from './AuthContext'
@@ -39,20 +39,27 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const { t } = useTranslation()
   const { user } = useAuth()
 
-  const createNewSession = useCallback((): Session => ({
+  // Factory for new sessions. Wrapped in useState lazy initializer when used as
+  // a default value so that Date.now() / crypto.randomUUID() are only called
+  // once on mount, not on every re-render.
+  const createNewSession = (): Session => ({
     id: crypto.randomUUID(),
     title: t('chat.newConversation'),
     createdAt: Date.now(),
     updatedAt: Date.now(),
     messages: [],
-  }), [t])
+  })
+
   const userId = user?.id
 
   // Namespace localStorage keys by userId for session isolation
   const sessionKey = userId ? `${BASE_SESSION_KEY}:${userId}` : BASE_SESSION_KEY
   const { settings, updateSettings, resetSettings } = useSettings(userId)
 
-  const [sessions, setSessions] = useLocalStorage<Session[]>(sessionKey, [createNewSession()])
+  // Use useState to lazily compute the default value so Date.now() is not
+  // called during every render (satisfies React's purity rules).
+  const [defaultSessions] = useState<Session[]>(() => [createNewSession()])
+  const [sessions, setSessions] = useLocalStorage<Session[]>(sessionKey, defaultSessions)
 
   // Ensure sessions is always a valid array
   const validSessions = Array.isArray(sessions) ? sessions : (() => {
@@ -71,7 +78,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     ?? validSessions[0]
   const effectiveSessionId = activeSession.id
 
-  const handleMessagesChange = useCallback((msgs: ChatMessage[]) => {
+  const handleMessagesChange = (msgs: ChatMessage[]) => {
     setSessions(prev => {
       const list = Array.isArray(prev) ? prev : []
       return list.map(s => {
@@ -84,7 +91,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         return { ...s, title, messages: msgs, updatedAt: Date.now() }
       })
     })
-  }, [effectiveSessionId, setSessions])
+  }
 
   const { messages, isLoading, activeTool, sendMessage, stopGeneration, retryLastMessage } = useChat({
     sessionId: effectiveSessionId,
@@ -94,7 +101,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     onMessagesChange: handleMessagesChange,
   })
 
-  const createSessionFn = useCallback(() => {
+  const createSessionFn = () => {
     const newSession = createNewSession()
     setSessions(prev => {
       const list = Array.isArray(prev) ? prev : []
@@ -106,13 +113,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       return updated
     })
     setActiveSessionId(newSession.id)
-  }, [createNewSession, setSessions])
+  }
 
-  const switchSessionFn = useCallback((id: string) => {
+  const switchSessionFn = (id: string) => {
     setActiveSessionId(id)
-  }, [])
+  }
 
-  const deleteSessionFn = useCallback((id: string) => {
+  const deleteSessionFn = (id: string) => {
     setSessions(prev => {
       const list = Array.isArray(prev) ? prev : []
       const filtered = list.filter(s => s.id !== id)
@@ -126,14 +133,14 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       }
       return filtered
     })
-  }, [createNewSession, effectiveSessionId, setSessions])
+  }
 
-  const renameSessionFn = useCallback((id: string, title: string) => {
+  const renameSessionFn = (id: string, title: string) => {
     setSessions(prev => {
       const list = Array.isArray(prev) ? prev : []
       return list.map(s => s.id === id ? { ...s, title } : s)
     })
-  }, [setSessions])
+  }
 
   return (
     <ChatCtx.Provider value={{

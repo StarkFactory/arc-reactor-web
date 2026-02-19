@@ -1,4 +1,3 @@
-import { memo } from 'react'
 import type { ChatMessage as ChatMessageType } from '../../types/chat'
 import { MarkdownRenderer } from '../common/MarkdownRenderer'
 import { MessageActions } from './MessageActions'
@@ -13,7 +12,7 @@ interface ChatMessageProps {
   onRetry?: () => void
 }
 
-export const ChatMessage = memo(function ChatMessage({
+export function ChatMessage({
   message, isLast, isLoading, showMetadata, onRetry,
 }: ChatMessageProps) {
   const showPlaceholder = isLoading && isLast && message.role === 'assistant' && !message.content
@@ -68,4 +67,4 @@ export const ChatMessage = memo(function ChatMessage({
       </div>
     </div>
   )
-})
+}

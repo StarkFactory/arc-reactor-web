@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { IntentProfile, IntentResponse, IntentResponseFormat } from '../../types/api'
 import { createIntent, deleteIntent, listIntents, updateIntent } from '../../services/intents'
@@ -45,7 +45,7 @@ export function IntentManager() {
   const [profileSystemPrompt, setProfileSystemPrompt] = useState('')
   const [profileResponseFormat, setProfileResponseFormat] = useState('')
 
-  const fetchAll = useCallback(async () => {
+  const fetchAll = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -57,16 +57,13 @@ export function IntentManager() {
     } finally {
       setLoading(false)
     }
-  }, [t])
+  }
 
   useEffect(() => {
     fetchAll()
-  }, [fetchAll])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const selected = useMemo(() => {
-    if (!expanded) return null
-    return items.find(i => i.name === expanded) ?? null
-  }, [expanded, items])
+  const selected = !expanded ? null : items.find(i => i.name === expanded) ?? null
 
   const resetForm = () => {
     setName('')

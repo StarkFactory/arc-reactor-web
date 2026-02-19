@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useChatContext } from '../../context/ChatContext'
 import { useAuth } from '../../context/AuthContext'
@@ -27,11 +27,11 @@ export function SettingsPanel({ open, onClose }: SettingsPanelProps) {
     return () => document.removeEventListener('keydown', handleKey)
   }, [open, onClose])
 
-  const handlePersonaChange = useCallback((personaId: string | null) => {
+  const handlePersonaChange = (personaId: string | null) => {
     updateSettings({ selectedPersonaId: personaId })
     // Clear custom system prompt when persona is selected
     if (personaId) updateSettings({ selectedPersonaId: personaId, systemPrompt: '' })
-  }, [updateSettings])
+  }
 
   if (!open) return null
 

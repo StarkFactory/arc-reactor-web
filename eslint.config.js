@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import reactCompiler from 'eslint-plugin-react-compiler'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
@@ -15,9 +16,28 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+    plugins: {
+      'react-compiler': reactCompiler,
+    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    rules: {
+      // Enforce React Compiler rules (catches violations of React's rules of hooks/components)
+      'react-compiler/react-compiler': 'error',
+      // Prevent manual memoization — React Compiler handles this automatically
+      'no-restricted-syntax': [
+        'warn',
+        {
+          selector: "CallExpression[callee.name='useCallback']",
+          message: 'React Compiler handles memoization automatically. Remove useCallback.',
+        },
+        {
+          selector: "CallExpression[callee.property.name='memo'][callee.object.name='React']",
+          message: 'React Compiler handles memoization automatically. Remove React.memo.',
+        },
+      ],
     },
   },
 ])
