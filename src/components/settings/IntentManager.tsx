@@ -1,180 +1,156 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import type { IntentProfile, IntentResponse, IntentResponseFormat } from '../../types/api'
-import { createIntent, deleteIntent, listIntents, updateIntent } from '../../services/intents'
+import { useIntents, useCreateIntent, useUpdateIntent, useDeleteIntent } from '../../hooks/useIntents'
+import { IntentFormSchema, type IntentFormInput } from '../../schemas/intent'
 import './IntentManager.css'
 
 type Mode = 'none' | 'create' | 'edit'
 
 function splitLines(text: string): string[] {
-  return text
-    .split('\n')
-    .map(s => s.trim())
-    .filter(Boolean)
+  return text.split('\n').map(s => s.trim()).filter(Boolean)
 }
 
 function splitCsv(text: string): string[] {
-  return text
-    .split(',')
-    .map(s => s.trim())
-    .filter(Boolean)
+  return text.split(',').map(s => s.trim()).filter(Boolean)
+}
+
+function buildProfile(data: IntentFormInput): IntentProfile {
+  const temperature = data.profileTemp.trim() ? Number(data.profileTemp) : null
+  const maxToolCalls = data.profileMaxToolCalls.trim() ? Number(data.profileMaxToolCalls) : null
+  const allowedTools = data.profileAllowedTools.trim() ? splitCsv(data.profileAllowedTools) : null
+
+  return {
+    model: data.profileModel.trim() || null,
+    temperature: Number.isFinite(temperature) ? temperature : null,
+    maxToolCalls: Number.isFinite(maxToolCalls) ? maxToolCalls : null,
+    allowedTools,
+    systemPrompt: data.profileSystemPrompt.trim() || null,
+    responseFormat: (data.profileResponseFormat.trim() || null) as IntentResponseFormat | null,
+  }
+}
+
+function intentToFormValues(intent: IntentResponse): IntentFormInput {
+  const p = intent.profile ?? ({} as IntentProfile)
+  return {
+    name: intent.name,
+    description: intent.description,
+    examplesText: (intent.examples ?? []).join('\n'),
+    keywordsText: (intent.keywords ?? []).join(', '),
+    enabled: intent.enabled,
+    profileModel: p.model ?? '',
+    profileTemp: p.temperature != null ? String(p.temperature) : '',
+    profileMaxToolCalls: p.maxToolCalls != null ? String(p.maxToolCalls) : '',
+    profileAllowedTools: (p.allowedTools ?? []).join(', '),
+    profileSystemPrompt: p.systemPrompt ?? '',
+    profileResponseFormat: p.responseFormat ?? '',
+  }
+}
+
+const EMPTY_FORM: IntentFormInput = {
+  name: '',
+  description: '',
+  examplesText: '',
+  keywordsText: '',
+  enabled: true,
+  profileModel: '',
+  profileTemp: '',
+  profileMaxToolCalls: '',
+  profileAllowedTools: '',
+  profileSystemPrompt: '',
+  profileResponseFormat: '',
 }
 
 export function IntentManager() {
   const { t } = useTranslation()
-  const [items, setItems] = useState<IntentResponse[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const [expanded, setExpanded] = useState<string | null>(null)
   const [mode, setMode] = useState<Mode>('none')
-  const [saving, setSaving] = useState(false)
   const [editName, setEditName] = useState<string | null>(null)
+  const [expanded, setExpanded] = useState<string | null>(null)
+  const [formError, setFormError] = useState<string | null>(null)
 
-  // Form
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [examplesText, setExamplesText] = useState('')
-  const [keywordsText, setKeywordsText] = useState('')
-  const [enabled, setEnabled] = useState(true)
+  const { data: items = [], isLoading, error: loadError } = useIntents()
+  const createMutation = useCreateIntent()
+  const updateMutation = useUpdateIntent()
+  const deleteMutation = useDeleteIntent()
 
-  const [profileModel, setProfileModel] = useState('')
-  const [profileTemp, setProfileTemp] = useState('')
-  const [profileMaxToolCalls, setProfileMaxToolCalls] = useState('')
-  const [profileAllowedTools, setProfileAllowedTools] = useState('')
-  const [profileSystemPrompt, setProfileSystemPrompt] = useState('')
-  const [profileResponseFormat, setProfileResponseFormat] = useState('')
-
-  const fetchAll = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await listIntents()
-      setItems(data)
-    } catch {
-      setError(t('intent.loadError'))
-      setItems([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    fetchAll()
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  const selected = !expanded ? null : items.find(i => i.name === expanded) ?? null
-
-  const resetForm = () => {
-    setName('')
-    setDescription('')
-    setExamplesText('')
-    setKeywordsText('')
-    setEnabled(true)
-
-    setProfileModel('')
-    setProfileTemp('')
-    setProfileMaxToolCalls('')
-    setProfileAllowedTools('')
-    setProfileSystemPrompt('')
-    setProfileResponseFormat('')
-  }
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<IntentFormInput>({
+    resolver: zodResolver(IntentFormSchema),
+    defaultValues: EMPTY_FORM,
+  })
 
   const openCreate = () => {
-    resetForm()
+    reset(EMPTY_FORM)
     setEditName(null)
+    setFormError(null)
     setMode('create')
   }
 
   const openEdit = (intent: IntentResponse) => {
+    reset(intentToFormValues(intent))
     setEditName(intent.name)
+    setFormError(null)
     setMode('edit')
-    setName(intent.name)
-    setDescription(intent.description)
-    setExamplesText((intent.examples || []).join('\n'))
-    setKeywordsText((intent.keywords || []).join(', '))
-    setEnabled(intent.enabled)
-
-    const p = intent.profile || ({} as IntentProfile)
-    setProfileModel(p.model ?? '')
-    setProfileTemp(p.temperature != null ? String(p.temperature) : '')
-    setProfileMaxToolCalls(p.maxToolCalls != null ? String(p.maxToolCalls) : '')
-    setProfileAllowedTools((p.allowedTools || []).join(', '))
-    setProfileSystemPrompt(p.systemPrompt ?? '')
-    setProfileResponseFormat(p.responseFormat ?? '')
   }
 
   const closeForm = () => {
     setMode('none')
     setEditName(null)
+    setFormError(null)
+    reset()
   }
 
-  const buildProfile = (): IntentProfile => {
-    const temperature = profileTemp.trim() ? Number(profileTemp) : null
-    const maxToolCalls = profileMaxToolCalls.trim() ? Number(profileMaxToolCalls) : null
-    const allowedTools = profileAllowedTools.trim() ? splitCsv(profileAllowedTools) : null
-
-    return {
-      model: profileModel.trim() || null,
-      temperature: Number.isFinite(temperature) ? temperature : null,
-      maxToolCalls: Number.isFinite(maxToolCalls) ? maxToolCalls : null,
-      allowedTools,
-      systemPrompt: profileSystemPrompt.trim() || null,
-      responseFormat: (profileResponseFormat.trim() || null) as IntentResponseFormat | null,
-    }
-  }
-
-  const handleSave = async () => {
-    if (!name.trim() || !description.trim()) return
-    setSaving(true)
-    setError(null)
-
+  const onSubmit = handleSubmit(async (data) => {
+    setFormError(null)
     try {
       if (mode === 'create') {
-        await createIntent({
-          name: name.trim(),
-          description: description.trim(),
-          examples: splitLines(examplesText),
-          keywords: splitCsv(keywordsText),
-          profile: buildProfile(),
-          enabled,
+        await createMutation.mutateAsync({
+          name: data.name.trim(),
+          description: data.description.trim(),
+          examples: splitLines(data.examplesText),
+          keywords: splitCsv(data.keywordsText),
+          profile: buildProfile(data),
+          enabled: data.enabled,
         })
       } else if (mode === 'edit' && editName) {
-        await updateIntent(editName, {
-          description: description.trim(),
-          examples: splitLines(examplesText),
-          keywords: splitCsv(keywordsText),
-          profile: buildProfile(),
-          enabled,
+        await updateMutation.mutateAsync({
+          name: editName,
+          data: {
+            description: data.description.trim(),
+            examples: splitLines(data.examplesText),
+            keywords: splitCsv(data.keywordsText),
+            profile: buildProfile(data),
+            enabled: data.enabled,
+          },
         })
       }
-
       closeForm()
-      await fetchAll()
     } catch (e) {
       if (e instanceof Error && e.message === 'CONFLICT') {
-        setError(t('intent.duplicateError'))
+        setFormError(t('intent.duplicateError'))
       } else {
-        setError(t('intent.saveError'))
+        setFormError(t('intent.saveError'))
       }
-    } finally {
-      setSaving(false)
     }
-  }
+  })
 
   const handleDelete = async (intentName: string) => {
     if (!confirm(t('intent.deleteConfirm'))) return
-    setError(null)
     try {
-      await deleteIntent(intentName)
+      await deleteMutation.mutateAsync(intentName)
       if (expanded === intentName) setExpanded(null)
-      await fetchAll()
     } catch {
-      setError(t('intent.deleteError'))
+      setFormError(t('intent.deleteError'))
     }
   }
 
-  if (loading) {
+  if (isLoading) {
     return <div className="IntentManager-loading">{t('intent.loading')}</div>
   }
 
@@ -189,102 +165,65 @@ export function IntentManager() {
         </button>
       </div>
 
-      {error && <div className="IntentManager-error">{error}</div>}
+      {(loadError || formError) && (
+        <div className="IntentManager-error">
+          {formError ?? t('intent.loadError')}
+        </div>
+      )}
 
       {mode !== 'none' && (
-        <div className="IntentManager-form">
+        <form className="IntentManager-form" onSubmit={onSubmit}>
           <div className="IntentManager-formTitle">
             {mode === 'create' ? t('intent.createTitle') : t('intent.editTitle')}
           </div>
 
           <input
             className="IntentManager-input"
-            value={name}
-            onChange={e => setName(e.target.value)}
+            {...register('name')}
             placeholder={t('intent.namePlaceholder')}
             disabled={mode === 'edit'}
           />
           <input
             className="IntentManager-input"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
+            {...register('description')}
             placeholder={t('intent.descriptionPlaceholder')}
           />
-
           <textarea
             className="IntentManager-textarea"
-            value={examplesText}
-            onChange={e => setExamplesText(e.target.value)}
+            {...register('examplesText')}
             placeholder={t('intent.examplesPlaceholder')}
             rows={3}
           />
           <input
             className="IntentManager-input"
-            value={keywordsText}
-            onChange={e => setKeywordsText(e.target.value)}
+            {...register('keywordsText')}
             placeholder={t('intent.keywordsPlaceholder')}
           />
-
           <label className="IntentManager-checkLabel">
-            <input type="checkbox" checked={enabled} onChange={e => setEnabled(e.target.checked)} />
+            <input type="checkbox" {...register('enabled')} />
             {t('intent.enabled')}
           </label>
 
           <div className="IntentManager-formSection">{t('intent.profile')}</div>
 
-          <input
-            className="IntentManager-input"
-            value={profileModel}
-            onChange={e => setProfileModel(e.target.value)}
-            placeholder={t('intent.profileModel')}
-          />
+          <input className="IntentManager-input" {...register('profileModel')} placeholder={t('intent.profileModel')} />
           <div className="IntentManager-row">
-            <input
-              className="IntentManager-input"
-              value={profileTemp}
-              onChange={e => setProfileTemp(e.target.value)}
-              placeholder={t('intent.profileTemperature')}
-            />
-            <input
-              className="IntentManager-input"
-              value={profileMaxToolCalls}
-              onChange={e => setProfileMaxToolCalls(e.target.value)}
-              placeholder={t('intent.profileMaxToolCalls')}
-            />
+            <input className="IntentManager-input" {...register('profileTemp')} placeholder={t('intent.profileTemperature')} />
+            <input className="IntentManager-input" {...register('profileMaxToolCalls')} placeholder={t('intent.profileMaxToolCalls')} />
           </div>
-          <input
-            className="IntentManager-input"
-            value={profileResponseFormat}
-            onChange={e => setProfileResponseFormat(e.target.value)}
-            placeholder={t('intent.profileResponseFormat')}
-          />
-          <input
-            className="IntentManager-input"
-            value={profileAllowedTools}
-            onChange={e => setProfileAllowedTools(e.target.value)}
-            placeholder={t('intent.profileAllowedTools')}
-          />
-          <textarea
-            className="IntentManager-textarea"
-            value={profileSystemPrompt}
-            onChange={e => setProfileSystemPrompt(e.target.value)}
-            placeholder={t('intent.profileSystemPrompt')}
-            rows={4}
-          />
+          <input className="IntentManager-input" {...register('profileResponseFormat')} placeholder={t('intent.profileResponseFormat')} />
+          <input className="IntentManager-input" {...register('profileAllowedTools')} placeholder={t('intent.profileAllowedTools')} />
+          <textarea className="IntentManager-textarea" {...register('profileSystemPrompt')} placeholder={t('intent.profileSystemPrompt')} rows={4} />
 
           <div className="IntentManager-formActions">
-            <button
-              className="IntentManager-saveBtn"
-              onClick={handleSave}
-              disabled={saving || !name.trim() || !description.trim()}
-            >
-              {saving ? t('intent.saving') : t('intent.save')}
+            <button className="IntentManager-saveBtn" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? t('intent.saving') : t('intent.save')}
             </button>
-            <button className="IntentManager-cancelBtn" onClick={closeForm}>
+            <button type="button" className="IntentManager-cancelBtn" onClick={closeForm}>
               {t('intent.cancel')}
             </button>
           </div>
-        </div>
+        </form>
       )}
 
       {items.length === 0 ? (
@@ -310,22 +249,24 @@ export function IntentManager() {
                 <div className="IntentManager-detail">
                   <div className="IntentManager-detailRow">
                     <span className="IntentManager-detailLabel">{t('intent.examples')}</span>
-                    <span className="IntentManager-detailValue">{(intent.examples || []).length}</span>
+                    <span className="IntentManager-detailValue">{(intent.examples ?? []).length}</span>
                   </div>
                   <div className="IntentManager-detailRow">
                     <span className="IntentManager-detailLabel">{t('intent.keywords')}</span>
-                    <span className="IntentManager-detailValue">{(intent.keywords || []).join(', ') || '-'}</span>
+                    <span className="IntentManager-detailValue">{(intent.keywords ?? []).join(', ') || '-'}</span>
                   </div>
                   <div className="IntentManager-detailRow">
                     <span className="IntentManager-detailLabel">{t('intent.allowedTools')}</span>
-                    <span className="IntentManager-detailValue">{(intent.profile?.allowedTools || []).join(', ') || '-'}</span>
+                    <span className="IntentManager-detailValue">{(intent.profile?.allowedTools ?? []).join(', ') || '-'}</span>
                   </div>
-
                   <div className="IntentManager-actions">
                     <button className="IntentManager-actionBtn" onClick={() => openEdit(intent)}>
                       {t('intent.edit')}
                     </button>
-                    <button className="IntentManager-actionBtn IntentManager-actionBtn--danger" onClick={() => handleDelete(intent.name)}>
+                    <button
+                      className="IntentManager-actionBtn IntentManager-actionBtn--danger"
+                      onClick={() => handleDelete(intent.name)}
+                    >
                       {t('intent.delete')}
                     </button>
                   </div>
@@ -336,7 +277,7 @@ export function IntentManager() {
         </div>
       )}
 
-      {selected == null && items.length > 0 && (
+      {expanded == null && items.length > 0 && (
         <div className="IntentManager-hint">{t('intent.hint')}</div>
       )}
     </div>

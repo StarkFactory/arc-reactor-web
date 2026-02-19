@@ -39,7 +39,22 @@ export const UpdateIntentSchema = z.object({
   enabled: z.boolean().optional(),
 })
 
+export const IntentFormSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  description: z.string().min(1, 'Description is required'),
+  examplesText: z.string(),
+  keywordsText: z.string(),
+  enabled: z.boolean(),
+  profileModel: z.string(),
+  profileTemp: z.string(),
+  profileMaxToolCalls: z.string(),
+  profileAllowedTools: z.string(),
+  profileSystemPrompt: z.string(),
+  profileResponseFormat: z.string(),
+})
+
 export type IntentProfile = z.infer<typeof IntentProfileSchema>
 export type Intent = z.infer<typeof IntentSchema>
 export type CreateIntentInput = z.infer<typeof CreateIntentSchema>
 export type UpdateIntentInput = z.infer<typeof UpdateIntentSchema>
+export type IntentFormInput = z.infer<typeof IntentFormSchema>
