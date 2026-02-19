@@ -5,61 +5,33 @@ import type {
   UpdateMcpServerRequest,
   McpConnectResponse,
 } from '../types/api'
-import { API_BASE } from '../utils/constants'
-import { fetchWithAuth } from '../utils/api-client'
+import { api, isHttpError } from '../lib/http'
 
-export async function listMcpServers(): Promise<McpServerResponse[]> {
-  const res = await fetchWithAuth(`${API_BASE}/api/mcp/servers`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const listMcpServers = (): Promise<McpServerResponse[]> =>
+  api.get('mcp/servers').json()
 
-export async function getMcpServer(name: string): Promise<McpServerDetailResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/mcp/servers/${encodeURIComponent(name)}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const getMcpServer = (name: string): Promise<McpServerDetailResponse> =>
+  api.get(`mcp/servers/${encodeURIComponent(name)}`).json()
 
 export async function registerMcpServer(request: RegisterMcpServerRequest): Promise<McpServerResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/mcp/servers`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (res.status === 409) throw new Error('CONFLICT')
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
+  try {
+    return await api.post('mcp/servers', { json: request }).json()
+  } catch (error) {
+    if (isHttpError(error, 409)) throw new Error('CONFLICT')
+    throw error
+  }
 }
 
-export async function updateMcpServer(name: string, request: UpdateMcpServerRequest): Promise<McpServerResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/mcp/servers/${encodeURIComponent(name)}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const updateMcpServer = (name: string, request: UpdateMcpServerRequest): Promise<McpServerResponse> =>
+  api.put(`mcp/servers/${encodeURIComponent(name)}`, { json: request }).json()
 
-export async function deleteMcpServer(name: string): Promise<void> {
-  const res = await fetchWithAuth(`${API_BASE}/api/mcp/servers/${encodeURIComponent(name)}`, {
-    method: 'DELETE',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-}
+export const deleteMcpServer = (name: string): Promise<void> =>
+  api.delete(`mcp/servers/${encodeURIComponent(name)}`).then(() => undefined)
 
-export async function connectMcpServer(name: string): Promise<McpConnectResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/mcp/servers/${encodeURIComponent(name)}/connect`, {
-    method: 'POST',
-  })
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`)
-  return data
-}
+// ky throws HTTPError on non-2xx, so .json() is called only on success responses.
+// The beforeError hook in lib/http attaches "HTTP <status> <url>" as the error message.
+export const connectMcpServer = (name: string): Promise<McpConnectResponse> =>
+  api.post(`mcp/servers/${encodeURIComponent(name)}/connect`).json()
 
-export async function disconnectMcpServer(name: string): Promise<void> {
-  const res = await fetchWithAuth(`${API_BASE}/api/mcp/servers/${encodeURIComponent(name)}/disconnect`, {
-    method: 'POST',
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-}
+export const disconnectMcpServer = (name: string): Promise<void> =>
+  api.post(`mcp/servers/${encodeURIComponent(name)}/disconnect`).then(() => undefined)

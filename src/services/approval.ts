@@ -1,31 +1,17 @@
 import type { ApprovalSummary, ApprovalActionResponse } from '../types/api'
-import { fetchWithAuth } from '../utils/api-client'
-import { API_BASE } from '../utils/constants'
+import { api } from '../lib/http'
 
 export async function fetchPendingApprovals(): Promise<ApprovalSummary[]> {
   try {
-    const res = await fetchWithAuth(`${API_BASE}/api/approvals`)
-    if (!res.ok) return []
-    return await res.json()
+    return await api.get('approvals').json()
   } catch {
+    // Return an empty list on any error so the UI degrades silently
     return []
   }
 }
 
-export async function approveToolCall(id: string): Promise<ApprovalActionResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/approvals/${id}/approve`, {
-    method: 'POST',
-    body: JSON.stringify({}),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return await res.json()
-}
+export const approveToolCall = (id: string): Promise<ApprovalActionResponse> =>
+  api.post(`approvals/${id}/approve`, { json: {} }).json()
 
-export async function rejectToolCall(id: string, reason?: string): Promise<ApprovalActionResponse> {
-  const res = await fetchWithAuth(`${API_BASE}/api/approvals/${id}/reject`, {
-    method: 'POST',
-    body: JSON.stringify({ reason }),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return await res.json()
-}
+export const rejectToolCall = (id: string, reason?: string): Promise<ApprovalActionResponse> =>
+  api.post(`approvals/${id}/reject`, { json: { reason } }).json()

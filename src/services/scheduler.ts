@@ -3,52 +3,33 @@ import type {
   ScheduledJobResponse,
   UpdateScheduledJobRequest,
 } from '../types/api'
-import { API_BASE } from '../utils/constants'
-import { fetchWithAuth } from '../utils/api-client'
+import { api, HTTPError } from '../lib/http'
 
-const BASE = `${API_BASE}/api/scheduler/jobs`
+export const listScheduledJobs = (): Promise<ScheduledJobResponse[]> =>
+  api.get('scheduler/jobs').json()
 
-export async function listScheduledJobs(): Promise<ScheduledJobResponse[]> {
-  const res = await fetchWithAuth(BASE)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const getScheduledJob = (id: string): Promise<ScheduledJobResponse> =>
+  api.get(`scheduler/jobs/${encodeURIComponent(id)}`).json()
 
-export async function getScheduledJob(id: string): Promise<ScheduledJobResponse> {
-  const res = await fetchWithAuth(`${BASE}/${encodeURIComponent(id)}`)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const createScheduledJob = (request: CreateScheduledJobRequest): Promise<ScheduledJobResponse> =>
+  api.post('scheduler/jobs', { json: request }).json()
 
-export async function createScheduledJob(request: CreateScheduledJobRequest): Promise<ScheduledJobResponse> {
-  const res = await fetchWithAuth(BASE, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const updateScheduledJob = (id: string, request: UpdateScheduledJobRequest): Promise<ScheduledJobResponse> =>
+  api.put(`scheduler/jobs/${encodeURIComponent(id)}`, { json: request }).json()
 
-export async function updateScheduledJob(id: string, request: UpdateScheduledJobRequest): Promise<ScheduledJobResponse> {
-  const res = await fetchWithAuth(`${BASE}/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
-
-export async function deleteScheduledJob(id: string): Promise<void> {
-  const res = await fetchWithAuth(`${BASE}/${encodeURIComponent(id)}`, { method: 'DELETE' })
-  if (!res.ok && res.status !== 204) throw new Error(`HTTP ${res.status}`)
-}
+// ky treats 204 No Content as a successful response, so no special handling is needed.
+export const deleteScheduledJob = (id: string): Promise<void> =>
+  api.delete(`scheduler/jobs/${encodeURIComponent(id)}`).then(() => undefined)
 
 export async function triggerScheduledJob(id: string): Promise<{ result: string }> {
-  const res = await fetchWithAuth(`${BASE}/${encodeURIComponent(id)}/trigger`, { method: 'POST' })
-  const data = await res.json().catch(() => ({}))
-  if (!res.ok) throw new Error((data && data.error) || `HTTP ${res.status}`)
-  return data
+  try {
+    return await api.post(`scheduler/jobs/${encodeURIComponent(id)}/trigger`).json()
+  } catch (error) {
+    if (error instanceof HTTPError) {
+      // Attempt to extract a server-provided error message from the response body
+      const body = await error.response.json().catch(() => ({}))
+      throw new Error((body as { error?: string }).error || error.message)
+    }
+    throw error
+  }
 }
-

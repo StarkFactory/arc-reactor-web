@@ -3,28 +3,14 @@ import type {
   ToolPolicyResponse,
   UpdateToolPolicyRequest,
 } from '../types/api'
-import { API_BASE } from '../utils/constants'
-import { fetchWithAuth } from '../utils/api-client'
+import { api } from '../lib/http'
 
-const BASE = `${API_BASE}/api/tool-policy`
+export const getToolPolicy = (): Promise<ToolPolicyStateResponse> =>
+  api.get('tool-policy').json()
 
-export async function getToolPolicy(): Promise<ToolPolicyStateResponse> {
-  const res = await fetchWithAuth(BASE)
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
+export const updateToolPolicy = (request: UpdateToolPolicyRequest): Promise<ToolPolicyResponse> =>
+  api.put('tool-policy', { json: request }).json()
 
-export async function updateToolPolicy(request: UpdateToolPolicyRequest): Promise<ToolPolicyResponse> {
-  const res = await fetchWithAuth(BASE, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(request),
-  })
-  if (!res.ok) throw new Error(`HTTP ${res.status}`)
-  return res.json()
-}
-
-export async function deleteToolPolicy(): Promise<void> {
-  const res = await fetchWithAuth(BASE, { method: 'DELETE' })
-  if (!res.ok && res.status !== 204) throw new Error(`HTTP ${res.status}`)
-}
+// ky treats 204 No Content as a successful response, so no special handling is needed.
+export const deleteToolPolicy = (): Promise<void> =>
+  api.delete('tool-policy').then(() => undefined)
