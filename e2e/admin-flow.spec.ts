@@ -5,7 +5,7 @@ test.describe.configure({ mode: 'serial' })
 const PAUSE = 3000 // 각 액션 후 3초 대기
 
 test.describe('Admin Dashboard Full Flow', () => {
-  let page: Awaited<ReturnType<typeof test.info>>['_'] extends never ? never : any
+  let page: import('@playwright/test').Page
 
   test.beforeAll(async ({ browser }) => {
     page = await browser.newPage()
