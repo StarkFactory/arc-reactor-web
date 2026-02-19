@@ -7,6 +7,7 @@ export const queryKeys = {
   intents: {
     all: () => ['intents'] as const,
     list: () => ['intents', 'list'] as const,
+    detail: (name: string) => ['intents', 'detail', name] as const,
   },
   mcpServers: {
     all: () => ['mcpServers'] as const,
@@ -30,5 +31,20 @@ export const queryKeys = {
   approval: {
     all: () => ['approval'] as const,
     list: () => ['approval', 'list'] as const,
+  },
+  clipping: {
+    all: () => ['clipping'] as const,
+    stats: (yearMonth: string, categoryId?: string) =>
+      ['clipping', 'stats', yearMonth, categoryId] as const,
+    categories: () => ['clipping', 'categories'] as const,
+  },
+  prompts: {
+    all: () => ['prompts'] as const,
+    list: () => ['prompts', 'list'] as const,
+    detail: (id: string) => ['prompts', 'detail', id] as const,
+  },
+  errorReports: {
+    all: () => ['errorReports'] as const,
+    list: () => ['errorReports', 'list'] as const,
   },
 }
