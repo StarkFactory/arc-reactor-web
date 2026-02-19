@@ -1,0 +1,240 @@
+.UserManagementPage {
+  padding: 0;
+}
+
+.UserManagementPage-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.UserManagementPage-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.25rem;
+}
+
+.UserManagementPage-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.UserManagementPage-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+  align-items: center;
+}
+
+.UserManagementPage-searchInput {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.UserManagementPage-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.UserManagementPage-btn {
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.UserManagementPage-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.UserManagementPage-btnSecondary {
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.UserManagementPage-btnSecondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.UserManagementPage-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.UserManagementPage-error {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--error-bg, #fef2f2);
+  border: 1px solid var(--error, #ef4444);
+  border-radius: 8px;
+  color: var(--error, #ef4444);
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.UserManagementPage-tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.UserManagementPage-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.UserManagementPage-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.UserManagementPage-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.UserManagementPage-table tr:last-child td {
+  border-bottom: none;
+}
+
+.UserManagementPage-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+}
+
+.UserManagementPage-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.UserManagementPage-badge--admin {
+  background: var(--accent-bg, #eff6ff);
+  color: var(--accent, #3b82f6);
+}
+
+.UserManagementPage-badge--user {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.UserManagementPage-badge--active {
+  background: var(--success-bg, #f0fdf4);
+  color: var(--success, #22c55e);
+}
+
+.UserManagementPage-badge--inactive {
+  background: var(--error-bg, #fef2f2);
+  color: var(--error, #ef4444);
+}
+
+.UserManagementPage-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.UserManagementPage-actionBtn {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.UserManagementPage-actionBtnDanger {
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  background: var(--error-bg, #fef2f2);
+  border: 1px solid var(--error, #ef4444);
+  border-radius: 4px;
+  color: var(--error, #ef4444);
+  cursor: pointer;
+}
+
+.UserManagementPage-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.UserManagementPage-pageInfo {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Confirmation dialog */
+.UserManagementPage-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.UserManagementPage-dialog {
+  background: var(--bg-primary, #fff);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  max-width: 420px;
+  width: 90%;
+}
+
+.UserManagementPage-dialogText {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin: 0 0 1.25rem;
+  line-height: 1.5;
+}
+
+.UserManagementPage-dialogActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}

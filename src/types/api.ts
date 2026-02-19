@@ -364,6 +364,47 @@ export interface AuditLogsParams {
   to?: string
 }
 
+// ---- Admin User Types ----
+
+export type UserRole = 'USER' | 'ADMIN'
+
+export interface AdminUserResponse {
+  id: string
+  email: string
+  name: string
+  role: UserRole
+  active: boolean
+  createdAt: number
+}
+
+export interface AdminUserListResponse {
+  content: AdminUserResponse[]
+  totalElements: number
+  totalPages: number
+  page: number
+  size: number
+}
+
+export interface AdminUserListParams {
+  page?: number
+  size?: number
+  search?: string
+  role?: string
+  status?: string
+}
+
+export interface UpdateUserRoleRequest {
+  role: UserRole
+}
+
+export interface UpdateUserStatusRequest {
+  active: boolean
+}
+
+export interface ResetPasswordResponse {
+  temporaryPassword: string
+}
+
 // ---- Scheduler Types ----
 
 export interface ScheduledJobResponse {
