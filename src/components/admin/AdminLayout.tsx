@@ -25,6 +25,9 @@ export function AdminLayout() {
     { to: '/admin/clipping/stats', label: t('admin.nav.clippingStats') },
     { to: '/admin/audit-logs', label: t('admin.nav.auditLogs') },
     { to: '/admin/users', label: t('admin.nav.users') },
+    { to: '/admin/prompt-templates', label: t('admin.nav.promptTemplates') },
+    { to: '/admin/rag', label: t('admin.nav.rag') },
+    { to: '/admin/feedback', label: t('admin.nav.feedback') },
   ]
 
   return (

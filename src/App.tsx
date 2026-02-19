@@ -24,6 +24,9 @@ import { ClippingPersonasPage } from './components/admin/pages/ClippingPersonasP
 import { ClippingStatsPage } from './components/admin/pages/ClippingStatsPage'
 import { AuditLogsPage } from './components/admin/pages/AuditLogsPage'
 import { UserManagementPage } from './components/admin/pages/UserManagementPage'
+import { PromptTemplatesPage } from './components/admin/pages/PromptTemplatesPage'
+import { RagIngestionPage } from './components/admin/pages/RagIngestionPage'
+import { FeedbackPage } from './components/admin/pages/FeedbackPage'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import './App.css'
 
@@ -128,6 +131,9 @@ export default function App() {
         <Route path="clipping/stats" element={<ClippingStatsPage />} />
         <Route path="audit-logs" element={<AuditLogsPage />} />
         <Route path="users" element={<UserManagementPage />} />
+        <Route path="prompt-templates" element={<PromptTemplatesPage />} />
+        <Route path="rag" element={<RagIngestionPage />} />
+        <Route path="feedback" element={<FeedbackPage />} />
       </Route>
       <Route path="*" element={<ChatPage />} />
     </Routes>
